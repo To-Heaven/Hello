@@ -557,22 +557,11 @@ name = input().strip(' ')   # 去除多余的空格
 password  = input().strip(' ')
 ```
 
-	- **注意：**一旦字符串中包含的字符至少有一个不在str中，那么strip()就不会对str进行任何处理
-
-```python
->>> str = '   zi  wang  haha a '
->>> str.strip('ahziy')
-'   zi  wang  haha a '
->>> 
-```
-
 - str.maketrans(intab, outtab)  创建子字符隐射的转换表，进行字符转换，返回值是新的字符串，源字符串不会改变
 - intab 字符串中要被替代的字符组成的字符串
 - outtab对应intab中字符的字符串
 - **注意：python2.x**
-	- 使用str.maketrans()方法必须要先从模块中调用
-	-      from string import maketrans
-
+	- 使用str.maketrans()方法必须要先从模块string中调用maketrans方法
 - str.translate(table)  根据参数table提供的表来转换字符串中的字符
 - 翻译表table通过maketrans()方法转换而来
 
