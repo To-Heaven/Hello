@@ -4,8 +4,8 @@
 > 得之在俄顷，积之在平日。——袁守侗
 
 - 数据类型
-	- [字符串](https://github.com/ZiaWang/ziawang.github.com/blob/master/python/basic_knowledge_of_python/string.md)
-	- [列表](https://github.com/ZiaWang/ziawang.github.com/blob/master/python/basic_knowledge_of_python/list.md)
+	- [字符串](basic_knowledge_of_python/string.md)
+	- [列表](basic_knowledge_of_python/list.md)
 - 语法结构
 
 
