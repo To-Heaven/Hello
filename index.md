@@ -1,6 +1,3 @@
-<title>ziawang 的官方网站</title>
-{"name":"ziawang的官方网站","headline":"ziawang的官方网站","url":"http://www.ziawang.com/"}
-
 ![](https://github.com/ZiaWang/ziawang.github.com/blob/master/picture/logo.jpg?raw=true)
 
 # Get Knowledge
