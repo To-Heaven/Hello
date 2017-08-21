@@ -1,6 +1,4 @@
 
-<head>
-
 <title>ziawang.github.io</title>
 <meta property="og:title" content="ziawang.github.io" />
 <meta property="og:locale" content="en_US" />
@@ -9,10 +7,7 @@
 <meta property="og:site_name" content="ziawang.github.io" />
 <script type="application/ld+json">
 {"@context":"http://schema.org","@type":"WebSite","name":"ziawang的官方网站","headline":"ziawang的官方网站","url":"http://www.ziawang.com/"}</script>
-<link href="/assets/css/style.css?v=80eafa832c99efc7fe515ce083063973bdb465af" rel="stylesheet">
-</head>
 
-<body>
 ![](https://github.com/ZiaWang/ziawang.github.com/blob/master/picture/logo.jpg?raw=true)
 
 # Get Knowledge
@@ -23,7 +18,3 @@
 - [python documentation ——最全的python知识库](https://docs.python.org/3/index.html)
 - [虎嗅——不错过互联网的每个时刻](https://www.huxiu.com/)
 
-
-
-
-</body>
