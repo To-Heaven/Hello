@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- Begin Jekyll SEO tag v2.2.3 -->
+<head>
+
 <title>ziawang.github.io</title>
 <meta property="og:title" content="ziawang.github.io" />
 <meta property="og:locale" content="en_US" />
@@ -13,12 +9,10 @@
 <meta property="og:site_name" content="ziawang.github.io" />
 <script type="application/ld+json">
 {"@context":"http://schema.org","@type":"WebSite","name":"ziawang的官方网站","headline":"ziawang的官方网站","url":"http://www.ziawang.com/"}</script>
-<!-- End Jekyll SEO tag -->
+<link href="/assets/css/style.css?v=80eafa832c99efc7fe515ce083063973bdb465af" rel="stylesheet">
+</head>
 
-    <link href="/assets/css/style.css?v=80eafa832c99efc7fe515ce083063973bdb465af" rel="stylesheet">
-  </head>
-
-
+<body>
 ![](https://github.com/ZiaWang/ziawang.github.com/blob/master/picture/logo.jpg?raw=true)
 
 # Get Knowledge
@@ -32,5 +26,4 @@
 
 
 
-
-</html>
+</body>
