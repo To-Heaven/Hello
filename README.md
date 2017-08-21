@@ -1,10 +1,10 @@
 
 <title>ziawang 的官方网站</title>
-<meta property="og:title" content="ziawang.github.io" />
+<meta property="og:title" content="www.ziawang.com" />
 <meta property="og:locale" content="en_US" />
 <link rel="canonical" href="http://www.ziawang.com/" />
 <meta property="og:url" content="http://www.ziawang.com/" />
-<meta property="og:site_name" content="ziawang.github.io" />
+<meta property="og:site_name" content="www.ziawang.com" />
 <script type="application/ld+json">
 {"name":"ziawang的官方网站","headline":"ziawang的官方网站","url":"http://www.ziawang.com/"}</script>
 
