@@ -6,7 +6,7 @@
 <meta property="og:url" content="http://www.ziawang.com/" />
 <meta property="og:site_name" content="ziawang.github.io" />
 <script type="application/ld+json">
-{"@context":"http://schema.org","@type":"WebSite","name":"ziawang的官方网站","headline":"ziawang的官方网站","url":"http://www.ziawang.com/"}</script>
+{"name":"ziawang的官方网站","headline":"ziawang的官方网站","url":"http://www.ziawang.com/"}</script>
 
 ![](https://github.com/ZiaWang/ziawang.github.com/blob/master/picture/logo.jpg?raw=true)
 
