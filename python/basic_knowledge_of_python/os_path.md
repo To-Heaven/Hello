@@ -1,25 +1,22 @@
+## words
+convention		习惯    
+normal			正常的  
+absolutized		绝对化的  
+descripter		描述符  
+grant			允许，准许  
+
 ## Note
-
-
-> convention		习惯  
-> normal			正常的
-> absolutized		绝对化的
-> descripter		描述符
-> grant			允许，准许
-
-
 - the *path* parameters  can be a string or a bytes .
-	- some file names on unix not be representable as strings on Unix
+	- some filenames on unix not be representable as strings on Unix
 	- applications that need to support arbitrary file names on Unix should use bytes objects to represent path names
 
 - All of these functions accept either only bytes or only string objects as their parameters. 
 	- the result is an object of the **same type** , if a path or file is returned
 
 ## Methods
-
-> slash           斜线
-> colon          冒号
-> up   to         直到
+> slash           斜线  
+> colon          冒号  
+> up   to         直到  
 
 
 - os.path.split(*path*)
@@ -28,17 +25,35 @@
 		- the last pathname component
 	-  head：
 		-  everything, lead up to 'tail'
-	-**NOTE**:
+	-  **NOTE**:
 		-  path ends in a slash, tail will be empty
 		-  If there is no slash in path, head will be empty
 		-   If path is empty, both head and tail are empty
 
+```python
+>>> import os
+>>> os.path.split('a\b\c\d')
+('a\x08\\c', 'd')				# 应该使用r转义
+>>> os.path.split(r'\a\b\c')
+('\\a\\b', 'c')
+>>> os.path.split('\a\b\c\\')
+('\x07\x08\\c', '')
+>>> os.path.split('asdfghj')
+('', 'asdfghj')
+>>> 
+
+```
+
+
+
 - os.path.splitdrive(*path*)
-	-  Split the pathname path into a pair (drive, tail)
+	-  Split the  path into a pair (drive, tail)
 	-  drive:
 		-  either a mount point or the empty string. On systems which do not use drive specifications, drive will always be the empty string
 		-  On Windows, splits a pathname into drive/UNC sharepoint and relative path
 	-  对于UNC 通用命名规则，等用到时候再补充
+
+
 
 ```python
 >>> os.path.split(r'D:a\b\c\d')
@@ -49,6 +64,22 @@
 ('D:', 'abcd')
 >>> os.path.splitdrive(r'D:a\b\c\d')
 ('D:', 'a\\b\\c\\d')
+>>> os.path.splitdrive('a\b\c\d')
+('', 'a\x08\\c\\d')
+>>> 
+```
+
+> postfix    后缀  
+> period     时期，句号  
+
+
+- os.path.splitext(*path*)
+	- return a tuple (root, ext)
+	- Split the pathname path into a pair (root, ext)
+		- ext is empty or begins with a period and contains at most one period. Leading periods on the basename are ignored; splitext('.cshrc') returns ('.cshrc', '').
+	- get the file-postfix
+
+```python
 >>> os.path.splitext(r'D:a\b\c\d')
 ('D:a\\b\\c\\d', '')
 >>> os.path.splitext(r'D:a\b\c\d.py')
@@ -57,35 +88,13 @@
 ('.py', '')
 >>> os.path.splitext(r'd.py')
 ('d', '.py')
->>> 
 ```
 
-- os.path.splitext(*path*)
-	- split the pathname and return a tuple (root, ext)
-		- 就是将路径分割成一个由文件扩展名和其他剩余部分构成的元组
-		- 注意：ext是文件扩展名，当只对一个文件扩展名操作的时候，元组第一个元素为文件扩展名，第二个元素为空
-	- 再次强调：路径记得用原始字符串 
-
-```python
->>> import os
->>> os.path.splitext('D:\a\b\c\d.py')
-('D:\x07\x08\\c\\d', '.py')
->>> os.path.splitext(r'D:\a\b\c\d.py')
-('D:\\a\\b\\c\\d', '.py')
->>> os.path.splitext('.py')
-('.py', '')
->>> 
-```
 
 - os.path.abspath(*path*)
 	- return the absolutized version of the pathnem path
 	- 即返回文件路径和文件扩展名
-
-```python
->>> os.path.abspath(os.path.pardir)
-'D:\\'
->>> 
-```
+	- 
 
 - os.path.basename(*path*)
 	- Return the base name of pathname path	
@@ -99,12 +108,13 @@
 >>> path_other = 'a\b\c\d\e\n'
 >>> os.path.basename(path_other)
 'e\n'
->>> path_other = 'a\b\c\d\e\l'
->>> os.path.basename(path_other)
-'l'
 >>> path_other = r'a\b\c\d\e\n'
 >>> os.path.basename(path_other)
 'n'
+>>> path_other = 'a\b\c\d\e\l'
+>>> os.path.basename(path_other)
+'l'
+
 >>> 
 
 ```
@@ -170,8 +180,8 @@ False
 
 ```
 
-> access          进入
-> modification          修改
+> access          进入  
+> modification          修改   
 
 - os.path.getatime(*path*)
 	- Return the time of last access of path
@@ -239,9 +249,9 @@ True
 >>> 
 ``` 
 
-> concatenation          相互关联的
->component              零件
-> separator                 分隔符
+> concatenation          相互关联的  
+>component              零件  
+> separator                 分隔符  
 
 
 - os.path.join(*path*, *paths)
@@ -257,8 +267,8 @@ True
 
 
 
-> encountered               遇到 
-	- the drive letter 驱动器号
+> encountered               遇到   
+	- the drive letter 驱动器号  
 		- If a component contains a drive letter, all previous components are thrown away and the drive letter is reset.
 
 ```python
@@ -268,13 +278,13 @@ True
 
 ```
 
-> normalize          使正常化，使标准化
-> collapsing          压扁/平
-> redundant         多余的，累赘的
-> up-level   reference       上级引用
-> manipulation             操作
-> forward slash            正斜杠
-> backward slash           反斜杠
+> normalize          使正常化，使标准化  
+> collapsing          压扁/平  
+> redundant         多余的，累赘的  
+> up-level   reference       上级引用  
+> manipulation             操作  
+> forward slash            正斜杠  
+> backward slash           反斜杠  
 
 - os.path.normpath(*path*)
 	- Normalize a pathname by collapsing redundant separators and up-level references
