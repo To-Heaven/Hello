@@ -1,13 +1,13 @@
 ## 单词
-interpreter		解释器
-maintain			保持
-option			选择
-specify			指定
-interactively		交互的
+interpreter		解释器  
+maintain			保持  
+option			选择  
+specify			指定  
+interactively		交互的  
 
 
 ## introduce 
-this module provides access to some variables used or maintained by the interpreter  and to functions that interact strongly with the interpreter.（就是这个模块提供了可以和python解释器进行交互的变量和函数）
+- this module provides access to some variables used or maintained by the interpreter  and to functions that interact strongly with the interpreter.（就是这个模块提供了可以和python解释器进行交互的变量和函数）
 
 
 ## variables
@@ -88,15 +88,37 @@ arg ...: arguments passed to program in sys.argv[1:]
 
 
 - sys.exit()
+	- Exit from Python. This is implemented by raising the SystemExit exception
+	- cleanup actions specified by finally clauses of try statements are honored
+
+```python
+import sys
+try:
+    sys.exit('use eith the try statement is best')
+except  Exception:
+    pass
+finally:
+    print('cleanup action ')
+
+-------------------------------------------------
+# 运行结果
+cleanup action 
+use eith the try statement is best
+
+Process finished with exit code 1
+
+
+```
+
 
 
 - sys.maxsize
-	- an intger giving the maxmum value a variable of type Py_ssize can take. it's usually 2**31-1 on a 32-bit platform for 2**63-1 on a 64-bit platform
+	- an intger giving the maxmum value a variable of type Py_ssize can take. it's usually 2\**31-1 on a 32-bit platform for 2\**63-1 on a 64-bit platform
 
 - sys.path
-	- a list of string that specifies the search path for the modules. initalized form the emvironment variable PYTHONPATH, plus an installation-dependent default
-	- the first item of this list , path[0] is the directory containing the script that used to incoke the python interpreter（path列表的第一个元素的值是执行python脚本的路径）
-	- if the script is not avaliable , for  example  if  the interpreter is invoked interactively or if the scrit is red from standard directory first.   
+	- return  a list of string that specifies the search path for the modules. initalized form the emvironment variable PYTHONPATH, plus an installation-dependent default
+	- the first item of this list , path[0] is the directory containing the script that used to invoke the python interpreter（path列表的第一个元素的值是执行python脚本的路径）
+
 
 ```python
 >>> import sys
@@ -108,24 +130,27 @@ arg ...: arguments passed to program in sys.argv[1:]
 
 
 - sys.paltform 
-	- this string contains a platform indentifier that can be used to append platform-specific components to sys.path
+	- this string contains a platform identifier that can be used to append platform-specific components to sys.path
 
 
 
 - sys.stdin
 	- used for all interactive input, including calls to input()
+
+> prompt     提示符  
+
 - sys.stdout
-	- 
+	- used for the output of print() and expression statements and for the prompts of input();
 - sys.stderr
-	- 
+	- The interpreter’s own prompts and its error messages go to stderr.
 
 
 - sys.modules
 	- a dictionary that maps module names to modules which have alreadly been laded.  
-	- __name__
-		- 在当前文件的时候，__name__变量的值为"__main__"
-		- 在当前的文件中导入别的模块的时候，__name__变量指向的是该模块的模块名
-	- sys.modules[__name__]会返回当前所在模块对象
+	- \_\_name\_\_
+		- 在当前文件的时候，\_\_name\_\_变量的值为"\_\_main\_\_"
+		- __在当前的文件中导入别的模块的时候，__name__变量指向的是该模块的模块名__
+	- sys.modules[\_\_name\_\_]会返回当前所在模块对象
 	
 ```python
 import sys

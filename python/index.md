@@ -27,7 +27,6 @@
 	- [sys模块](basic_knowledge_of_python/sys.md)
 	- [序列化---json](basic_knowledge_of_python/json.md)
 	- [序列化---shelve](basic_knowledge_of_python/shelve.md)
-	- [序列化---json](basic_knowledge_of_python/json.md)
                                                                                                                                      
 # python进阶
 > 我们愈是学习，愈觉得自己的贫乏。——雪莱

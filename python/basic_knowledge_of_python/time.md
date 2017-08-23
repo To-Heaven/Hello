@@ -1,4 +1,3 @@
-> 开始之前
 > UTC时间： 格林威治时间，中国为UTC+8
 
 # Python中表示时间的几种方式
@@ -28,13 +27,25 @@
     	7	tm_yday（一年中的第几天）	1 - 366
     	8	tm_isdst（是否是夏令时）	默认为-1
 ```
-	- 返回struct_time的函数
+
+- 返回struct_time类型对象的函数
 	- time.gmtime()
 	- localtime()
 	- strptime()
-	- struct_time的元素获取可以通过命名元组的获取元素方式获取
-	- 应用
-		- 用于计算机对时间差进行计算（从某点时刻开始经过的时间，比较元素的值的不同）
+- struct_time的元素获取可以通过命名元组的获取元素方式获取
+	- 从而可以自定义时间格式
+
+```python
+time.struct_time(tm_year=2017, tm_mon=8, tm_mday=23, tm_hour=20, tm_min=28, tm_sec=37, tm_wday=2, tm_yday=235, tm_isdst=0)
+235
+
+Process finished with exit code 0
+
+```
+
+
+- 应用
+	- 用于计算机对时间差进行计算（从某点时刻开始经过的时间，比较元素的值的不同）
 
 - 格式化的时间字符串
 	- 应用
@@ -43,16 +54,10 @@
 
 
 
-
-
-
-
-
-
 ## time.Method
 - time.time()返回当前时间的时间戳 
 
-- time.localtiem([secs]) 将一个时间戳转换成**当前时区**的struct_time，secs不提供是以当前时间为准
+- time.localtime([secs]) 将一个时间戳转换成**当前时区**的struct_time，secs不提供是以当前时间为准
 	- secs 时间戳，可以转换指定的时间戳为struct_time
 
 - time.gmtime([secs])将一个时间戳转换成UTC时间的struct_time
@@ -88,16 +93,15 @@ print(time.clock(), time.time())
 - time.strftime(format[, t])：把一个代表时间的stauct_time元组或函数gtime()和localtime()的返回值转换成格式化的字符串并返回。元组中的元素越界时，会抛出ValueError错误
 	- t 为struct_time类型。为指定则默认为time.localtime()
 
-> 格式
-
-年	%Y
-月	%m
-日	%d
-周	%A
-本地相应时间  %X
-时	%H
-分	%M
-秒	%S
+> 格式  
+> 年	%Y  
+> 月	%m    
+> 日	%d  
+> 周	%A  
+> 本地相应时间  %X  
+> 时	%H  
+> 分	%M  
+> 秒	%S  
 
 - time.strptime(string[, format]) 把一个格式化的时间转换成struct_time。是strftime()的逆操作 
 
@@ -113,4 +117,4 @@ print(now_gmtime)
 print(now_strf)
 print(now_strp)
 ```
-![](http://files.jb51.net/file_images/article/201404/2014424120618129.jpg?201432412651)
+![](https://raw.githubusercontent.com/ZiaWang/Hello/master/picture/time.jpg)
