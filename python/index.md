@@ -1,4 +1,4 @@
-![](https://github.com/ZiaWang/ziawang.github.com/blob/master/picture/python.jpg?raw=true)
+![](picture/python.jpg)
 
 # python 基础
 > 得之在俄顷，积之在平日。——袁守侗
@@ -30,3 +30,7 @@
                                                                                                                                      
 # python进阶
 > 我们愈是学习，愈觉得自己的贫乏。——雪莱
+
+
+# python题库
+> 学习知识要善于思考，思考，再思考。我就是靠这个方法成为科学家的。—— 爱因斯坦
