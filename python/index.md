@@ -19,7 +19,8 @@
 - 面向对象
 	- [面向对象](basic_knowledge_of_python/class_and_object.md)
 
-
+- 相关必备知识
+	- [进程与线程原理](basic_knowledge_of_python/processes_and_threads.md)
 - python standard library
 	- [os模块，操作系统常用变量和方法](basic_knowledge_of_python/os.md)
 	- [os.path模块，常用文件路径处理](basic_knowledge_of_python/os_path.md)
@@ -30,6 +31,8 @@
 	- [序列化---shelve，超级实用的数据对象存取模块](basic_knowledge_of_python/shelve.md)
 	- [python其他容器类型collections](basic_knowledge_of_python/collections.md)
 	- [multiprocessing模块，创建大量的进程](basic_knowledge_of_python/multiprocessing.md)
+	- [logging模块，最常用的日志记录工具](basic_knowledge_of_python/logging.md)
+	
                                                                                                                                      
 # python进阶
 > 我们愈是学习，愈觉得自己的贫乏。——雪莱
