@@ -29,6 +29,7 @@
 	- [序列化---json，跨越语言障碍的数据类型](basic_knowledge_of_python/json.md)
 	- [序列化---shelve，超级实用的数据对象存取模块](basic_knowledge_of_python/shelve.md)
 	- [python其他容器类型collections](basic_knowledge_of_python/collections.md)
+	- [multiprocessing模块，创建大量的进程](basic_knowledge_of_python/multiprocessing.md)
                                                                                                                                      
 # python进阶
 > 我们愈是学习，愈觉得自己的贫乏。——雪莱
