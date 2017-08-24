@@ -1,9 +1,8 @@
-## 单词
-interpreter		解释器  
-maintain			保持  
-option			选择  
-specify			指定  
-interactively		交互的  
+> interpreter		解释器   
+> maintain			保持   
+> option			选择   
+> specify			指定   
+> interactively		交互的   
 
 
 ## introduce 

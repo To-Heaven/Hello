@@ -21,12 +21,14 @@
 
 
 - python standard library
-	- [os模块](basic_knowledge_of_python/os.md)
-	- [os.path模块](basic_knowledge_of_python/os_path.md)
-	- [time模块](basic_knowledge_of_python/time.md)
-	- [sys模块](basic_knowledge_of_python/sys.md)
-	- [序列化---json](basic_knowledge_of_python/json.md)
-	- [序列化---shelve](basic_knowledge_of_python/shelve.md)
+	- [os模块，操作系统常用变量和方法](basic_knowledge_of_python/os.md)
+	- [os.path模块，常用文件路径处理](basic_knowledge_of_python/os_path.md)
+	- [time模块，获取多种时间格式](basic_knowledge_of_python/time.md)
+	- [random模块，随机生成指定数据](basic_knowledge_of_python/random.md)
+	- [sys模块，与python解释器进行交互](basic_knowledge_of_python/sys.md)
+	- [序列化---json，跨越语言障碍的数据类型](basic_knowledge_of_python/json.md)
+	- [序列化---shelve，超级实用的数据对象存取模块](basic_knowledge_of_python/shelve.md)
+	- [python其他容器类型collections](basic_knowledge_of_python/collections.md)
                                                                                                                                      
 # python进阶
 > 我们愈是学习，愈觉得自己的贫乏。——雪莱
