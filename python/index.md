@@ -32,6 +32,7 @@
 	- [python其他容器类型collections](basic_knowledge_of_python/collections.md)
 	- [multiprocessing模块，创建大量的进程](basic_knowledge_of_python/multiprocessing.md)
 	- [logging模块，最常用的日志记录工具](basic_knowledge_of_python/logging.md)
+	- [hashlib模块，各种主流加密算法](basic_knowledge_of_python/hashlib.md)
 	
                                                                                                                                      
 # python进阶
