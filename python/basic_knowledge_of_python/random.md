@@ -23,7 +23,7 @@ permutations		序列，排列 <br>
 imply			暗示 <br>
 sample			样品 <br>
 ## introduction of random class
-- class Random can also be subclass if you wanted to as a different basic generator of your own devising: in that case ,override the random() , seed(), getstate(), and setstate() methods. optionally , a new generator can supply a getrandbits() method------whis allows randrange() to produce selecttions over an arbitrarily large range
+- class Random can also be subclass if you wanted to as a different basic generator of your own devising: in that case ,override the random() , seed(), getstate(), and setstate() methods. optionally , a new generator can supply a getrandbits() method------this allows randrange() to produce selecttions over an arbitrarily large range
 
 > 注意： the pseudo-random generators of this module **should not be used for security purposes**. （可以参考secrets模块)
 
