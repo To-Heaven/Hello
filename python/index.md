@@ -3,6 +3,10 @@
 # python 基础
 > 得之在俄顷，积之在平日。——袁守侗
 
+- 学习之前
+	- [进程与线程原理](basic_knowledge_of_python/processes_and_threads.md)
+	- [网络通讯原理](basic_knowledge_of_python/network_protocol.md)
+
 - 数据类型
 	- [字符串](basic_knowledge_of_python/string.md)
 	- [列表](basic_knowledge_of_python/list.md)
@@ -11,6 +15,7 @@
 	- [集合](basic_knowledge_of_python/set.md)
 - 语法结构
 	- [流程控制](basic_knowledge_of_python/process_control.md)
+	- [迭代器与生成器](basic_knowledge_of_python/iterator_generator.md)
 
 - 函数
 	- [函数](basic_knowledge_of_python/function.md)
@@ -19,8 +24,6 @@
 - 面向对象
 	- [面向对象](basic_knowledge_of_python/class_and_object.md)
 
-- 相关必备知识
-	- [进程与线程原理](basic_knowledge_of_python/processes_and_threads.md)
 - python standard library
 	- [os模块，操作系统常用变量和方法](basic_knowledge_of_python/os.md)
 	- [os.path模块，常用文件路径处理](basic_knowledge_of_python/os_path.md)
@@ -44,3 +47,9 @@
 
 - 函数
     - [装饰器练习](question_bank/question_bank_decorator.md)
+
+
+# python Bugs
+> 千里之堤，以蝼蚁之穴溃；百尺之室，以突隙之烟焚   ——韩非子
+
+

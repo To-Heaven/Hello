@@ -1,8 +1,12 @@
 ## set
 ## frozenset
+
+> duplicate       复制  
+> compute        计算   
+
 - A set object is an  **unordered ** collection of distinct hashable objects
 - common uses
-	- membershi testing    'in ' and  ' not in '
+	- membership testing    'in ' and  ' not in '
 	- removing duplicates from a sequence
 	- computing mathematical operations 
 		- & 	intersection
@@ -10,6 +14,9 @@
 		- ^	
 		-   ‘ -’ difference
 		- Do not support ' + '
+	- len(set)
+	- iterable
+		- `for element in set` 
 
 ```python
 >>> s1 = {1, 2, 3, 4, 5, 6}
@@ -43,8 +50,7 @@ TypeError: unsupported operand type(s) for +: 'set' and 'set'
 
 ```
 
-	- len(set)
-	- for element in set
+
 
 - **Note**:
 	- sets do not record element position or order of insertion
@@ -76,7 +82,7 @@ frozenset({'a', 'c', 'b', 'd'})
 ## set([iterbale])
 ## forzenset([iterable])
 
-- the elements of the iterbale must be hashable 
+- the elements of the iterable must be hashable 
 	- To represent sets of sets, the inner sets must be frozenset objects. 
 	- If iterable is not specified, a new empty set is returned.
 
