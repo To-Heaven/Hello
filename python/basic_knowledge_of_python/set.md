@@ -1,4 +1,4 @@
-![集合思维导图](picture/set-2.jpg)
+![集合思维导图](picture/set-2.png)
 
 ## set
 ## frozenset

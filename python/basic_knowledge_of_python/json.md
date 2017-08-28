@@ -1,4 +1,4 @@
-![](picture/json-2.jpg)
+![](picture/json-2.png)
 
 ## 单词 
 notation		记号，标记法  
