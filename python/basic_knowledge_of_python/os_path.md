@@ -171,7 +171,7 @@ Traceback (most recent call last):
     os.path.exists('D:\files\python_practice\0810')
   File "D:\Python36\lib\genericpath.py", line 19, in exists
     os.stat(path)
-ValueError: stat: embedded null character in path				# 不是永远是字符串， 遇到特殊意义的														#转义字符时报错
+ValueError: stat: embedded null character in path				# 不是原始字符串， 遇到特殊意义的														#转义字符时报错
 >>> os.path.exists(r'D:\files\python_practice\0810')
 True
 >>> os.path.exists(r'a\b\c\d\e\f')

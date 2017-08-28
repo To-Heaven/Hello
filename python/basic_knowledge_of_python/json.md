@@ -166,7 +166,7 @@ print(d3)
 - if sort_keys is True ,  the output of dictionaries will be sorted by key.
 
 -  json.dumps(obj, *, skipkeys=False, ensure_ascii= True, check-circular=True, allow_nan=True, cls = None, indent=None, separators=None, default=None, sort_keys=False, **kw)
-	-  serialize obj to a hson formatted str using the conversion table above.
+	-  serialize obj to a json formatted str using the conversion table above.
 
 
 ## json load and json loads
@@ -206,6 +206,39 @@ print(data_loads)
 }
 {'age': 21, 'name': 'ziawang', 'phone': 15695018792}
 
+
+```
+
+- for  parameter of encoding
+	- Note: **dump(obj), obj can not be a bytes object** 
+
+```python
+>>> import json
+>>> data = b'asdfgh'
+>>> data_json = json.dumps(data)
+Traceback (most recent call last):
+  File "<pyshell#5>", line 1, in <module>
+    data_json = json.dumps(data)
+  File "D:\Python36\lib\json\__init__.py", line 231, in dumps
+    return _default_encoder.encode(obj)
+  File "D:\Python36\lib\json\encoder.py", line 199, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "D:\Python36\lib\json\encoder.py", line 257, in iterencode
+    return _iterencode(o, 0)
+  File "D:\Python36\lib\json\encoder.py", line 180, in default
+    o.__class__.__name__)
+TypeError: Object of type 'bytes' is not JSON serializable			# obj can not be a bytes object
+>>> data = 'asas'
+>>> data_json = json.dumps(data)
+>>> data_json
+'"asas"'
+>>> data_json_bytes = data_json.encode('utf-8')
+>>> data_json_bytes
+b'"asas"'
+>>> data = json.loads(data_json_bytes)
+>>> data
+'asas'
+>>> 
 
 ```
 
