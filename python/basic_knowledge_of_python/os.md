@@ -1,5 +1,5 @@
-[点击查看我整理的os模块思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/os-2.png?raw=true)
-[点击传送至os.path](basic_knowledge_of_python/os_path.md)
+[点击查看我整理的os模块思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/os-2.png?raw=true) <br>
+[点击传送至os.path](https://github.com/ZiaWang/Hello/blob/master/python/basic_knowledge_of_python/os_path.md)
 
 ## Note
 - In Python, file names, command line arguments, and environment variables are represented using the string type
@@ -235,16 +235,16 @@ b'D:\\files'
 		- Set followlinks to True to visit directories pointed to by symlinks
 
 
-> 返回值是一个生成器generator
-> os.walk(top, topdown=True, oneerror=None, followlinks=False)
-> top : 要遍历目录的地址
-> topdown为真，则优先遍历top目录，否则优先遍历top的子目录（默认开启）。但是最终都会被遍历
-> oneerror需要一个callable对象，当walk异常的时候，调用
-> followlinks为真，会遍历目录下的快捷方式指向的目录
-> 每次遍历的对象都是一个三元元组（root，dirs，files）
-> root 是当前正在被遍历文件夹本身的地址
-> dirs 是一个list，内容是文件夹中所有目录的名字（不包括子目录）
-> files 是一个list，内容是给文件家中所有文件，不包括子目录
+> 返回值是一个生成器generator<br>
+> os.walk(top, topdown=True, oneerror=None, followlinks=False)<br>
+> top : 要遍历目录的地址<br>
+> topdown为真，则优先遍历top目录，否则优先遍历top的子目录（默认开启）。但是最终都会被遍历<br>
+> oneerror需要一个callable对象，当walk异常的时候，调用<br>
+> followlinks为真，会遍历目录下的快捷方式指向的目录<br>
+> 每次遍历的对象都是一个三元元组（root，dirs，files）<br>
+> root 是当前正在被遍历文件夹本身的地址<br>
+> dirs 是一个list，内容是文件夹中所有目录的名字（不包括子目录）<br>
+> files 是一个list，内容是给文件家中所有文件，不包括子目录<br>
 
 
 ```python
