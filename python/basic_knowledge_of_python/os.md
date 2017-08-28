@@ -1,5 +1,5 @@
 [点击查看我整理的os模块思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/os-2.png?raw=true) <br>
-[点击传送至os.path](https://github.com/ZiaWang/Hello/blob/master/python/basic_knowledge_of_python/os_path.md)
+[点击传送至os.path](http://www.ziawang.com/python/basic_knowledge_of_python/os_path.html)
 
 ## Note
 - In Python, file names, command line arguments, and environment variables are represented using the string type
