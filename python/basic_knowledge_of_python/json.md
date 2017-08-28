@@ -1,3 +1,5 @@
+![](picture/json-2.jpg)
+
 ## 单词 
 notation		记号，标记法  
 obsolete		废弃，抛弃  
