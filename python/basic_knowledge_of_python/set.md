@@ -1,4 +1,4 @@
-![集合思维导图](picture/set-2.png)
+[点击查看我整理的集合思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/set-2.png?raw=true)
 
 ## set
 ## frozenset

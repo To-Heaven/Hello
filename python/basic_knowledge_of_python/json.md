@@ -1,4 +1,4 @@
-![](picture/json-2.png)
+[点击查看我整理的json模块思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/json-2.png?raw=true)
 
 ## 单词 
 notation		记号，标记法  
