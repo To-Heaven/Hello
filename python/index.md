@@ -40,7 +40,9 @@
                                                                                                                                      
 # python进阶
 > 我们愈是学习，愈觉得自己的贫乏。——雪莱
-
+	- [数据结构](advanced_knowledge_of_python/data_structure.md)
+	- [数据模型](advanced_knowledge_of_python/data_model.md)
+	- [对象引用、可变性、垃圾回收](advanced_knowledge_of_python/object_reference_garbage.md)
 
 # python题库
 > 学习知识要善于思考，思考，再思考。我就是靠这个方法成为科学家的。—— 爱因斯坦
@@ -52,4 +54,8 @@
 # python Bugs
 > 千里之堤，以蝼蚁之穴溃；百尺之室，以突隙之烟焚   ——韩非子
 
+- 语法错误bug
+
+- 逻辑思维bug
+	- [生产者消费者模型](python_bugs/producer_customer.md)
 

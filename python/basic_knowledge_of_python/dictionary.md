@@ -1,3 +1,5 @@
+[点击查看我整理的字典思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/dict-2.png?raw=true)
+
 ## Dict
 - 官方dict解释
 	- A mapping object maps hashable values to arbitrary objects.
@@ -230,16 +232,25 @@ for key in info_dic:
 
 
 - 其他：
+
+
 1.
-	    for i, j in info_dic.items():   #  items返回的对象是一个dict_items类型对象，其内的元素是封装了key-	print(i, j)					#value对的一个个元组
-    		
+```python
+for i, j in info_dic.items():   #  items返回的对象是一个dict_items类型对象，其内的元素是封装了key-	print(i, j)					#value对的一个个元组
+```    		
 
 2.
-	    for   key  in info_dic.keys():
-    		print(key)
+```python
+for   key  in info_dic.keys():
+	print(key)
+```
+
 3.
-	    for value in info_dic.values():
-    		print(value)
+```python
+for value in info_dic.values():
+	print(value)
+```
+
 
 
 	
@@ -266,12 +277,9 @@ for key in info_dic:
 ## dict methods
  - dict.copy() 返回一个字典的浅复制
 	- 直接赋值：其实就是对象的引用（别名）
-	- ![](http://https://github.com/ZiaWang/img/blob/master/%E7%9B%B4%E6%8E%A5%E8%B5%8B%E5%80%BC.png?raw=true)
 	- 所谓浅复制指：对父对象（一级目录）进行深拷贝，而对子对象（二级目录）不拷贝
-	- ![](http://https://github.com/ZiaWang/img/blob/master/%E6%B5%85%E6%8B%B7%E8%B4%9D.png?raw=true)
 	- 所谓深复制指：copy模块的deepcopy方法，它完全拷贝了父对象及其子对象
-	- ![](http://https://raw.githubusercontent.com/ZiaWang/img/aab8e9b408ad611f12af9e7970833b42fab17152/%E6%B7%B1%E6%8B%B7%E8%B4%9D.png)
-	- https://www.runoob.com/w3cnote/python-understanding-dict-copy-shallow-or-deep.html
+
 ```python
 from copy import deepcopy
 info = {'name': 'ziawang', 'age': 23, 'skills': ['stock', 'python']}
@@ -493,17 +501,6 @@ dict_keys(['name', 'age', 'sex', 'skills', 'school'])
 
 ```
 
-
-
-## 易忘部分
-1. 字典key必须是不可变，字典中出现相同key，python会记住最后一个key-value对
-2. 字典的遍历循环应采用for循环
-3. 创建字典
-	1. dict(name= 'ziawang', age=23)             # keyword can't be an expression
-	2. dict([('name', 'ziawang'),('age', 23)])
-4. dict.update(dict2)
-5. dict.setdefault(key, default=None)
-6. dict.get(key,[default])
 
 
 
