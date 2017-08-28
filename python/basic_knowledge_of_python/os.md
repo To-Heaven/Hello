@@ -1,4 +1,7 @@
-## Note 
+[点击查看我整理的os模块思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/os-2.png?raw=true)
+[点击传送至os.path](basic_knowledge_of_python/os_path.md)
+
+## Note
 - In Python, file names, command line arguments, and environment variables are represented using the string type
 - get the system default encoding of file
 	- sys.getfilesystemencoding()
@@ -15,14 +18,16 @@
 ## Methods
 - os.chdir(*path*)
 	- Change the current working directory to path.
-	- 注意：path可以是一个文件描述符（句柄）， 官方这样解释
+	- 注意：path可以是一个文件描述符（不是句柄，文件描述符是一个非负整数，在Linux内核系统中没打开一个文件就会返回一个文件描述符）， 官方这样解释
 		- This function can support specifying a file descriptor. The descriptor must refer to an opened directory, not an open file.
 
 - os.fchdir(fd)		
 	- Change the current working directory to the directory represented by the file descriptor fd
-	- fd:文件描述符（句柄）， 这个句柄必须是指向一个已经打开了的文件。
+	- fd:文件描述符（同样不是句柄）， 这个句柄必须是指向一个已经打开了的文件。
 		- The descriptor must refer to an opened directory, not an open file
 	- 将当前脚本工作目录切换到句柄指向的目录
+	- **NOTE:**
+		- Availability: Unix.
 
 - os.getcwd()
 	- return a string representing the current working directory
@@ -63,10 +68,8 @@ FileExistsError: [WinError 183] 当文件已存在时，无法创建该文件。
 >>> 
 ```
 
-> entry          记录  
-
-
-- os.listdir()
+> entry          记录
+- os.listdir(*path='.'*)
 	- Return a list containing the names of the entries in the directory given by path.
 	- Note:**not include '.' and '..'**
 
@@ -77,8 +80,7 @@ FileExistsError: [WinError 183] 当文件已存在时，无法创建该文件。
 ['$RECYCLE.BIN', '13-红蜘蛛多媒体教学软件商业版', 'CentOS-6.9-x86_64-LiveDVD.iso', 'files', 'Git', 'Go', 'Notepad++', 'PyCharm', 'Python27', 'Python36', 'screen+', 'System Volume Information', 'ubuntu-16.04.2-desktop-amd64.iso', 'Virtual Machines', 'VMware', 'wkhtmltopdf', 'work', 'XMind', '安装包',  '红蜘蛛修改频道', '视频']
 >>> 
 ```
-
-- os.rmdir()
+- os.rmdir(path, *, dir_fd=None)
 	- Note:Remove (delete) the directory path, **only when the directory is empty**
 		- otherwise , raise OSError
 
@@ -146,9 +148,10 @@ os.stat_result(st_mode=33206, st_ino=3940649673985678, st_dev=1443930415, st_nli
 >>> 
 ```
 
-- 待补充：
-- os.system()
+- os.system(cmd)
+	
 - os.popen()
+
 - os.wait()
 - os.waitpid()
 - os.waitid()
@@ -203,42 +206,66 @@ b'D:\\files'
 	- The character conventionally used by the operating system to separate search path components (as in PATH), such as ':' for POSIX or ';'
 
 
+> bottom-up   倒置，自底向上
+> top-down     自上而下的，先总后分的
+> triple     遍历   
+
+
+
+- os.walk(top, topdown, onerror=None, followlinks=False)
+	- return     (dirpath, dirnames, filenames)
+		- dirpath is a string, the path to the directory
+		- dirnames is a list of the names of the subdirectories in dirpath (excluding '.' and '..')
+		-  filenames is a list of the names of the non-directory files in dirpath
+		-  __os.path.join(dirpath, path) to get the full path of a file or directory__
+	- top
+		- 开始进行遍历的顶目录
+		-  For each directory in the tree rooted at directory top (including top itself), it yields a 3-tuple (dirpath, dirnames, filenames).
+	- topdown
+ 		- if  True or not specified
+			- directories are generated top-down
+		- if False
+			-  directories are generated bottom-up
+	- onerror
+		- errors form the listdir() call are ignored by default
+		- if specified
+			- it should be a function  called with one argument
+			- It can report the error to continue with the walk, or raise the exception to abort the walk
+	- followlinks
+		- Set followlinks to True to visit directories pointed to by symlinks
+
+
+> 返回值是一个生成器generator
+> os.walk(top, topdown=True, oneerror=None, followlinks=False)
+> top : 要遍历目录的地址
+> topdown为真，则优先遍历top目录，否则优先遍历top的子目录（默认开启）。但是最终都会被遍历
+> oneerror需要一个callable对象，当walk异常的时候，调用
+> followlinks为真，会遍历目录下的快捷方式指向的目录
+> 每次遍历的对象都是一个三元元组（root，dirs，files）
+> root 是当前正在被遍历文件夹本身的地址
+> dirs 是一个list，内容是文件夹中所有目录的名字（不包括子目录）
+> files 是一个list，内容是给文件家中所有文件，不包括子目录
+
+
+```python
+import os
+
+
+for dirpath, dirname, filename in os.walk('.'):
+    print(dirpath, dirname, filename)
+    for name in filename:
+        print(os.path.join(dirpath, name))
+------------------------------------------------------------------
+. [] ['onclass.py', 'practice.py', 'test.txt']
+.\onclass.py
+.\practice.py
+.\test.txt
+
+```
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## os.walk
-- 返回值是一个生成器generator
-	- os.walk(top, topdown=True, oneerror=None, followlinks=False)
-	- top : 要遍历目录的地址
-	- topdown为真，则优先遍历top目录，否则优先遍历top的子目录（默认开启）。但是最终都会被遍历
-	- oneerror需要一个callable对象，当walk异常的时候，调用
-	- followlinks为真，会遍历目录下的快捷方式指向的目录
-- 每次遍历的对象都是一个三元元组（root，dirs，files）
-	- root 是当前正在被遍历文件夹本身的地址
-	- dirs 是一个list，内容是文件夹中所有目录的名字（不包括子目录）
-	- files 是一个list，内容是给文件家中所有文件，不包括子目录
 

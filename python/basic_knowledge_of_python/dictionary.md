@@ -106,6 +106,7 @@ ValueError: dictionary update sequence element #0 has length 3; 2 is required
 ```
 
 
+
 PS：还可以结合zip(a ,   b)函数来创建字典
 
 ```python
@@ -115,6 +116,7 @@ PS：还可以结合zip(a ,   b)函数来创建字典
 {'name': 'ziawang', 'age': 23, 'skills': ('stock', 'python')}
 >>> 
 ```
+
 
 3. 直接利用dict(**kw)中的关键字参数，来创建字典
 
