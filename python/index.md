@@ -48,8 +48,7 @@
 # python题库
 > 学习知识要善于思考，思考，再思考。我就是靠这个方法成为科学家的。—— 爱因斯坦
 
-- 函数
-    - [装饰器练习](question_bank/question_bank_decorator.md)
+- [装饰器练习](question_bank/question_bank_decorator.md)
 
 
 # python Bugs

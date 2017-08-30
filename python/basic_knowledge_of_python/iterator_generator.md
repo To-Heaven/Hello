@@ -3,7 +3,7 @@
 - 可迭代标志    对象有\_\_iter__方法
 	- 判断对象是否可迭代
 		- in  判断       '\_\_iter__'  in dir(object)
-		- isinstrance(object, Iterable)
+		- from collections import Iterable  , isinstrance(object, Iterable)     
 	- 可迭代协议（可迭代对象成立的必要条件）
 		- 对象内部实现了\_\_iter__方法，将一个可迭代对象转换成迭代器
 			-  \_\_iter__(self, /)
@@ -151,7 +151,7 @@ print(l_iter.__next__())
 - 当生成器函数调用了return语句或者next()完了所有yield语句，就会抛出StopIteration异常
 
 ## 处理无限序列（或未知长度序列）
-- 使用while可以保证生成器源源不断乘胜新的值，保证生成器不会到达最后
+- 使用while可以保证生成器源源不断产生新的值，保证生成器不会到达最后
 
 ## 生成器Generator
 - 本质
@@ -163,7 +163,7 @@ print(l_iter.__next__())
 	- 一个包含yield关键字的函数就是一个生成器函数。
 	- yield的作用
 		- 从生成器函数中返回值（但是与return不同）
-		- next()方法调用生成器时（或生成器对象调用\_\_next__方法时），会从上一次yield凡湖ide位置向下继续运行到下一个yield
+		- next()方法调用生成器时（或生成器对象调用\_\_next__方法时），会从上一次yield返回的位置向下继续运行到下一个yield
 
 
 - 生成器实现的方式
@@ -171,7 +171,7 @@ print(l_iter.__next__())
 		- 带yield函数，生成器函数调用的时候不执行任何函数中的代码，只是返回一个生成器。调用next的时候才会得到生成器函数的yield返回值，遇到yield时停止，并返回yield的内容
 	- 生成器表达式
 
-- **生成器第一次出发只能用next()或send(None)**
+- **生成器第一次触发只能用next()或send(None)**
 
 
 ```python
