@@ -17,13 +17,13 @@
 		- should always be None
 	- target:
 		-  target is the callable object to be invoked by the run() method
-	-   name:
+	- name:
 		-   process’s name.The name is a string used for identification purposes only
-	-    args
+	- args
 		-   the argument tuple for the target invocation
-	-    keargs
+	- keargs
 		-    a dictionary of keyword arguments for the target invocatio
-	-    daemon	
+	- daemon	
 		-     sets the process daemon flag to True or False.
 		-     if None (the default), this flag will be inherited from the creating process.
 	- **NOTE:**
@@ -169,6 +169,64 @@ Process finished with exit code 0
 	- start the process's activity
 	- must be called at most once per process objec
 	-  It arranges for the object’s run() method to be invoked in a separate process.
+		-  start作用只是发起开启进程的请求，何时进程开始运行是由操作系统调度的，特别的，当有多个进程一起start发起请求的时候，进程开启的顺序并不是按照start的先后顺序来安排的
+		-  一个进程start之后，先该进程创建以一个内存空间，将对应的数据加载到内存中之后，然后该进程的任务才能开始执行，这需要时间。
+			- 看下面例子，主进程不会等子进程加载完成后执行完再运行主进程自己的代码，而是会在子进程start方法执行完后，继续运行主进程中的其他代码，当主进程运行过程中子进程启动成功并可以执行
+
+```python
+# 主进程代码运行完，子进程才刚开始
+from multiprocessing import  Process
+import time
+import os
+
+
+def task():
+    print('%s runing'%os.getpid())
+    time.sleep(2)
+    print('%s  done . . .   '%os.getpid())
+
+
+if __name__ == '__main__':
+    p = Process(target=task)
+    p.start()
+    print('主进程')
+-----------------------------------------------------------------
+主进程
+7688 runing
+7688  done . . .   
+
+Process finished with exit code 0
+```
+
+
+```python
+# 主进程代码执行过程中，子进程启动成功
+from multiprocessing import  Process
+import time
+import os
+
+
+def task():
+    print('%s runing'%os.getpid())
+    time.sleep(2)
+    print('%s  done . . .   '%os.getpid())
+
+
+if __name__ == '__main__':
+    p = Process(target=task)
+    p.start()
+    time.sleep(2)
+    print('主进程')
+----------------------------------------------------------
+9728 runing
+主进程
+9728  done . . .   
+
+Process finished with exit code 0
+```
+
+
+
 
 
 > optonal   可选择的   
@@ -236,6 +294,7 @@ Process finished with exit code 0
 - is_alive()
 	- Return whether the process is alive.
 	- a process object is alive from the moment the start() method returns until the child process terminates.
+		- 操作系统关闭该进程需要时间，如果调用此方法后立即调用is_alive()，可能会返回True
 
 
 ## process_obj.variables
@@ -245,8 +304,839 @@ Process finished with exit code 0
 
 
 
+> primitive           原始的   
+> as long as      
+> ubbounded      不限制的  
+> release          释放   
+
+## Lock object
+- 创建方式`l = Lock()`
+
+- lock.acquire()
+	- Acquire a lock
+	- block until release.
+- lock.relase()
+	-  Release a lock
+		-  When the lock is locked, reset it to unlocked
+
+```python
+# test.txt文件内容
+{"count":6}
+-----------------------------------------------------
+import os
+import json
+from multiprocessing import Lock, Process
+
+# 模拟抢票系统
+
+
+def search():
+    stock_info = json.load(open('test.txt'))
+    print('剩余%s张票'%stock_info['count'])
+
+
+def get():
+    stock_info = json.load(open('test.txt'))
+    if stock_info['count'] > 0:
+        stock_info['count'] -= 1
+        json.dump(stock_info, open('test.txt', 'w'))
+        print('%s购买成功'%os.getpid())
+    else:
+        print('%s购买失败'%os.getpid())
+
+def run(l):
+    search()
+    l.acquire()
+    get()
+    l.release()
+
+if __name__ == '__main__':
+    l = Lock()
+    for i in range(10):
+        p = Process(target=run, args=(l, ))
+        p.start()
+
+---------------------------------------------------------------------------------------
+剩余6张票
+10160购买成功
+剩余5张票
+4136购买成功
+剩余4张票
+4592购买成功
+剩余3张票
+剩余2张票
+5192购买成功
+剩余2张票
+剩余2张票
+6396购买成功
+6352购买成功
+剩余0张票
+8712购买失败
+1636购买失败
+剩余0张票
+4760购买失败
+剩余0张票
+7248购买失败
+
+Process finished with exit code 0
+```
+
+
+> shared     共享的   
+> buffer       缓冲区   
+> feeder      分支  
+> approximate     大概的   
+> concurrent    同时存在的   
+
+# sharing state between multiple processes
+> when doing concurrent programming it is usually best to avoid using shared state as far as possible. This is particularly true when using multiple processes.
+> if you really do need to use some shared data then multiprocessing provides a couple of ways of doing so.
+
+- shared memory(Value, Array)  
+- server process (Manager object)
+- queue  (Queue, JoinableQueue)
+
+
+## Queue object
+- Queue([maxsize])
+	- Returns a process shared queue implemented using a pipe and a few locks/semaphores
+	- When a process first puts an item on the queue a feeder thread is started which transfers objects from a buffer into the pipe.
+		- 当maxxize不指定的时候，返回的Queue对象长度不限制 
+
+
+```python
+from multiprocessing import Process, Queue
+import time
+import os
+import random
+
+
+def my_put(q):
+    for i in range(10):
+        q.put(i)
+        time.sleep(random.randint(1, 3))
+        print('%s put  %s into the Queue '%(os.getpid(), i))
+
+def my_get(q):
+    while True:
+        res = q.get()
+        time.sleep(2)
+        print('%s get  %s from the Queue'%(os.getpid(), res))
+if __name__ == '__main__':
+    q = Queue(5)
+    p = Process(target=my_put, args=(q, ))
+    g = Process(target=my_get, args=(q, ))
+    p.start()
+    g.start()
+    print('这是主进程')
+------------------------------------------------------------------------------------
+这是主进程
+3172 put  0 into the Queue 
+3252 get  0 from the Queue
+3252 get  1 from the Queue
+3172 put  1 into the Queue 
+3252 get  2 from the Queue
+3172 put  2 into the Queue 
+3172 put  3 into the Queue 
+3252 get  3 from the Queue
+3172 put  4 into the Queue 
+3252 get  4 from the Queue
+3172 put  5 into the Queue 
+3172 put  6 into the Queue 
+3252 get  5 from the Queue
+3252 get  6 from the Queue
+3172 put  7 into the Queue 
+3252 get  7 from the Queue
+3172 put  8 into the Queue 
+3252 get  8 from the Queue
+3172 put  9 into the Queue 
+3252 get  9 from the Queue
+```
+
+
+## Queue  method  
+- 不稳定结果的方法
+	- q.qsize()
+		- Return the approximate size of the queue
+	- q.empty()
+		- Return True if the queue is empty
+	- q.full()
+		- Return True if the queue is full
+
+
+> slot      槽位，位置   
+
+
+- q.put(obj, block=True, timeout=None)
+	- obj is arbitrary value of python
+	- block=True  & time = None
+		-   block if necessary until a free slot is available
+	- block=True & time is a positive number
+		-    blocks at most timeout seconds and raises the queue.Full exception if no free slot was available within that time.
+	-  block=False 
+		-  Note: timeout argument is ingure in this case
+		-  put an item on the queue if a free slot is immediately available, else raise the queue.Full exception (timeout is ignored in that case).
+
+- q.get(block=True, timeout=None)
+	- Remove and return an item from the queue
+	- block和time参数与put逻辑相同
+
+
+```python
+# 把Queue的长度改成0，再运行
+
+from multiprocessing import Process, Queue
+import time
+import os
+
+
+def my_put(q):
+    for i in range(10):
+        q.put(i)
+        time.sleep(1)
+        print('%s put  %s into the Queue '%(os.getpid(), i))
+
+def my_get(q):
+    while True:
+        res = q.get()
+        time.sleep(2)
+        print('%s get  %s from the Queue'%(os.getpid(), res))
+if __name__ == '__main__':
+    q = Queue(1)
+    p = Process(target=my_put, args=(q, ))
+    g = Process(target=my_get, args=(q, ))
+    p.start()
+    g.start()
+    print('这是主进程')
+# 再运行会发现陈Queue中主允许同时存在一个元素，只有后档这个元素被get后，才能被put进去
+
+
+```
+
+- q.put_nowait(obj)
+	- q.put(obj, block=False)
+
+- q.get_nowait(obj)
+	- q.get(obj, block=False)
+
+- q.close()
+	- Indicate that no more data will be put on this queue by the current process
+		- 如果在close方法后继续执行put就会报错
+
+```python
+from multiprocessing import Queue
+
+q = Queue(5)
+q.put(1)
+q.put(1)
+q.put(1)
+q.close()
+q.put(2)
+q.put(2)
+-------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:/files/python_practice/0821-0827/0825/practice.py", line 53, in <module>
+    q.put(2)
+  File "D:\Python36\lib\multiprocessing\queues.py", line 81, in put
+    assert not self._closed
+AssertionError
+
+
+```
+
+- join_thread()
+
+- cancel_join_thread()
+
+
+
+## JoinableQueue   object
+
+> additionally    额外的   
+> fromerly      之前的   
+> enqueued       排队的   
+> subsequent     随后的，后面的  
+> fetch         获取    
+
+- a Queue subclass, is a queue which additionally has task_done() and join() methods.
+
+
+
+
+- q.join()
+	- Block until all items in the queue have been gotten and processed.
+	- The count of unfinished tasks goes up whenever an item is added to the queue.
+	-  The count goes down whenever a consumer calls task_done() to indicate that the item was retrieved and all work on it is complete.
+	-   **When the count of unfinished tasks drops to zero, join() unblocks.**
+
+> go up  上升  
+
+- q.task_done()
+	- Note:
+		- __Used by queue consumers__
+	- Indicate that a formerly enqueued task is complete
+
+```python
+# 生产者消费者模型1——单个生产者和单个消费者
+import time
+import os
+import random
+from multiprocessing import Process,JoinableQueue
+
+q = JoinableQueue(5)
+
+
+def producer(q):
+    for i in range(10):
+        time.sleep(2)
+        q.put('*')
+        print('produce a  *')
+    q.join()
+
+
+def customer(q):
+    while True:
+        buy = q.get()
+        time.sleep(random.randint(1, 3))
+        print('customer %s '%os.getpid(), buy)
+        q.task_done()
+
+
+if __name__ == '__main__':
+    p = Process(target=producer, args=(q, ))
+    c = Process(target=customer, args=(q, ))
+    c.daemon = True
+
+    p.start()
+    c.start()
+    p.join()
+
+    print('这是主进程')
+
+# 自行运行结果
+```
+
+- **When the count of unfinished tasks drops to zero, join() unblocks**
+
+
+```python
+# 多个生产者消费者并发
+import os
+import time
+import random
+from multiprocessing import JoinableQueue, Process
+
+
+def producer1(q):
+    for i in range(3):
+        time.sleep(random.randint(1, 2))
+        q.put('$$%s'%i)
+        print('%s produce $$%s' % (os.getpid(), i))
+    q.join()
+
+def producer2(q):
+    for i in range(3):
+        time.sleep(random.randint(1, 2))
+        q.put('@@%s'%i)
+        print('%s produce @@%s'%(os.getpid(), i))
+    q.join()
+
+def producer3(q):
+    for i in range(3):
+        time.sleep(random.randint(1, 2))
+        q.put('**%s'%i)
+        print('%s produce **%s' % (os.getpid(), i))
+    q.join()
+
+def customer(q):
+    while True:
+        time.sleep(2)
+        buy = q.get()
+        print('[%s] buy %s'%(os.getpid(), buy))
+        q.task_done()
+
+
+
+if __name__ == '__main__':
+    q = JoinableQueue(5)
+    p1 = Process(target=producer1, args=(q, ))
+    p2 = Process(target=producer2, args=(q, ))
+    p3 = Process(target=producer3, args=(q, ))
+
+    c1 = Process(target=customer, args=(q, ))
+    c2 = Process(target=customer, args=(q, ))
+    c1.daemon = True
+    c2.daemon = True
+
+    for i in [p1, p2, p3, c1, c2]:
+        i.start()
+
+    for i in [p1, p2, p3]:
+        i.join()
+
+    print('这是主进程')
+
+```
+
+
+> correspond       通信  
+> proxy           代替物   
+
+## Manager   object
+> 创造共享数据（字典，列表等），没有锁，各个进程对于数据是竞争使用关系
+> 两个进程同时对一个共享数据进行处理，得到的结果相当于处理一次，因为进程处理的时候获取的原数据是没变的
+> 可以为进程上锁来让进程之间串行，每一个进程运行时使用的都是基于上一次进程处理后的数据
+
+
+
+- multiprocessing.Manager()
+	- Note:
+		- __return a multiprocessing.manages.SyncManager object__ which can be uesed for shaing objects between process
+		- the returned object corresponds to a spawned child process and has methods which will create shared objects and return corresponding proxies
+
+> A manager returned by Manager() will support types list, dict, Namespace, Lock, RLock, Semaphore, BoundedSemaphore, Condition, Event, Barrier, Queue, Value and Array. 
+
+- m.list()     |     m.list(sequence)
+	- Create a shared list object and return a proxy for it.
+
+```python
+
+```
+
+
+
+- m.dict()    |     m.dict(mapping)     |     m.dict(sequence)     |    m.dict(key = value)
+	- Create a shared dict object and return a proxy for it.
+
+```python
+from multiprocessing import Process, Lock, Manager
+
+def work(dic):
+    dic['count'] -= 1
+
+
+if __name__ == '__main__':
+    m = Manager()
+    share_dic = m.dict({'count':100})
+    l = []
+    for i in range(100):
+        p = Process(target=work, args=(share_dic, ))
+        l.append(p)
+        p.start()
+    for i in l:
+         i.join()
+    print(share_dic)
+
+```
+
+上面一种没有给它上锁，可能会出现最后count对应的不是0的情况
+
+```python
+from multiprocessing import Process, Lock, Manager
+
+
+def task(mutex, dic):
+    with mutex:
+        dic['count'] -= 1
+
+if __name__ == '__main__':
+    mutex = Lock()
+    m = Manager()
+    share_dic = m.dict(count=100)
+    l = []
+    for i in range(100):
+        p = Process(target=task, args=(mutex, share_dic))
+        p.start()
+        l.append(p)
+    for j in l:
+        j.join()
+    print(share_dic)
+
+```
+
+
+- m.Value(typecode, value)
+	- Create an object with a writable value attribute and return a proxy for it.
+
+```python
+
+
+```
+
+
+- m.Queue([maxsize])
+	- Create a shared queue.Queue object and return a proxy for it.
+
+- m.Lock()
+	- Create a shared threading.Lock object and return a proxy for it.
+
+
+
+
+## Pool  进程池
+> 进程池的作用就是控制同时并发的进程数目
+> submitted         屈服， 服从   
+> parallel         同步的   
+> enable          使能做， 使可能  
+> unused        没使用的， 空闲的  
+> free             释放   
+
+- multiprocessing.Pool([processes[, initializer[, initargs[, maxtasksperchild[, context]]]]]) 
+- multiprocessing.pool.Pool([processes[, initializer[, initargs[, maxtasksperchild[, context]]]]])
+	- return a multiprocessing.pool.Pool object , which  controls a pool of worker processes to which jobs can be submitted.
+	- parameters
+		- __processes__:
+			- the number of worker processes to use
+			- If processes is None then the number returned by os.cpu_count()
+				- 即是计算机上的cpu数量
+		- __maxtasksperchild__ :
+			- the number of tasks a worker process can complete before it will exit and be replaced with a fresh worker process
+			- The default maxtasksperchild is None, which means worker processes will live as long as the pool
+	- Note:the methods of the pool object should only be called by the process which created the pool.
+		- Pool 对象的方法只能在创建pool的进程中调用
+
+
+```python
+# 简单的一个进程池
+import time
+import  os
+from multiprocessing import Pool
+
+
+def task():
+    print('%s worker process start do a task '%os.getpid())
+    time.sleep(2)
+    print('%s worker process has done a task'%os.getpid())
+
+
+
+if __name__ == '__main__':
+    p = Pool(2)
+    for i in range(10):
+        p.apply_async(func=task)
+    p.close()
+    p.join()
+    print('主进程')
+```
+
+
+> duration     持续时间   
+
+- **worker process **
+	- Worker processes within a Pool  live for the complete duration of the Pool’s work queue
+		- 进程池中进行工作的进程，数量由processes指定，当其中一个id对应的进程完成一个队列中的任务之后，会以相同的id(即不会被回收释放)处理下一个任务
+
+
+- apply(func,[ args,[ kwargs]])
+	- **It blocks until the result is ready**
+		- func is only executed in one of the workers (worker processes) of the pool
+	- parameters
+		- func is the name of the function
+		- args is a tuple of the arguments
+		- kwds is the dict of the arguments  
+	- Call func with arguments args and keyword arguments kwds
+	- apply()      =      apply_async().get()
+		-  apply_async() is better suited for work in parallel
+
+
+```python
+# apply()串行
+import time
+import  os
+from multiprocessing import Pool
+
+
+def task():
+    print('%s worker process start do a task '%os.getpid())
+    time.sleep(2)
+    print('%s worker process has done a task'%os.getpid())
+
+
+
+if __name__ == '__main__':
+    p = Pool(2)
+    for i in range(10):
+        p.apply(func=task)
+    print('主进程')
+-------------------------------------------------------------------------------------
+2472 worker process start do a task 
+2472 worker process has done a task
+4640 worker process start do a task 
+4640 worker process has done a task
+2472 worker process start do a task 
+2472 worker process has done a task
+4640 worker process start do a task 
+4640 worker process has done a task
+2472 worker process start do a task 
+2472 worker process has done a task
+4640 worker process start do a task 
+4640 worker process has done a task
+2472 worker process start do a task 
+2472 worker process has done a task
+4640 worker process start do a task 
+4640 worker process has done a task
+2472 worker process start do a task 
+2472 worker process has done a task
+4640 worker process start do a task 
+4640 worker process has done a task
+主进程
+```
+
+
+
+
+> apply()同步提交任务，主进程提交任务，等进程池中工作进程完成该任务之后，主进程才能提交下次任务
+> apply()将任务提交到进程池中的某一个工作进程，多个apply存在于主进程中的时候，使进程池中的进程串行运行
+> 进程池中工作进程的进程id是不变的
+> apply() 和 apply_async()提交的任务而不是进程
+> apply_async()异步提交任务， 主进程提交任务到进程池，不需要等待任务结果，返回值是一个applyresult  object，可以继续往进程池扔进程
+>  apply_async更灵活，可以多种形式的输出值，挡在进程过程中调用其返回值的get方法时候，就相当于apply，使用apply_async的时候，最好在最后再将值获取。
+
+
+- apply_async(func[, args[, kwds[, callback[, error_callback]]]])
+	- func , args, kwds is memtioned above
+	- callback（回调函数，参考进程与线程）
+		-  should be callable
+		-  When the result becomes ready callback is applied to it, that is unless the call failed, in which case the error_callback is applied instead.
+			-  当进程结果准备好的时候传递给callback指向的函数，如果传递失败，就发送给error_callback指向的函数
+	- error_callback
+		-   should be a callable
+		-   If the target function fails, then the error_callback is called with the exception instance
+	 - callback应该被立刻调用，除非控制运算结果的线程被阻塞了
+		 - Callbacks should complete immediately since otherwise the thread which handles the results will get blocked.
+
+- 回调函数
+	- callback指向的一个函数就是回调函数，在一段程序运行完得到一个结果之后，将这个结果当作中间数据传递给另外一个函数进行处理，从而得到最终结果。
+	- **回调函数存在于主进程或调用回调函数的父进程中**
+	- **回调函数的应用场景——爬虫**
+	- 什么时候使用回调函数
+		-  使用进程池处理任务的时候，对于比较耗费时间的任务，放在进程池中，进行并发多进程处理任务，对于耗费时间较少并且需要对上述耗时任务结果进行处理的任务就需要使用回调函数
+
+
+- 获取结果的两种方式
+
+```python
+# 1. 获取apply_result对象之后直接获取其结果, 此时进程之间是串行的
+from multiprocessing import Pool
+import time
+import os
+
+def task(n):
+    print('%s worker process start do a task '%os.getpid())
+    time.sleep(1)
+    print('%s worker process has done a task'%os.getpid())
+    return n**2
+
+if __name__ == '__main__':
+    p = Pool(2)
+    for i in range(1, 10):
+        obj = p.apply_async(task, args=(i, ))
+        print(obj.get())
+    p.close()
+    p.join()
+----------------------------------------------------------------------------------
+1348 worker process start do a task 
+1348 worker process has done a task
+1
+4876 worker process start do a task 
+4876 worker process has done a task
+4
+1348 worker process start do a task 
+1348 worker process has done a task
+9
+4876 worker process start do a task 
+4876 worker process has done a task
+16
+1348 worker process start do a task 
+1348 worker process has done a task
+25
+4876 worker process start do a task 
+4876 worker process has done a task
+36
+1348 worker process start do a task 
+1348 worker process has done a task
+49
+4876 worker process start do a task 
+4876 worker process has done a task
+64
+1348 worker process start do a task 
+1348 worker process has done a task
+81
+
+Process finished with exit code 0
+
+```
+
+
+
+```python
+# 2. 先获取apply_result对象，再最后一次性获取所有结果
+from multiprocessing import Pool
+import time
+import os
+
+def task(n):
+    print('%s worker process start do a task '%os.getpid())
+    time.sleep(1)
+    print('%s worker process has done a task'%os.getpid())
+    return n**2
+
+if __name__ == '__main__':
+    p = Pool(2)
+    apply_result = []
+    for i in range(1, 10):
+        obj = p.apply_async(task, args=(i, ))
+        apply_result.append(obj)
+    p.close()
+    p.join()
+    for obj in apply_result:
+        print(obj.get())
+--------------------------------------------------------------------------------
+1112 worker process start do a task 
+5776 worker process start do a task 
+1112 worker process has done a task
+1112 worker process start do a task 			# 注意每一个进程池中的工作进程的id
+5776 worker process has done a task
+5776 worker process start do a task 
+1112 worker process has done a task
+1112 worker process start do a task 
+5776 worker process has done a task
+5776 worker process start do a task 
+1112 worker process has done a task
+1112 worker process start do a task 
+5776 worker process has done a task
+5776 worker process start do a task 
+1112 worker process has done a task
+1112 worker process start do a task 
+5776 worker process has done a task
+1112 worker process has done a task
+1
+4
+9
+16
+25
+36
+49
+64
+81
+
+Process finished with exit code 0
+```
 
 
 
 
 
+> immediately     立马，立刻
+> prevent            阻止
+> submitted       屈服     
+> garbage          垃圾  
+
+- close()
+	- Prevents any more tasks from being submitted to the pool
+	- Once all the tasks have been completed the worker processes will exit.
+	- Note:
+		- join() method must be called after it
+		- close()进制其他进程往进程池内额提交任务，而不是关闭进程池
+		- apply_async()返回的appply_result是一个appply_result对象，也有join()方法，但是在调用p.join()之前必须先使用p.close()防止其他程序仍向进程池中提交进程
+
+- terminate()
+	- Stops the worker processes immediately without completing outstanding work. 
+	- When the pool object is garbage collected terminate() will be called immediately
+		- 当Pool被垃圾回收的时候，terminate被立即自动调用，为了防止留下僵尸进程
+
+- join()
+	- Wait for the worker processes to exit
+		- 阻塞主进程直到进程池中的进程全部完成队列中的任务.
+	-  **must call close() or terminate() before using join().**
+
+
+- **Note**
+	- apply_async()异步提交，主进程一旦执行完，进程池内的进程就得全部结束，所以要join()，如果主进程是一个死循环，就没有必要使用join()
+	
+> 异步提交：将主进程将任务提交到进程池的时候，不会去等待任务的结果，返回一个apply_result对象用来最后调取结果，主进程会继续往进程池中提交进程，进程池满了的时候就会等待进程池任务完成再提交
+
+
+```python
+
+# 对于apply()，它是同步提交的
+from multiprocessing import Pool
+import time
+import os
+
+def task(n):
+    print('%s worker process start do a task '%os.getpid())
+    time.sleep(1)
+    print('%s worker process has done a task'%os.getpid())
+    return n**2
+
+if __name__ == '__main__':
+    p = Pool(2)
+    for i in range(10):
+        # p.apply_async(task, args=(i, ))
+        p.apply(task, args=(i, ))
+    print('主进程')
+--------------------------------
+1492 worker process start do a task 
+1492 worker process has done a task
+9032 worker process start do a task 
+9032 worker process has done a task
+1492 worker process start do a task 
+1492 worker process has done a task
+9032 worker process start do a task 
+9032 worker process has done a task
+1492 worker process start do a task 
+1492 worker process has done a task
+9032 worker process start do a task 
+9032 worker process has done a task
+1492 worker process start do a task 
+1492 worker process has done a task
+9032 worker process start do a task 
+9032 worker process has done a task
+1492 worker process start do a task 
+1492 worker process has done a task
+9032 worker process start do a task 
+9032 worker process has done a task
+主进程
+```
+
+
+
+```python
+# apply_async()
+# 异步提交，主进程一旦执行完，进程池内的进程就得结束
+from multiprocessing import Pool
+import time
+import os
+
+def task(n):
+    print('%s worker process start do a task '%os.getpid())
+    time.sleep(1)
+    print('%s worker process has done a task'%os.getpid())
+    return n**2
+
+if __name__ == '__main__':
+    p = Pool(2)
+    for i in range(10):
+        p.apply_async(task, args=(i, ))
+        # p.apply(task, args=(i, ))
+    print('主进程')
+
+-------------------------------------------------------------------
+主进程
+
+Process finished with exit code 0
+
+
+```
+
+## Pool methods待补充
+
+- map(func, iterable, [chunksize])
+- map_async(func, iterable[, chunksize[, callback[, error_callback]]])
+- imap(func, iterable[, chunksize])
+- imap_unordered(func, iterable[, chunksize])
+- starmap(func, iterable[, chunksize])
+- starmap_async(func, iterable[, chunksize[, callback[, error_back]]])
+
+   

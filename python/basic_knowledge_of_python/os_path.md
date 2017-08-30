@@ -1,3 +1,6 @@
+[点击查看我整理的os.path模块思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/os_path-2.png?raw=true)
+
+
 ## words
 convention		习惯    
 normal			正常的  

@@ -1,11 +1,8 @@
-> interpreter		解释器   
-> maintain			保持   
-> option			选择   
-> specify			指定   
-> interactively		交互的   
-
-
 ## introduce 
+
+> interpreter		解释器   
+> maintain			保持  
+
 - this module provides access to some variables used or maintained by the interpreter  and to functions that interact strongly with the interpreter.（就是这个模块提供了可以和python解释器进行交互的变量和函数）
 
 
@@ -84,6 +81,9 @@ arg ...: arguments passed to program in sys.argv[1:]
 ```
 
 
+> option			选择  
+> specify			指定  
+> interactively		交互的  
 
 
 - sys.exit()
@@ -93,7 +93,7 @@ arg ...: arguments passed to program in sys.argv[1:]
 ```python
 import sys
 try:
-    sys.exit('use eith the try statement is best')
+    sys.exit('use with the try statement is best')
 except  Exception:
     pass
 finally:
@@ -139,7 +139,33 @@ Process finished with exit code 1
 > prompt     提示符  
 
 - sys.stdout
-	- used for the output of print() and expression statements and for the prompts of input();
+	- used for the output of print() and expression statements and for the prompts of input()
+	- sys指向控制台，赋值为一个文件句柄的时候，就会指向该文件
+
+```python
+import sys
+
+wf = open('ziawang.txt', 'w', encoding='utf-8')
+msg1 = 'www.ziawang.com'
+__console__ = sys.stdout             # 先把最初sys.stdout赋值给__console__
+sys.stdout = wf			
+print('msg1:',msg1)
+
+msg2 = 'ziawang'
+sys.stdout = __console__		
+print(msg2)
+
+
+-------------------------------------------------------------------------
+# 输出结果
+#ziawang.txt
+#msg1: www.ziawang.com
+ziawang
+
+Process finished with exit code 0
+```
+
+
 - sys.stderr
 	- The interpreter’s own prompts and its error messages go to stderr.
 

@@ -34,6 +34,7 @@
 	- [序列化---shelve，超级实用的数据对象存取模块](basic_knowledge_of_python/shelve.md)
 	- [python其他容器类型collections](basic_knowledge_of_python/collections.md)
 	- [multiprocessing模块，创建大量的进程](basic_knowledge_of_python/multiprocessing.md)
+	- [threading模块，创造更快的线程](basic_knowledge_of_python/threading.md)
 	- [logging模块，最常用的日志记录工具](basic_knowledge_of_python/logging.md)
 	- [hashlib模块，各种主流加密算法](basic_knowledge_of_python/hashlib.md)
 	
