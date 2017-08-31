@@ -1,3 +1,4 @@
+# 进程与线程
 ## 操作系统的两大功能
 1. 为应用软件提供各种功能的抽象接口
 	- 隐藏了丑陋复杂的各种硬件接口，为应用程序提供了良好的接口
@@ -25,7 +26,7 @@
 	- 而程序就是一个文件中的一堆代码
 		- 这个程序每运行一次就会创建一个新的进程
 
-- 以下两种情况导致一个进程再逻辑上不能进行
+- 以下两种情况导致一个进程在逻辑上不能进行
 	1. 进程挂起(进程自身原因)
 		- 进程中存在IO阻塞，该进程占用的CPU就会让出给其他进程去执行，保证CPU一直在工作
 	2. 操作系统层面(与进程无关)
@@ -980,30 +981,9 @@ Process finished with exit code 0
 
 
 
-## 线程同步——信号量
-本质上就是多个锁，可以控制最大线程数
-
-
-
-
-
-## 线程同步——event事件
-event.wait()
-event.set()
-event.isSet()
-event.clear()
-应用场景
-MySQL中进程等待数据库开启，数据库开启e.set()，进程就可以连接上MySQL
-
-def conn_mysql():
-	pass
-
-def check_mysql():
-	pass
-
-
-## 定时器
-
+## multiprocessing.Process中
+apply_async()的callback使用时，multiprocessing会自动将apply_result对象调用get()得到的结果传递给callback
+与gevent中的不同，geven返回的是一个future对象
 
 
 
@@ -1012,15 +992,45 @@ def check_mysql():
 
 
 
-
-##进程池和线程池
-
-
-
-
+class.mro
+map()
+yield from
 ## windows   linux
 2.不同的是：在UNIX中，子进程的初始地址空间是父进程的一个副本，提示：子进程和父进程是可以有只读的共享内存区的。但是对于windows系统来说，从一开始父进程与子进程的地址空间就是不同的。
 global  n
 global n
 
 
+## concurrent future 实现进程池，线程池
+
+
+一个进程内的多个线程无法利用多核youshi
+
+回调函数在multiprocessing和concurrent中的区别
+
+
+并发编程尽量使用Queue，少用lock
+
+## 单线程实现并发（协程）
+一个线程内实现多个任务
+yield     保存函数的一种状态（把一个任务的结果传递给另一个任务）
+遇到I/O阻塞线程内任务之间的切换才有意义，把一个线程内的I/O降低到最低
+
+http://greenlet.readthedocs.io/en/latest/
+
+gevent模块（异步提交任务）
+monkey.patch_all()
+gevent.joinall(list)
+g.value——获取任务返回值
+
+http://www.gevent.org/intro.html#example
+http://www.maiziedu.com/course/747/
+
+## 并发编程注意
+1. 锁与队列的选择
+2. 生产者消费者模型
+3. 回调函数代表的编程思想
+
+
+## Stackless python
+http://www.stackless.com/stackless.htm

@@ -1,5 +1,11 @@
-## introduce 
 
+# sys模块
+
+[点击查看我整理的sys模块思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/sys-2.png?raw=true)
+
+
+## introduce
+ 
 > interpreter		解释器   
 > maintain			保持  
 
@@ -86,7 +92,7 @@ arg ...: arguments passed to program in sys.argv[1:]
 > interactively		交互的  
 
 
-- sys.exit()
+- sys.exit(msg)
 	- Exit from Python. This is implemented by raising the SystemExit exception
 	- cleanup actions specified by finally clauses of try statements are honored
 
