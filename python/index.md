@@ -73,4 +73,4 @@
 # python codes
 > Talk is cheap. Show me the code.
 
-- [进程与线程](D:\files\Hello\python\show_me_your_code\process_thread_coroutine.md)
+- [进程与线程](show_me_your_code/process_thread_coroutine.md)
