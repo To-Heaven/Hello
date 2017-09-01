@@ -12,7 +12,7 @@
 	2. 每个任务被执行地状态要保存起来
 
 
-- CPU中线程（任务）的三种状态
+- 线程（任务）的三种状态
 	1. 运行
 		- 顾名思义，就是该任务正在被CPU执行地状态
 	2. 阻塞
@@ -105,7 +105,7 @@ print('total time: %s'%(end-start))
 ```
 
 - greenlet模块
-- [点击查看greenlet模块内容]((http://www.ziawang.com/python/basic_knowledge_of_python/coroutine.html))
+- [点击查看greenlet模块内容](http://www.ziawang.com/python/basic_knowledge_of_python/coroutine.html)
 - 简单来说，greenlet模块简化了上述yield实现多个任务的切换，因为使用yield 的时候。生成器函数每一都要先激活，然后才能利用send去想yield传递值，当线程中的任务非常多的时候，显然不能这样做。
 - **但是，greenlet模块仍然和yield一样存在缺点——无法检测和处理任务中的I/O阻塞**
 
@@ -129,17 +129,6 @@ print('total time: %s'%(end-start))
 > 在协程中，如何检测并处理I/O阻塞呢？
 
 
-
-gevent
-用户软件级别的来回切换，操作系统感知不到，效率更高，因为操作系统管理的线程多
-
-dummyThread
-一个线程下多个任务来回切换的时候，每一个任务都对应一个dummyThread
-
-知识将进程和线程控制在操作系统能够接受的范围内，如果客户端非常多，远大于进程池数目，还是不能解决存在IO的进程和线程
-
-tcp挥手照收 	
-socket
 
 
 ## IO模型
