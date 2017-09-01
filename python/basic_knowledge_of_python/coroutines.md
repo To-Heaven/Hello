@@ -105,7 +105,7 @@ print('total time: %s'%(end-start))
 ```
 
 - greenlet模块
-- [点击查看greenlet模块内容](http://www.ziawang.com/python/basic_knowledge_of_python/coroutine.html)
+- [点击查看greenlet模块内容](http://www.ziawang.com/python/basic_knowledge_of_python/coroutines.html)
 - 简单来说，greenlet模块简化了上述yield实现多个任务的切换，因为使用yield 的时候。生成器函数每一都要先激活，然后才能利用send去想yield传递值，当线程中的任务非常多的时候，显然不能这样做。
 - **但是，greenlet模块仍然和yield一样存在缺点——无法检测和处理任务中的I/O阻塞**
 
