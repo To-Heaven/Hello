@@ -33,7 +33,7 @@
 	- [协程，单线程内实现并发](basic_knowledge_of_python/coroutines.md)
 	- [greenlet，设计轻量级的任务](basic_knowledge_of_python/greenlet.md)
 	- [gevent模块实现协程]()
-	- [并发编程中进程、线程、协程各自特点及选择]()
+	- [并发编程中进程、线程、协程各自特点及选择]()cd dcd d
 
 - python standard library
 	- [os模块，操作系统常用变量和方法](basic_knowledge_of_python/os.md)
