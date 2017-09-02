@@ -26,6 +26,13 @@
 - 面向对象
 	- [面向对象](basic_knowledge_of_python/class_and_object.md)
 
+
+
+
+- 网络编程
+	- [使用socket建立简单的服务端和客户端]()
+
+
 - 并发编程
 	- [进程与线程原理](basic_knowledge_of_python/processes_and_threads.md)
 	- [multiprocessing实现多进程](basic_knowledge_of_python/multiprocessing.md)
@@ -35,6 +42,7 @@
 	- [gevent模块实现协程]()
 	- [并发编程中进程、线程、协程各自特点及选择]()
 
+
 - python standard library
 	- [os模块，操作系统常用变量和方法](basic_knowledge_of_python/os.md)
 	- [os.path模块，常用文件路径处理](basic_knowledge_of_python/os_path.md)
@@ -43,11 +51,17 @@
 	- [sys模块，与python解释器进行交互](basic_knowledge_of_python/sys.md)
 	- [序列化---json，跨越语言障碍的数据类型](basic_knowledge_of_python/json.md)
 	- [序列化---shelve，超级实用的数据对象存取模块](basic_knowledge_of_python/shelve.md)
+	- [序列化---pickle，python对象的序列化！！]((basic_knowledge_of_python/pickle.md)
 	- [python其他容器类型collections](basic_knowledge_of_python/collections.md)
 	- [logging模块，最常用的日志记录工具](basic_knowledge_of_python/logging.md)
 	- [hashlib模块，各种主流加密算法](basic_knowledge_of_python/hashlib.md)
 	- [requests模块，爬虫首选]()
-	- [greenlet模块，实现同一线程下多任务之间的切换]()
+	- [greenlet模块，实现同一线程下多任务之间的切换](basic_knowledge_of_python/greenlet.md)
+	- [socket模块，低级的网络接口]((basic_knowledge_of_python/socket.md)
+	- [selectors模块，高级I/O多路复用]()
+	- [timeit模块，测试程序运行效率的计时器](basic_knowledge_of_python/timeit.md)
+	- [pprint，让输出更友好](basic_knowledge_of_python/pprint.md)
+	- 
 	
                                                                                                                                      
 # python进阶
