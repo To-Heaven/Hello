@@ -56,3 +56,41 @@ def client(ip, port):
 
 client('127.0.0.1', 8080)
 ```
+
+
+### Bugs——生产者消费者模型
+> [解决不了看这里](https://stackoverflow.com/questions/43155553/python-3-5-multiprocessing-pool-and-queue-dont-work)
+
+```python
+import multiprocessing
+import time
+
+class Test:
+    def __init__(self):
+        self.pool = multiprocessing.Pool(1)
+        #self.queue = multiprocessing.Queue()
+
+    def subprocess(self):
+        for i in range(10):
+            print("Running")
+            time.sleep(1)
+        print("Subprocess Completed")
+
+    def start(self):
+        self.pool.apply_async(func=self.subprocess)
+        print("Subprocess has been started")
+        self.pool.close()
+        self.pool.join()
+
+    def __getstate__(self):
+        self_dict = self.__dict__.copy()
+        del self_dict['pool']
+        return self_dict
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+
+if __name__ == '__main__':
+    test = Test()
+    test.start()
+```
