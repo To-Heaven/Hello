@@ -1,4 +1,4 @@
-![](picture/python.jpg)
+![python](https://github.com/ZiaWang/Hello/blob/master/picture/python.jpg?raw=true)
 
 # python 基础
 > 得之在俄顷，积之在平日。——袁守侗
@@ -7,6 +7,7 @@
 	- [计算机硬件](basic_knowledge_of_python/hardware.md)
 	- 计算机操作系统
 	- [网络通讯原理](basic_knowledge_of_python/network_protocol.md)
+	- [HTTP协议](basic_knowledge_of_python/HTTP_protocol.md)
 
 - 数据类型
 	- [字符串](basic_knowledge_of_python/string.md)
@@ -42,6 +43,10 @@
 	- [gevent模块实现协程]()
 	- [并发编程中进程、线程、协程各自特点及选择]()
 
+- 爬虫
+	- [requests模块入门](basic_knowledge_of_python/tutorial_requests.md)
+	- [requests模块进阶](basic_knowledge_of_python/advanced_requests.md)
+
 
 - python standard library
 	- [os模块，操作系统常用变量和方法](basic_knowledge_of_python/os.md)
@@ -61,7 +66,6 @@
 	- [selectors模块，高级I/O多路复用]()
 	- [timeit模块，测试程序运行效率的计时器](basic_knowledge_of_python/timeit.md)
 	- [pprint，让输出更友好](basic_knowledge_of_python/pprint.md)
-	- 
 	
                                                                                                                                      
 # python进阶
