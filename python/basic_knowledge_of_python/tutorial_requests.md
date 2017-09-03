@@ -215,7 +215,7 @@ requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://www.z
 ```
 
 
-## Errors while Connected failed
+## Errors while Connectting failed
 
 ```python
 >>> r = requests.get('http://www.xvideos.com')
