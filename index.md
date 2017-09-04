@@ -2,7 +2,7 @@
 
 # Get Knowledge
 - [Python教程 ](python/index.md) 
-
+- [关系型数据库教程](relational_database/index.md)
 
 
 # Site Navigation

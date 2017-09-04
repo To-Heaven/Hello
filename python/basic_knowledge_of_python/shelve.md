@@ -8,7 +8,7 @@
 > ordinary		普通的  
 
 - shelf is a persistent, dictinoary-like object. 
-	- the **values **(不是keys) in a shelf can be essentially arbitary python objects.  includes most class instances, recursive data types. and objects containing lots of shared sub-objects. 
+	- the  **values ** (不是keys) in a shelf can be essentially arbitary python objects.  includes most class instances, recursive data types. and objects containing lots of shared sub-objects. 
 	- the **keys** are ordinary strings
 
 # shelve.Method
@@ -20,7 +20,7 @@
 > entry 		记录  
 > access		使用  
 
-- shelve.open(filename, )  open a persistent dictionary 
+- shelve.open(filename,flag='c', protocol=None, writeback=False )  open a persistent dictionary 
 	- the filename specified is the base filename for the underly database.
 	- flag is the mode while open the file :
 		- '  r  '  open existing database for reading only
@@ -51,7 +51,7 @@ with shelve.open('shelve_file', 'c') as sf:
 ```
 
 - shelve.sync()
-	- write back all entries in the cache if the shelf was opened with the argument ** writeback = True **, also empty the cache and syncchronize the persistent dictionary on disk.
+	- write back all entries in the cache if the shelf was opened with the argument  ** writeback = True ** , also empty the cache and syncchronize the persistent dictionary on disk.
 		- 使用该方法时，内存中的所有记录会被写入磁盘中的文件，并且清空缓存
 	- called automatically when the shelf is closed by the shelve.close()
 
