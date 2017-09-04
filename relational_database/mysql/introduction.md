@@ -52,7 +52,7 @@
 
 ## 创建用户名和密码
 - 使用下面命令创建root用户密码（刚安装的MySQL，root用户是没有密码的）
-```mysql
+```sql
 mysqladmin -u root password 密码
 ```
 
@@ -60,7 +60,7 @@ mysqladmin -u root password 密码
 	- 需要登录到客户端的root用户在mysql中创建
 	- 命令如下
 
-```mysql
+```sql
 create user 'ziawang' @ 'localhost' identified by 'password'
 ```
 
@@ -97,7 +97,7 @@ create user 'ziawang' @ 'localhost' identified by 'password'
 	3. 由于datadir即数据库路径变化了，因此需要对数据库进行初始化 `mysqld --initialize-insecure`
 		- 这样初始化之后，原先的密码就不存在了，这样就可以重新创建密码了
 
-```
+```ini
 [mysqld]
 skip-grant-tables
 # mysql安装目录
