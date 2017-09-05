@@ -34,6 +34,67 @@ mysql> create table t1(
 Query OK, 0 rows affected (0.55 sec)
 ```
 
+- 默认情况下，创建好的表是保存在当前使用的数据库下的，使用下面的方法可以将创建好的表保存到指定的任意数据库中（权限足够的情况下）
+	- `create table db_name.tb_name(...)`
+	
+```sql
+mysql> show tables;
++---------------------------+
+| Tables_in_mysql           |
++---------------------------+
+| class                     |
+| columns_priv              |
+| course                    |
+| db                        |
+| engine_cost               |
+| event                     |
+| func                      |
+| general_log               |
+| gtid_executed             |
+| help_category             |
+| help_keyword              |
+| help_relation             |
+| help_topic                |
+| innodb_index_stats        |
+| innodb_table_stats        |
+| ndb_binlog_index          |
+| plugin                    |
+| proc                      |
+| procs_priv                |
+| proxies_priv              |
+| server_cost               |
+| servers                   |
+| slave_master_info         |
+| slave_relay_log_info      |
+| slave_worker_info         |
+| slow_log                  |
+| student                   |
+| tables_priv               |
+| teacher                   |
+| time_zone                 |
+| time_zone_leap_second     |
+| time_zone_name            |
+| time_zone_transition      |
+| time_zone_transition_type |
+| user                      |
++---------------------------+
+35 rows in set (0.00 sec)
+mysql> create table db1.student like student;
+Query OK, 0 rows affected (0.32 sec)
+
+mysql> create table db1.teacher like teacher;
+Query OK, 0 rows affected (0.36 sec)
+
+mysql> create table db1.class like class;
+Query OK, 0 rows affected (0.45 sec)
+
+mysql> create table db1.course like course;
+Query OK, 0 rows affected (0.47 sec)
+
+
+```
+
+
 
 - 查看表信息
 	- `show tables`
@@ -176,6 +237,35 @@ mysql>
 
 
 ## 表字段操作
+- 修改表的编码格式
+
+```python
+mysql> show create table student\G;
+*************************** 1. row ***************************
+       Table: student
+Create Table: CREATE TABLE `student` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` char(20) DEFAULT NULL,
+  `sex` char(6) DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
+  `course` char(10) DEFAULT NULL,
+  `class` char(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+1 row in set (0.00 sec)
+
+ERROR:
+No query specified
+
+mysql> alter table student
+    -> charset utf8;
+Query OK, 0 rows affected (0.07 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql>
+
+```
+
 - 修改存储引擎
 
 ```sql
@@ -265,6 +355,8 @@ mysql>
 ## 复制表
 - 方法1
 	- `create table 新表名  like 目标表名`
+		- 这种方法只会拷贝表的结构
+		- 这种方法会把主键拷贝
 
 ```sql
 
@@ -279,4 +371,4 @@ mysql>
 ```
 
 - 如果指向拷贝目标表的结构
-	- `create table 新表明 as select * from 目标表名 where 2=3`
+	- `create table 新表名 as select * from 目标表名 where 2=3`

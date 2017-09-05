@@ -1,3 +1,5 @@
+
+# 数据库介绍
 ## 为什么要使用数据库
 
 - 文件
@@ -65,6 +67,14 @@ create user 'ziawang' @ 'localhost' identified by 'password'
 ```
 
 
+## 修改用户密码（已知现在密码）
+1. `mysqladmin -u user -p password  new_password`
+	- 输入之后，会提示输入原密码，原密码输入正确之后密码旧变成了new_password
+
+2. `update mysql.user set authentication_string=password('密码') where user='root' and host='localhost'`
+	- 记得 `flush privileges` 
+
+3. `set password for root=password('new_password')`
 
 ## 验证登陆
 - 刚创建的MySQL数据库，用户在进行使用的时候是没有设置密码的，因此只需要在客户端终端这样
@@ -107,7 +117,7 @@ datadir=D:\data
 # 端口，默认为3306
 port=3306
 # 编码，注意utf8不是utf-8，如果是
-character-set-server=utf8
+character_set_server=utf8
 host=localhost
 ```
 
@@ -226,6 +236,10 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 mysql>
 ```
 
+## 删除用户
+- `drop user username@'user_host'`
+
+
 ## MySQL用户权限管理
 - 语法格式如下
 
@@ -269,6 +283,11 @@ mysql> grant
 information_schema
 t_1
 ```
+
+## 撤销用户权限
+- `revoke privilege on db_name.tb_name from username@'user_host';`
+ 
+
 
 
 ## root用户初始化的库

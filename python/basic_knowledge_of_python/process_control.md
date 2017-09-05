@@ -1,3 +1,7 @@
+# 流程控制
+
+[点击查看我整理的流程控制思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/process_control.png?raw=true)
+
 ## if条件控制
 - 一个if语句的完整格式
 	- 条件语句可以是一个逻辑判断，也可以更简单的数据如用非空列表表示True，用0表示Flase

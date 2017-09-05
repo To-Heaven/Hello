@@ -1,4 +1,9 @@
-# The Process Class
+
+# multiprocessing 模块
+
+[点击查看我整理的multiprocessing模块思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/multiprocessing-2.png?raw=true)
+
+## The Process Class
 > spawned  大量生产的  
 > processes are spawned by creating a Process object and then calling its start() method.  
 
@@ -12,7 +17,7 @@
 
 ## Process object
 - multiprocessing.Process(group=None, target=None, name=None, args=(), kwargs={}, \*, daemon=None)
-	- ***constructor should always be called with keyword arguments*
+	- **constructor should always be called with keyword arguments**
 	- groups:
 		- should always be None
 	- target:
@@ -167,7 +172,7 @@ Process finished with exit code 0
 
 - start()
 	- start the process's activity
-	- must be called at most once per process objec
+	- must be called at most once per process object
 	-  It arranges for the object’s run() method to be invoked in a separate process.
 		-  start作用只是发起开启进程的请求，何时进程开始运行是由操作系统调度的，特别的，当有多个进程一起start发起请求的时候，进程开启的顺序并不是按照start的先后顺序来安排的
 		-  一个进程start之后，先该进程创建以一个内存空间，将对应的数据加载到内存中之后，然后该进程的任务才能开始执行，这需要时间。
@@ -477,6 +482,31 @@ if __name__ == '__main__':
 		-  Note: timeout argument is ingure in this case
 		-  put an item on the queue if a free slot is immediately available, else raise the queue.Full exception (timeout is ignored in that case).
 
+
+
+```python
+from multiprocessing import Queue
+
+
+q = Queue(5)
+
+for i in range(10):
+    q.put(i, block=False)
+    print(i)
+```
+
+```python
+from multiprocessing import Queue
+
+
+q = Queue(5)
+
+for i in range(10):
+    q.put(i, block=False)
+    print(i)
+```
+
+
 - q.get(block=True, timeout=None)
 	- Remove and return an item from the queue
 	- block和time参数与put逻辑相同
@@ -696,16 +726,16 @@ if __name__ == '__main__':
 
 > A manager returned by Manager() will support types list, dict, Namespace, Lock, RLock, Semaphore, BoundedSemaphore, Condition, Event, Barrier, Queue, Value and Array. 
 
-- m.list()     |     m.list(sequence)
+- m.list()     ,     m.list(sequence)
 	- Create a shared list object and return a proxy for it.
 
 ```python
 
 ```
 
+> proxy     代理   
 
-
-- m.dict()    |     m.dict(mapping)     |     m.dict(sequence)     |    m.dict(key = value)
+- m.dict()   ,     m.dict(mapping)     ,     m.dict(sequence)     ,    m.dict(key = value)
 	- Create a shared dict object and return a proxy for it.
 
 ```python
@@ -774,7 +804,7 @@ if __name__ == '__main__':
 
 
 ## Pool  进程池
-> 进程池的作用就是控制同时并发的进程数目
+> 进程池的作用就是控制同时并发的进程数目   
 > submitted         屈服， 服从   
 > parallel         同步的   
 > enable          使能做， 使可能  
@@ -822,7 +852,7 @@ if __name__ == '__main__':
 
 > duration     持续时间   
 
-- **worker process **
+- ** worker process **
 	- Worker processes within a Pool  live for the complete duration of the Pool’s work queue
 		- 进程池中进行工作的进程，数量由processes指定，当其中一个id对应的进程完成一个队列中的任务之后，会以相同的id(即不会被回收释放)处理下一个任务
 
