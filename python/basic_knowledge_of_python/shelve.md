@@ -1,4 +1,7 @@
-# what is shelve
+# shelve模块
+[点击查看我整理的shelve模块思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/shelve.png?raw=true)
+
+## what is shelve
 
 > shelf		格、层  
 > persistent	持续的  
@@ -11,7 +14,7 @@
 	- the  **values ** (不是keys) in a shelf can be essentially arbitary python objects.  includes most class instances, recursive data types. and objects containing lots of shared sub-objects. 
 	- the **keys** are ordinary strings
 
-# shelve.Method
+## shelve.Method
 
 > vast                 大量的  
 > consume          消耗  
