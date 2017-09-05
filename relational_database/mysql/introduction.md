@@ -1,6 +1,5 @@
 ## 为什么要使用数据库
 
-
 - 文件
 	1. 在接触数据库之前，我们是把数据存放在文件中的，假设现在要把一张表中的所有信息存放在一个文件中，第一行存放字段，其他行存放字段对应的数据信息。当然，你可能有多个表，这些表之间有共同的关系联系着，比如相同的字段id等等，那么就可以创建一个文件夹，将这些有联系的文件存放在这个文件夹中。
 	2. 上述这种存放数据的方式完全可以达到我们想要的效果——我们可以在需要获取表中某字段对应数据的时候把文件内容读取到内存中，然后再通过一系列操作来获取想要的数据。
@@ -27,6 +26,7 @@
 
 - 数据库的优点
 	- 程序员只需要关心代码逻辑，不需要关心客户端服务端的构建和数据的安全（枷锁）
+	- 解决了从文件处理数据，加锁等问题
 
 
 ## 关系型数据库和非关系型数据库
@@ -52,7 +52,7 @@
 
 ## 创建用户名和密码
 - 使用下面命令创建root用户密码（刚安装的MySQL，root用户是没有密码的）
-```sql
+```mysql
 mysqladmin -u root password 密码
 ```
 
@@ -60,7 +60,7 @@ mysqladmin -u root password 密码
 	- 需要登录到客户端的root用户在mysql中创建
 	- 命令如下
 
-```sql
+```mysql
 create user 'ziawang' @ 'localhost' identified by 'password'
 ```
 
@@ -97,7 +97,7 @@ create user 'ziawang' @ 'localhost' identified by 'password'
 	3. 由于datadir即数据库路径变化了，因此需要对数据库进行初始化 `mysqld --initialize-insecure`
 		- 这样初始化之后，原先的密码就不存在了，这样就可以重新创建密码了
 
-```ini
+```
 [mysqld]
 skip-grant-tables
 # mysql安装目录
@@ -106,8 +106,8 @@ basedir=D:\mysql
 datadir=D:\data
 # 端口，默认为3306
 port=3306
-# 编码，注意utf8不是utf-8
-charset=utf8
+# 编码，注意utf8不是utf-8，如果是
+character-set-server=utf8
 host=localhost
 ```
 
@@ -182,9 +182,171 @@ memory  关掉服务端
 		- 回滚就是当事务中间某个任务失败的时候，其他已经完成的任务会退回到任务开始之前的状态
 
 
+## 创建新用户
+- root用户下才能创建其他用户
+- 创建一个只能在本地主机登陆的账户
+
+```sql
+mysql> select user();
++----------------+
+| user()         |
++----------------+
+| root@localhost |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> create user 'local_username'@'local' identified by 'password';
+Query OK, 0 rows affected (0.00 sec)
+```
+
+- 创建一个可以在任何客户端上登陆的用户名，不过登陆的时候需要提供目标服务端地址
+
+```sql
+mysql> create user 'username'@'%' identified by 'pass';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> quit
+Bye
+
+C:\WINDOWS\system32>mysql -p192.168.20.28 -u username -p
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 7
+Server version: 5.7.19 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2017, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql>
+```
+
+## MySQL用户权限管理
+- 语法格式如下
+
+```sql
+grant
+priv_type [(column_list)]
+      [, priv_type [(column_list)]] ...
+    ON [object_type] priv_level
+    TO user [auth_option] [, user [auth_option]] ...
+    [REQUIRE {NONE | tls_option [[AND] tls_option] ...}]
+    [WITH {GRANT OPTION | resource_option} ...]
+```
+
+- 权限的级别
+	- `*.*`  
+		- 针对所有库的授权
+		- 第一个`*`代表所有数据库，第二个`.`代表所有表，第三个`*`代表所有字段
+	- `db_name.*` 
+		- 针对某一数据库的授权
+		- 即指定数据库db_name下的所有表及所有表下的所有字段
+	- `db_name.table_name`
+		- 针对某一数据库下指定表的授权
+		- 即指定数据库下指定的表 
+	- `priv_type (column1， column2. . .) on priv_level `
+		- 对 priv-level上的指定字段进行授权
+
+- 举例为新用户 ziawang 分别赋予不同级别的权限 
+	- 为ziawang授权在db_1数据库下table_1表中字段id和name的查询操作，以及对name字段的修改操作 
+
+```sql
+mysql> grant
+    -> select(id, name), update(name)
+    -> on db_1.table_1 to ziawang@'localhost' identified by 'pass';
+```
+
+> 这里如果用户不存在，可以直接通过auth_option创建用户，并绑定密码
+
+- 注意，此时ziawang登陆客户端之后，能看到的数据库 只有两个，同理，表只有一个t_1
+
+```sql
+information_schema
+t_1
+```
+
+
+## root用户初始化的库
+- information_schema
+	- 虚拟库，不占用磁盘空间，存储的是数据库启动后的一些参数，如用户表信息、列信息、权限信息、字符信息
+- performance_schema
+	- 用于收集数据库服务器性能参数，记录处理查询请求时发生的各种事件、锁等现象
+-   mysql
+	-   授权库，主要存储系统用户的权限信息
+-    test
+	-    	MySQL数据库系统自动创建的测试数据库
+
+## 查看指定用户的权限信息
+- 授权表
+	- 存放给了所有用户的权限信息
+		- user
+		- db
+		- tables_priv
+		- columns_priv
+
+
+
+```sql
+待补充
+```
 
 
 
 
+## 配置文件
+- 常用的sections
+	- [mysqld]
+		- mysqld section下存放着服务端启动时的配置，常用的配置信息如下
+			- # skip-grant-tables
+				- 取消注释时，直接输入mysql就可以以root身份进入mysql，常用于密码的设置和破解
+			- character_set_server
+				- 5.7版本中对编码格式的设置与之前版本不同
+				- 旧版`default-character-set`  注意不是下划线，在新版中是下划线
+			- port=3306
+				- 端口号，可以修改
+			- basedir
+				- 客户端解压的目录
+			- datadir
+				- 数据库保存的路径，第一次安装初始化的时候，会在该路径下创建一个data文件夹，用于存放用户创建的数据库
+			- default-storage-engine
+				- 创建新表时将使用的默认存储引擎（常委InnoDB） 
+			- max_connections
+				- MySQL拂去其支持的最大的并发连接数 
+	- [client]
+		- 客户端命令的全局配置
+		- 当[mysql]section中部分设置没有配置的时候，启动客户端时会调用[client]中相关的配置信息
+		- 常用配置信息如下
+			- user
+				- 在输入`mysql`时，如果在[mysql]section中没有指定user，那么直接[client]section中的用户，前提是该用户已经被创建，并且配置信息中的密码是正确密码
+			- password
+				- 用于提供上述user的密码
+			- default-character-set
+				-  客户端的编码搁置
+			-  port
+	- [mysql]
+		- 登陆时调用的配置文件，是客户端的局部配置
+		- 配置信息同[client]section，相同的配置参数会覆盖[client]中对应的配置参数
+
+
+## MySQL终端操作
+- '\c'   
+	- \c 用于输入错SQL语句时使用，就会结束当前语句输入，直接开启新命令行
+	- 由SQL语句中的引号是成对出现的，因此遇到这种情况，要先补全引号再使用 \c
+
+```sql
+
+```sql
+mysql> create database charse
+    -> \c
+mysql> create database charset 'utf8
+    '> '\c
+mysql>
+```
+```
 
 
