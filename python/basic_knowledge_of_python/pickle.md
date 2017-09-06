@@ -1,14 +1,15 @@
 # pickle模块
 ## Difference with Json
- 1. serialization format
+> ecosystem    生态系统     
+> scope        范围    
+
+1. serialization format
 	 - json is a text serialization format 
 	 - pickle is a binary serialization format, that non-Python programs may not be able to reconstruct pickled Python objects.
 
 2. readable
 	- json is hunman-readable
 	- pickle is not human-readable
-
-> ecosystem    生态系统     
 
 3. scope of application
 	- json  is interoperable and widely used outside of the Python ecosystem

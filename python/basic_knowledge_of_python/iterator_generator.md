@@ -1,15 +1,13 @@
-## 可迭代对象
-- str、list、tuple、set、dict
-- 可迭代标志    对象有\_\_iter__方法
-	- 判断对象是否可迭代
-		- in  判断       '\_\_iter__'  in dir(object)
-		- from collections import Iterable  , isinstrance(object, Iterable)     
-	- 可迭代协议（可迭代对象成立的必要条件）
-		- 对象内部实现了\_\_iter__方法，将一个可迭代对象转换成迭代器
-			-  \_\_iter__(self, /)
-			    Implement iter(self).
-			- for 循环遍历一个可迭代对象，本质上是在迭代过程中，先通过\_\_iter__将iterable对象转换成iterator，然后再调用\_\_next__方法遍历
+[点击查看我整理的生成器与迭代器思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/iterator_generator.png?raw=true)
 
+# 迭代器与生成器
+## 可迭代对象
+>  str、list、tuple、set、dict
+
+
+- 判断对象是否可迭代
+	- in  判断       '\_\_iter__'  in dir(object)
+	- `from collections import Iterable  , isinstrance(object, Iterable)`
 
 ```python
 >>> l = [1,2,3,4,5,6]
@@ -24,36 +22,31 @@ True
 
 ```
 
+- 可迭代标志    对象有\_\_iter__方法     
+	- 可迭代协议（可迭代对象成立的必要条件）
+		- 对象内部实现了\_\_iter__方法，将一个可迭代对象转换成迭代器
+			-  \_\_iter__(self, /)
+			    Implement iter(self).
+			- for 循环遍历一个可迭代对象，本质上是在迭代过程中，先通过\_\_iter__将iterable对象转换成iterator，然后再调用\_\_next__方法遍历
 
-- 判断一个对象是否可迭代
-- isinstrance(l, Iterable)
 
-```python
-l = [1, 2, 3]
-l_iterator = iter(l)
-print(set(dir(l_iterator))  - set(dir(l)))
-from collections import Iterable
-print('l ==>' , isinstance(l, Iterable))
-print('l_Iterator ==''>', isinstance(l_iterator, Iterator))
------------------------------------------------------------------------
 
-{'__setstate__', '__length_hint__', '__next__'}
-l ==> True
-l_Iterator ==> True
-```
+
+
 
 ## 迭代器
 - 条件
 	- 必须有 \_\_iter__ 方法
 	- 必须有 \_\_next__方法
-- 判断对象是否是可迭代对象(Iterator)
+- 判断对象是否是迭代器(Iterator)
 	- **不能用is判断**
-	-  isinstrance(l, Iterator)
+	-  `from collections import Iterator`
+
 
 ```python
 >>> l = map(str, [1,2,3])
 >>> from collections import Iterator
->>> l is Iterator
+>>> l is Iterator         # 不能用is判断
 False
 >>> isinstance(l,Iterator )
 True
@@ -96,7 +89,7 @@ l = range(10)
 # print(next(l_iterator))
 ```
 
-> 不管是一个迭代器还是一个可迭代对象，都是可以用for 循环的。（因为白努力可迭代对象就是先把该对象转换成一个Iterator再进行遍历的）
+> 不管是一个迭代器还是一个可迭代对象，都是可以用for 循环的。（因为遍历可迭代对象就是先把该对象转换成一个Iterator再进行遍历的）
 
 ## 迭代器比可迭代对象多了什么方法？
 
@@ -104,9 +97,14 @@ l = range(10)
 l = [1, 2, 3]
 l_iterator = iter(l)
 print(set(dir(l_iterator))  - set(dir(l)))
+from collections import Iterable
+print('l ==>' , isinstance(l, Iterable))
+print('l_Iterator ==''>', isinstance(l_iterator, Iterator))
+-----------------------------------------------------------------------
 
--------------------------------------------------------------------------------
-{'__next__', '__length_hint__', '__setstate__'}
+{'__setstate__', '__length_hint__', '__next__'}
+l ==> True
+l_Iterator ==> True
 ```
 
 - \_\_next__()
@@ -141,12 +139,12 @@ print(l_iter.__next__())
 - 保存函数暂停与继续运行的状态
 
 - yield与生成器
-	- 生成器通过yield关键字来生产数据，如果一个函数内部出现了一个yield关键字，那么这个函数就变成了一个生成器函数。即使这个时候这个函数包含了return关键字，那么他仍然是一个生成器
-	- next()调用一次生成器，生成器会把传回下一个值
-- 发什么什么？
-	1. 生成器函数调用yield语句，生成器函数状态被冻结，所有变量值都被保存。
-	2. 下一条要执行的语句被记录下来，指导下一次的next（）调用来临
-	3. 一旦遇到了next()调用，生成器函数就被激活
+	- 生成器通过yield关键字来生产数据，如果一个函数内部出现了一个yield关键字，那么这个函数就变成了一个生成器函数。即使这个时候这个函数包含了return关键字，那么它仍然是一个生成器
+	- next()调用一次生成器，生成器会下一个返回值返回
+- 发生了什么？
+	1. 生成器函数执行到yield语句，生成器函数状态被冻结，所有变量值都被保存。
+	2. 下一条要执行的语句被记录下来，直到下一次的next（）调用来临
+	3. 一旦遇到了next()调用，生成器函数就被激活，运行至下一个yield语句再次被冻结
 
 - 当生成器函数调用了return语句或者next()完了所有yield语句，就会抛出StopIteration异常
 
@@ -167,11 +165,13 @@ print(l_iter.__next__())
 
 
 - 生成器实现的方式
-	- 生成器函数
-		- 带yield函数，生成器函数调用的时候不执行任何函数中的代码，只是返回一个生成器。调用next的时候才会得到生成器函数的yield返回值，遇到yield时停止，并返回yield的内容
-	- 生成器表达式
+	1.  生成器函数
+		- 带yield函数，调用生成器函数的时候不执行任何函数中的代码，而是返回一个生成器。调用next的时候才会得到生成器函数的yield返回值，遇到yield时停止，并返回yield的内容
+	2. 生成器表达式
+		- `geberator = (f(x) for x in sequence if cond(x) ) ` 
 
 - **生成器第一次触发只能用next()或send(None)**
+	- 不能是send()，不许指定None
 
 
 ```python
@@ -230,8 +230,10 @@ print(l)
 
 
 - send(value)
-	- 将value传递给上一个yield。
-	- send就是向生成器中传值的同时还执行next方法，一个要用send方法的生成器函数中至少有两个yield
+	- 将value传递给下一个yield。
+	- 向生成器传递值
+	- **执行一次next()，并返回yield的返回值**
+	- 一个要用send方法的生成器函数中至少有两个yield
 
 ```python
 def generator_send():
@@ -272,14 +274,15 @@ how old are you ? ziawang
 
 ## yield from 
 场景1
+
 ```python
 # 先看这种
 # def yield_from():
-#     for i in ['how old are you ? ', 'ziawang']:
+#     for i in ['how old are you ? ',   'ziawang']:
 #         yield i
 # 进阶版
 def yield_from():
-    yield from ['how old are you ?', 'ziawang']
+    yield from ['how old are you ?',   'ziawang']
 
 s = yield_from()
 print(next(s))
@@ -336,10 +339,7 @@ yield 22222
 
 ```
 
-## 生成器作用就是一个容器，可以将其与其他容器类型数据看成一类，但是取值要区别开来
 
-## 生成器表达式
-- geberator = (f(x) for x in sequence if cond(x) ) 
 
 
 ## 各种推导式（解析式）

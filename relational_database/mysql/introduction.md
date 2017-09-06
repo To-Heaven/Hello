@@ -1,5 +1,3 @@
-
-# 数据库介绍
 ## 为什么要使用数据库
 
 - 文件
@@ -67,20 +65,16 @@ create user 'ziawang' @ 'localhost' identified by 'password'
 ```
 
 
-## 修改用户密码（已知现在密码）
-1. `mysqladmin -u user -p password  new_password`
-	- 输入之后，会提示输入原密码，原密码输入正确之后密码旧变成了new_password
-
-2. `update mysql.user set authentication_string=password('密码') where user='root' and host='localhost'`
-	- 记得 `flush privileges` 
-
-3. `set password for root=password('new_password')`
 
 ## 验证登陆
 - 刚创建的MySQL数据库，用户在进行使用的时候是没有设置密码的，因此只需要在客户端终端这样
 	- `mysql -u root`
 - 对于一个存在了用户名和密码的数据库，就要这样访问(注意密码不需要加引号)
 	- `mysql -u username -p password`
+- 完整的登陆因该是这样
+	- `mysql -h host -u username -p `
+		- host: MySQL服务器正在运行的主机名称
+
 
 ## 忘记密码（破解密码）
 -  在socket套接字通信中，客户端登陆验证的密码是保存在服务端主机的文件中的。同样的，在MySQL中，客户端的验证信息也是以文件的方式保存的
@@ -117,7 +111,7 @@ datadir=D:\data
 # 端口，默认为3306
 port=3306
 # 编码，注意utf8不是utf-8，如果是
-character_set_server=utf8
+character-set-server=utf8
 host=localhost
 ```
 
@@ -236,10 +230,6 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 mysql>
 ```
 
-## 删除用户
-- `drop user username@'user_host'`
-
-
 ## MySQL用户权限管理
 - 语法格式如下
 
@@ -275,6 +265,34 @@ mysql> grant
     -> on db_1.table_1 to ziawang@'localhost' identified by 'pass';
 ```
 
+- 如果要把指定的数据库、表或字段的所有命令权限分配给用户，使用`all`来代替长长的语句
+```sql
+mysql> create user 
+mysql> ziawang@'localhost' 
+mysql> identified by 'pass';
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| db                 |
+| db1                |
+| db2                |
+| mysql              |
+| performance_schema |
+| sys                |
+| test               |
++--------------------+
+8 rows in set (0.00 sec)
+
+mysql> grant all 
+mysql> on db.* 
+mysql> to ziawang@'localhost';
+Query OK, 0 rows affected (0.29 sec)
+```
+
 > 这里如果用户不存在，可以直接通过auth_option创建用户，并绑定密码
 
 - 注意，此时ziawang登陆客户端之后，能看到的数据库 只有两个，同理，表只有一个t_1
@@ -283,11 +301,6 @@ mysql> grant
 information_schema
 t_1
 ```
-
-## 撤销用户权限
-- `revoke privilege on db_name.tb_name from username@'user_host';`
- 
-
 
 
 ## root用户初始化的库
@@ -307,13 +320,42 @@ t_1
 		- db
 		- tables_priv
 		- columns_priv
-
-
+	- `show grants for user@'host'` 
 
 ```sql
-待补充
+mysql> show grants for ziawang@'localhost';
++---------------------------------------------------------+
+| Grants for ziawang@localhost                            |
++---------------------------------------------------------+
+| GRANT USAGE ON *.* TO 'ziawang'@'localhost'             |
+| GRANT ALL PRIVILEGES ON `db`.* TO 'ziawang'@'localhost' |
++---------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+mysql>
 ```
 
+## 删除用户
+- `drop user username@'host'`
+
+```sql
+mysql> drop user ziawang@'localhost';
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> show grants for ziawang@'localhost';
+ERROR 1141 (42000): There is no such grant defined for user 'ziawang' on host 'localhost'
+mysql>
+```
+
+## 用户重命名
+- `rename user 旧名@'host' to  新名@'host'`
+
+```sql
+mysql> rename user ziawang@'localhost' to wangziahao@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql>
+```
 
 
 
@@ -353,6 +395,18 @@ t_1
 
 
 ## MySQL终端操作
+- 输入命令格式
+	- 一个查询不要全部在一行
+		- MySQL通过查找终止分号来确定命令的结尾
+
+```sql
+
+mysql> select name, age from t
+    -> where
+    -> id = 2;
+```
+
+
 - '\c'   
 	- \c 用于输入错SQL语句时使用，就会结束当前语句输入，直接开启新命令行
 	- 由SQL语句中的引号是成对出现的，因此遇到这种情况，要先补全引号再使用 \c
@@ -367,5 +421,7 @@ mysql> create database charset 'utf8
 mysql>
 ```
 ```
+
+
 
 

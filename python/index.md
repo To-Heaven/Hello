@@ -15,6 +15,8 @@
 	- [元组](basic_knowledge_of_python/tuple.md)
 	- [字典](basic_knowledge_of_python/dictionary.md)
 	- [集合](basic_knowledge_of_python/set.md)
+- 数据处理
+	- [字符编码](basic_knowledge_of_python/character_encoding.md)
 
 - 语法结构
 	- [流程控制](basic_knowledge_of_python/process_control.md)

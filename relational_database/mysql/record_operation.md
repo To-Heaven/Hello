@@ -107,10 +107,63 @@ insert into 表名(字段1, 字段2,字段3...)
 
 ```
 # 基本格式
-select (字段1,字段2,字段3) from 表名
-		where  条件;
+SELECT what_to_select
+FROM which_table
+WHERE conditions_to_satisfy;
+```
+
+- 查看整个表格
+	- `select * from tb_name`
+- 查看指定行
+	- `select * from tb_name where  <conditions>`
+		- conditions 可以使用  `or`, `and` 操作符
+		- 注意：__`and`优先级高于`or`__ 
+			- 应使用括号明确分组，便于逻辑
+```sql
+mysql> SELECT name, species, birth FROM pet
+    -> WHERE species = 'dog' OR species = 'cat';
+# 等价于
+mysql> SELECT name, species, birth FROM pet
+    -> WHERE species IN ('dog','cat);
+
+```	
+
+
+
+- 查看特定列
+	- `select field1, field2 from tb_name`
+		- `distinct`关键字可以去除重复
+
+```sql
+mysql> create table tb(
+    -> name char(10) );
+Query OK, 0 rows affected (0.95 sec)
+
+mysql> insert into tb values
+    -> ('ziawang'),
+    -> ('haha'),
+    -> ('xixi'),
+    -> ('ziawang'),
+    -> ('xixi');
+Query OK, 5 rows affected (0.05 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select distinct name from tb;
++---------+
+| name    |
++---------+
+| ziawang |
+| haha    |
+| xixi    |
++---------+
+3 rows in set (0.04 sec)
+
+mysql>
 
 ```
+
+- 查看
+
 
 
 
@@ -149,7 +202,6 @@ mysql> select * from t;
 mysql>
 
 ```
-
 
 
 
@@ -219,3 +271,28 @@ Empty set (0.00 sec)
 mysql>
 
 ```
+
+
+## 字段排序
+- 使用`order by  ` 子句 
+	- 默认为升序排序（从上往下对应值从小到大）
+	- `select name, birth from info order by birth `
+	- 方向排序，使用`desc`关键字 
+		- `select name, birth from info order by birth desc`
+	- 对多个列进行排序
+		- __`DESC`只对紧挨着它的字段有效果__
+	
+```sql
+
+
+``` 
+
+
+
+
+
+
+
+
+
+
