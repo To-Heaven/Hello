@@ -5,3 +5,5 @@
 - [数据库操作](mysql/database_operation.md)
 - [表操作](mysql/table_operation.md)
 - [记录操作](mysql/record_operation.md)
+- [数据类型](mysql/data_type.md)
+- [约束条件](mysql/bound_control.md)
