@@ -1,7 +1,8 @@
 # socket模块
-
+[点击查看我整理的socket模块导图](https://github.com/ZiaWang/Hello/blob/master/picture/socket-2.png?raw=true)
 [点击访问更高级的socket接口socketserver]()
-[点击访问网络通讯原理]()
+[点击访问网络协议](http://www.ziawang.com/python/basic_knowledge_of_python/network_protocol.html)
+[点击访问网络编程](http://www.ziawang.com/python/basic_knowledge_of_python/network_protocol.html)
 
 > Unix、BSD、Linux 之间的关系<br>
 > BSD(伯克利软件套件)是Unix操作系统的一个分支，而Linux则是一个类Unix的系统，并不是Unix系统的一个分支
@@ -20,7 +21,7 @@
 
 - used for judgement
 	- socket.has_ipv6
-		- True if IPv6supported on this platform
+		- True if IPv6 supported on this platform
 
 ## Module_level  Functions For Create Sockets
 - socket.socket(family=AF_INET, type=SOCK_STREAM, proto=0, fileno=None)
@@ -106,7 +107,7 @@ Process finished with exit code 0
 - socket.bind(adress)
 	- Bind the socket to address
 	- The socket must not already be bound
-	- **the format of adress depens on the adress family**
+	- **the format of adress depends on the adress family**
 		- AF_INET    (ip, port )
 
 - socket.close()
@@ -417,6 +418,7 @@ Process finished with exit code 0
 	- Send data to the socket
 	- return the number of the bytes sent
 	- **the socket should not be connected to a remote socket**
+		- UDP协议
 		- 这个方法的使用场景是已知目标接收端的address
 
 
