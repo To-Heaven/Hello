@@ -6,6 +6,7 @@
 - 学习之前
 	- [计算机硬件](basic_knowledge_of_python/hardware.md)
 	- 计算机操作系统
+	- [网络协议](basic_knowledge_of_python/internet_protocol.md)
 	- [网络通讯原理](basic_knowledge_of_python/network_protocol.md)
 	- [HTTP协议](basic_knowledge_of_python/HTTP_protocol.md)
 
