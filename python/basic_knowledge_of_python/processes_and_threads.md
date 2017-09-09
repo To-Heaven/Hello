@@ -1,4 +1,7 @@
 # 进程与线程
+[点击查看我整理的进程思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/process_introduction-2.png?raw=true)
+[点击查看我整理的线程思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/thread_introduction.png?raw=true)
+
 ## 操作系统的两大功能
 1. 为应用软件提供各种功能的抽象接口
 	- 隐藏了丑陋复杂的各种硬件接口，为应用程序提供了良好的接口
@@ -47,7 +50,7 @@
 	- 并发就是依靠多道技术来实现伪并行效果
 
 -  **实现并发的核心**
-	- 硬件每中断一个进行着的进程，操作系统都要把该进程运行中的所有状态记录下来
+	- 每中断一个进行着的进程，操作系统都要把该进程中断时的所有状态记录下来
 	- 操作系统有一个进程表，每一个进程占用的进程表项都会被记录进去
 		- 该表存放了进程状态的重要信息：程序计数器、堆栈指针、内存分配状况、所有打开文件的状态、帐号和调度信息，以及其他在进程由运行态转为就绪态或阻塞态时，必须保存的信息，从而保证该进程在再次启动时，就像从未被中断过一样。
 
@@ -84,7 +87,7 @@
 		- python3  a.py      a.py 不存在
 	- 严重错误退出:错误语法，非法指令
 	- 被其他进程杀死
-		- kill -9 
+		- `kill -9  进程id`
 
 - 僵尸进程
 	-  子进程结束后父进程会清理器内存，如果父进程在子进程结束之前就已经终止了，那么这个子进程就变成了一个僵尸进程
@@ -94,13 +97,18 @@
 - windows
 	- `tasklist`
 	- `tasklist  |  findstr python`    筛选含有python的进程
-		- findstr  也是一个单独的命令
-		- | 用于过滤，即使用findstr命令过滤tasklist的结果
+		- `findstr`  也是一个单独的命令
+		-` |` 用于过滤，即使用`findstr`命令过滤tasklist的结果
 		- __两个命令在内存中是两个互相独立的内存空间，使用管道可以让两个进程共享数据__，此处共享的数据就是tasklist的结果
-		- 这个命令可以简单看成，tasklist的结果放到管道 | 中，findstr再从管道中对数据进行处理
+		- 这个命令可以简单看成，`tasklist`的结果放到管道` |` 中，`findstr`再从管道中对数据进行处理
 	- 此处管道不会堵塞是因为管道两侧分别只有一个进程 
 	- 命令本质上就是一个脚本文件
 
+- Linux
+	- `ps aux | grep str`
+		- str为要查找的进程名
+	- 查找到进程名之后，使用`kill命令杀死当前进程`
+		-  `kill -9 id`
 
 
 ## 互斥锁
@@ -985,6 +993,14 @@ Process finished with exit code 0
 apply_async()的callback使用时，multiprocessing会自动将apply_result对象调用get()得到的结果传递给callback
 与gevent中的不同，geven返回的是一个future对象
 
+由用户程序发起accept请求，操作系统就会等待连接请求，如果操作系统接收到了连接信息，就会将信息由内核态拷贝到用户态，否则就会阻塞
+
+
+
+
+
+## socketserver模块
+
 
 
 ## 线程queue
@@ -995,6 +1011,7 @@ apply_async()的callback使用时，multiprocessing会自动将apply_result对�
 class.mro
 map()
 yield from
+
 ## windows   linux
 2.不同的是：在UNIX中，子进程的初始地址空间是父进程的一个副本，提示：子进程和父进程是可以有只读的共享内存区的。但是对于windows系统来说，从一开始父进程与子进程的地址空间就是不同的。
 global  n
