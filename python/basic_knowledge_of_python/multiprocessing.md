@@ -21,16 +21,16 @@
 	- groups:
 		- should always be None
 	- target:
-		-  target is the callable object to be invoked by the run() method
+		- target is the callable object to be invoked by the run() method
 	- name:
-		-   process’s name.The name is a string used for identification purposes only
+		- process’s name.The name is a string used for identification purposes only
 	- args
-		-   the argument tuple for the target invocation
+		- the argument tuple for the target invocation
 	- keargs
-		-    a dictionary of keyword arguments for the target invocatio
+		-  a dictionary of keyword arguments for the target invocatio
 	- daemon	
-		-     sets the process daemon flag to True or False.
-		-     if None (the default), this flag will be inherited from the creating process.
+		- sets the process daemon flag to True or False.
+		- if None (the default), this flag will be inherited from the creating process.
 	- **NOTE:**
 		- If a subclass overrides the constructor, it must make sure it invokes the base class constructor (Process.__init__()) before doing anything else to the process.
 		- args中只有一个元素的时候，该元素后面不要忘了加上一个逗号，丑陋但是有效
@@ -78,7 +78,7 @@ Process finished with exit code 0
 
 ```
 
-- 当子进程调用start()方法时候，会将子进程的内存加载到内存，并且将父类的内存空间中的内容copy到自己内存空间中，这样子进程就会产生一个IO阻塞，操作系统就会调用其他进程去使用CPU
+- 当子进程调用start()方法时候，会将子进程的内存加载到内存（，如果是Linux平台上，还会将父类的内存空间中的内容copy到自己内存空间中），这样子进程就会产生一个IO阻塞，操作系统就会调用其他进程去使用CPU
 
 2. 当将出主进程时间延长的时候，再看下面例子
 
@@ -174,7 +174,7 @@ Process finished with exit code 0
 	- start the process's activity
 	- must be called at most once per process object
 	-  It arranges for the object’s run() method to be invoked in a separate process.
-		-  start作用只是发起开启进程的请求，何时进程开始运行是由操作系统调度的，特别的，当有多个进程一起start发起请求的时候，进程开启的顺序并不是按照start的先后顺序来安排的
+		-  start作用只是发起开启进程的请求，何时进程开始运行是由操作系统调度的（当该进程的内存空间准备完毕的时候，就从阻塞态编程了就绪态，处于就绪态进程的任务可以被CPU处理，但是不一定会立即处理），特别的，当有多个进程一起start发起请求的时候，进程开启的顺序并不是按照start的先后顺序来安排的
 		-  一个进程start之后，先该进程创建以一个内存空间，将对应的数据加载到内存中之后，然后该进程的任务才能开始执行，这需要时间。
 			- 看下面例子，主进程不会等子进程加载完成后执行完再运行主进程自己的代码，而是会在子进程start方法执行完后，继续运行主进程中的其他代码，当主进程运行过程中子进程启动成功并可以执行
 
