@@ -64,3 +64,50 @@ if __name__ == '__main__':
     print('这是主程序')
 
 ```
+
+2. 
+
+```python
+from multiprocessing import Manager, Process
+
+
+class Producer:
+    def __init__(self, q):
+        self.q = q
+
+    def run(self):
+        self.produce()
+
+    def produce(self):
+        for i in range(10):
+            self.q.put(i)
+            print('produce %s ' % i)
+        self.q.join()
+
+
+class Customer:
+
+    def __init__(self, q):
+        self.q = q
+
+
+    def custom(self):
+        while True:
+            res = self.q.get()
+            print('custom %s' % res)
+            self.q.task_done()
+
+
+if __name__ == '__main__':
+
+    with Manager() as m:
+        q = m.JoinableQueue(3)
+        p = Producer(q)
+        c = Customer(q)
+        p_process = Process(target=p.produce)
+        c_process = Process(target=c.custom)
+        p_process.start()
+        c_process.start()
+        print('主进程')
+
+```

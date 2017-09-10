@@ -73,7 +73,118 @@
 		- 在Linux系统中，子进程继承自父进程，会完全拷贝父进程初始状态的内存空间，两者可以有一个只读的共享内存区
 		- 在Windows系统中，父进程和子进程的内存空间在一开始就是不同的
 		
- 
+```python
+from multiprocessing import Process
+
+def func():
+    print(a)
+
+
+if __name__ == '__main__':
+    a = 1
+    p = Process(target=func)
+    p.start()
+---------------------------------------------
+Process Process-1:
+Traceback (most recent call last):
+  File "D:\Python36\lib\multiprocessing\process.py", line 249, in _bootstrap
+    self.run()
+  File "D:\Python36\lib\multiprocessing\process.py", line 93, in run
+    self._target(*self._args, **self._kwargs)
+  File "D:\files\python\practice.py", line 10, in func
+    print(a)
+NameError: name 'a' is not defined
+``` 
+
+- 看下面两段代码
+
+```python
+from multiprocessing import Process, Lock
+
+d = {'count': 10}
+
+
+class StockProcess(Process):
+    filename = 'stock'
+
+    def __init__(self):
+        super().__init__()
+        self.mutex = Lock()
+
+    def run(self):
+        self.last_count()
+        self.mutex.acquire()
+        self.get_stock()
+        self.mutex.release()
+
+    def last_count(self):
+        print(d)
+        print('%s surplus of stock' % d['count'])
+        return d['count']
+
+    def get_stock(self):
+        if d['count'] > 0:
+            d['count'] -= 1
+            print('%s get stock successful' % self.pid)
+
+
+if __name__ == '__main__':
+
+    for i in range(50):
+        s = StockProcess()
+        s.start()
+-------------------------------------------------------
+# 下面这一段会报错
+from multiprocessing import Process, Lock, Manager
+
+
+class StockProcess(Process):
+    filename = 'stock'
+
+    def __init__(self):
+        super().__init__()
+        self.mutex = Lock()
+
+    def run(self):
+        self.last_count()
+        self.mutex.acquire()
+        self.get_stock()
+        self.mutex.release()
+
+    def last_count(self):
+        print(d)
+        print('%s surplus of stock' % d['count'])
+        return d['count']
+
+    def get_stock(self):
+        if d['count'] > 0:
+            d['count'] -= 1
+            print('%s get stock successful' % self.pid)
+
+
+if __name__ == '__main__':
+    with Manager() as m:
+        d = m.dict({'count': 10})
+        for i in range(50):
+            s = StockProcess()
+            s.start()
+
+-------------------------------------------------------
+
+
+
+```
+
+
+
+- 可以使用IPC来解决
+
+```python
+
+
+```
+
+
 > 注意：进程是一种抽象的过程
 
 - 要先向操作系统发起请求，然后再在内存中创建对应空间，然后子进程才能运行，这需要一段时间，CPU不会等这段时间
@@ -185,7 +296,7 @@ customer(l)
 ```
 
 
-- 并发多线程中的生产者消费者模型
+- 并发多进程中的生产者消费者模型
 	- 进程可以并行存在
 	- 生产者和消费者之间不存在阻塞，生产者只需要生产，消费者只需要从第三方共享空间中获取数据即可
 	- 由阻塞变成了非阻塞的模式
@@ -245,7 +356,7 @@ if __name__ == '__main__':
 
 
 ## 什么是线程
-> 进程将程序运行过程中需要用到的资源整合到了一起，是一个资源单位
+> 进程将程序运行过程中需要用到的资源整合到了一起，是一个资源单位<br>
 > **进程和线程都是一个程序运行的过程的抽象**
 
 - 线程是cpu上的执行单位，每一个进程可以有一个主线程和多个其他线程

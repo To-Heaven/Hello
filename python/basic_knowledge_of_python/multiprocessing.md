@@ -3,6 +3,9 @@
 
 [点击查看我整理的multiprocessing模块思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/multiprocessing-2.png?raw=true)
 
+> 与线程不同，进程本身没有任何共享状态，进程修改的数据，改动仅限于该进程内。
+
+
 ## The Process Class
 > spawned  大量生产的  
 > processes are spawned by creating a Process object and then calling its start() method.  
@@ -290,10 +293,80 @@ Process finished with exit code 0
 > corrupt         破坏
 > liable        有责任的  
 
+- 注意，join()方法只能阻塞由start方法开启的进程，不能够阻塞住由run方法开启的进程
+	- 因为只由run()方法开启的进程，没有分配到进程id，join()想要阻塞该进程先要通过进程id找到该进程，所以如果用run方法开启的该进程，就没法join
+
+```python
+from multiprocessing import  Process
+import time
+
+
+class Myprocess(Process):
+    def run(self):
+        print('%s run'%self.pid)
+        time.sleep(1)
+        print('%s end'%self.pid)
+
+
+
+if __name__ == '__main__':
+    p = Myprocess()
+    # p.start()
+    p.run()
+    p.join()
+    print('这是主进程')
+-----------------------------------------------------------------------------------
+None run
+None end
+Traceback (most recent call last):
+  File "D:/files/python/practice.py", line 144, in <module>
+    p.join()
+  File "D:\Python36\lib\multiprocessing\process.py", line 120, in join
+    assert self._popen is not None, 'can only join a started process'
+AssertionError: can only join a started process
+
+Process finished with exit code 1
+```
+
+- 还有一个现象，如果start开启某个进程之后，再用run再次执行一次进程任务，此时的run会得到进程号，并且该任务会被执行两次(两次run)
+
+```python
+from multiprocessing import  Process
+import time
+
+
+class Myprocess(Process):
+    def run(self):
+        print('%s run'%self.pid)
+        time.sleep(1)
+        print('%s end'%self.pid)
+
+
+
+if __name__ == '__main__':
+    p = Myprocess()
+    p.start()
+    p.run()
+    p.join()
+    print('这是主进程')
+---------------------------------------------------------------------
+7740 run
+7740 run
+7740 end
+7740 end
+这是主进程
+
+Process finished with exit code 0
+```
+
+
 - terminate()
 	- Terminate the process.
 	- On Unix this is done using the SIGTERM signal; on Windows TerminateProcess() is used
 	- **If this method is used when the associated process is using a pipe or queue then the pipe or queue  become corrupted and may become unusable by other process. Similarly, if the process has acquired a lock or semaphore etc. then terminating it is liable to cause other processes to deadlock.**
+		- 如果被终结的进程有子进程，那么该子进程就会成为僵尸进程
+		- 如果该进程任务使用着Queue队列或Pipe管道，终结该进程会导致队列或管道被破坏，其他进程就无法继续使用该队列或管道
+		- 如果该进程中使用了锁，终止该进程可能会导致该锁无法释放，出现死锁
 
 
 - is_alive()
@@ -302,10 +375,48 @@ Process finished with exit code 0
 		- 操作系统关闭该进程需要时间，如果调用此方法后立即调用is_alive()，可能会返回True
 
 
+```python
+import time
+from multiprocessing import  Process
+
+
+
+class Myprocess(Process):
+    def run(self):
+        print('%s run'%self.pid)
+        time.sleep(10)
+        print('%s end'%self.pid)
+
+
+if __name__ == '__main__':
+    p = Myprocess()
+    p.start()
+    p.terminate()
+    print(p.is_alive())
+    time.sleep(1)
+    print(p.is_alive())
+```
+
+
+
 ## process_obj.variables
 - pid
 	- Return the process ID. Before the process is spawned, this will be None.
 	- 使用起来比os.getpid()方便
+- name
+	- 进程的名称
+- daemon
+	- 默认False
+	- 设置为True则表示p为守护进程
+	- 守护进程必须在p.start()之前设置
+- p.exitcode
+	- 当进程运行时，该变量值为None
+	- 当该变量值为-N时，表示被信号N结束
+- p.authkey
+	- 进程的身份验证键
+	- 值为os.urandom()随机生成的32字符的字符串
+	- 用于为网络连接底层进程间通信提供安全，这类链接只有在相同身份验证键时才能成功
+
 
 
 
@@ -739,23 +850,25 @@ if __name__ == '__main__':
 	- Create a shared dict object and return a proxy for it.
 
 ```python
-from multiprocessing import Process, Lock, Manager
+from multiprocessing import Process,Manager,Lock
 
-def work(dic):
-    dic['count'] -= 1
+def task(d, mutex):
+    with mutex:
+        d['count'] -= 1
 
 
 if __name__ == '__main__':
-    m = Manager()
-    share_dic = m.dict({'count':100})
-    l = []
-    for i in range(100):
-        p = Process(target=work, args=(share_dic, ))
-        l.append(p)
-        p.start()
-    for i in l:
-         i.join()
-    print(share_dic)
+    mutex = Lock()
+    with Manager() as m:
+        d = m.dict(count=500)
+        p_l= []
+        for i in range(500):
+            p = Process(target=task, args=(d, mutex))
+            p_l.append(p)
+            p.start()
+        for p in p_l:
+            p.join()
+        print(d)
 
 ```
 
@@ -863,6 +976,7 @@ if __name__ == '__main__':
 	- parameters
 		- func is the name of the function
 		- args is a tuple of the arguments
+			- 注意：args传参的时候虽然不用keyword方式传参，但是传入的参数必须放在元组中
 		- kwds is the dict of the arguments  
 	- Call func with arguments args and keyword arguments kwds
 	- apply()      =      apply_async().get()
