@@ -4,21 +4,50 @@
 	1. 在TCP五层模型中，HTTP位于最上层的应用层，属于应用层的面向对象的协议
 		- 为什么说http是面向对象的协议呢?
 			-  首先要明确的是，这里的面向对象和程序设计里面的面向对象的概念是不一样的。
-			-  http协议所说的面向对象，是指HTTP协议是允许传输任意类型的数据都想，传输对象的数据类型是由content-Type来标记的
+			-  http协议所说的面向对象，是指HTTP协议是允许传输任意类型的数据对象，传输对象的数据类型是由content-Type来标记的
 	2. HTTP协议基于TCP/IP通信协议来传递数据，如HTML文件，图片，视频等
-		- 每一次客户都按发送的request请求都悬哦服务端返回一个response响应，并且在每一次请求结束之后都会主动释放链接
+		- 每一次客户端发送的request请求都会从服务端返回一个response响应，并且在每一次请求结束之后都会主动释放链接
 			-  在1.0版本的HTTP协议中，客户都按每一次request和服务端返回的response都会建立一个单独的链接，在本次链接任务完成之后，都会释放该链接
 			-  在1.1版本的HTTP协议中，服务端可以并行同时处理从客户端接收到多个request，不再像1.0版本中串行的方式，大大提高了传输效率
 	3. TCP协议是传输层的协议，他建立了端口到端口之间的通信
 		- 三次握手和四次挥手请看网络通讯原理介绍
 	4. socket套接字是TCP/IP协议进行网络通信的基本操作单元，本身不是协议，而是一个调用接口API 
 		- socket套接字中包含了网络通信必须的五种信息
-			1. 协议：udp、tcp等
-			2. 本地主机ip
-			3. 本地进程端口
-			4. 目标主机ip
-			5. 目标主机端口
+			1. 协议：udp、tcp等（传输层）
+			2. 本地主机ip（网络层）
+			3. 本地进程端口（传输层）
+			4. 目标主机ip（网络层）
+			5. 目标主机端口（传输层）
 		-  从编写程序的角度来看，socket套接字是对TCP/IP协议的封装和应用，通过socket套接字我们才能使用TCP/IP协议
+
+
+```html
+# 一个简单的http报头
+Date: Sun, 10 Sep 2017 08:49:16 GMT 
+Content-Type: text/html; charset=utf-8 
+Transfer-Encoding: chunked 
+Connection: keep-alive 
+Set-Cookie: __cfduid=d58e12f330997afce88fd460f40f8e1d21505033356; expires=Mon, 10-Sep-18 08:49:16 GMT; path=/; domain=.ziawang.com; HttpOnly 
+Last-Modified: Sun, 10 Sep 2017 02:17:08 GMT 
+Access-Control-Allow-Origin: * 
+Expires: Sun, 10 Sep 2017 08:12:59 GMT 
+Cache-Control: max-age=600 
+X-GitHub-Request-Id: 3B3C:7058:F5339D:164566A:59B4F1B2 
+Via: 1.1 varnish 
+Age: 164 
+X-Served-By: cache-hkg17929-HKG 
+X-Cache: HIT 
+X-Cache-Hits: 1 
+X-Timer: S1505033356.393947,VS0,VE1 
+Vary: Accept-Encoding 
+X-Fastly-Request-ID: 99885d489440fe08625745541a035dbcd481fc4b 
+Server: cloudflare-nginx 
+CF-RAY: 39c1220d4239882d-HKG 
+Content-Encoding: gzip 
+
+```
+
+
 
 > TCP/IP协议解决的是数据在网络中的传输，而HTTP解决的是如何包装数据
 
@@ -58,6 +87,9 @@
 - URL(uniform resource locator) 统一资源定位符， 互联网上的每一个文件都有一个唯一的URL地址
 - CRLF是换行符 
 
+
+- URL与URI
+	- mark待补充
 
 ## HTTP响应response
 - 响应结构
