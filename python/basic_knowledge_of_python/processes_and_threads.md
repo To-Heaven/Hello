@@ -8,7 +8,7 @@
 2. 将多个应用程序对硬件资源的竞态访问变得有序化
 	- 进程之间的管理和协调调度是由操作系统完成的
 
-> __进程的调度，分配给哪一个CPU运行（多核），是操作系统说了算__
+> **进程的调度，分配给哪一个CPU运行（多核），是操作系统说了算**
 
 ##  多道技术——针对单核，实现（伪）并发
 - 空间上的复用
@@ -74,26 +74,31 @@
 		- 在Windows系统中，父进程和子进程的内存空间在一开始就是不同的
 		
 ```python
+import os
 from multiprocessing import Process
 
 def func():
-    print(a)
+    print(a, '来自于 %s'%os.getpid())
 
 
 if __name__ == '__main__':
+    print('主进程%s开始'%os.getpid())
     a = 1
+    func()
     p = Process(target=func)
     p.start()
 ---------------------------------------------
+主进程9920开始
+1 来自于 9920				# 主进程内存空间中的变量a
 Process Process-1:
 Traceback (most recent call last):
   File "D:\Python36\lib\multiprocessing\process.py", line 249, in _bootstrap
     self.run()
   File "D:\Python36\lib\multiprocessing\process.py", line 93, in run
     self._target(*self._args, **self._kwargs)
-  File "D:\files\python\practice.py", line 10, in func
-    print(a)
-NameError: name 'a' is not defined
+  File "D:\files\python_practice\20180911-0917\0911\practice.py", line 10, in func
+    print(a, '来自于 %s'%os.getpid())
+NameError: name 'a' is not defined			# windows系统中，子进程不会copy父进程中的内存空间（变量a）
 ``` 
 
 - 看下面两段代码
@@ -448,6 +453,7 @@ if __name__ == '__main__':
 
 - 自定义类，但必须继承自Thread
 	- 这种方式开启线程不需要在  if __name__ == '__main__'下
+	- **但是对于进程来说，自定义的subprocess必须在 if __name__ == '__main__'下**
 
 ```python
 from threading import Thread
@@ -573,6 +579,9 @@ Process finished with exit code 0
 		- 主线程随着进程的创建而出现。所以一个进程中主线程存在就代表了这个进程的存在，当进程中的主线程结束的时候，操作系统就会将该进程回收
 	- 主线程等待其他线程的原因是主线程的存在保证了其他线程的稳定运行 
 	
+- **为什么会出现这种情况**
+	- **每一个进程都有属于自己的内存空间**，一个守护进程结束，主进程关闭该守护进程不会对其他进程中的数据产生影响（除非该守护进程与其他进程的任务都操作了同一个队列orPIPE等其他共享数据（文件））
+	- 而**对于守护线程，进程内的多个线程之间是共享数据的**，如果不等待进程中其他的线程结束就杀死守护线程，肯定会对进程中这些线程共享的数据产生影响，如果对进程中的资源使用了锁，可能会导致死锁
 
 ## GIL——Global Interpreter Lock
 - GIL
@@ -747,7 +756,7 @@ if __name__ == '__main__':
 
 
 
-## 并发多进程程，串行多线程
+## 并发多进程，串行多线程
 - Cpython的GIL特性导致多线程是虽然运行速度快，但是它仍然是伪并发，本质上是串行
 - 多进程是并发的
 
@@ -1016,21 +1025,15 @@ t1 acquire the lock  B
 # 卡在了这里
 ```
 
-- 递归锁（可重入锁）
-	- python中为了支持在同一个线程中多次请求统一资源，python提供了递归锁
-	- threading.RLock()
-		- 在一个RLock的内部存在着两个变量lock和count。当count的计数为0的时候，锁被释放，然后其他线程才能获得该锁
-		- count记录的是每一个递归锁的使用情况
-			- 每一次acquire，count计数都会增加1
-			- 每一次release，count计数都会减1
-		- 保证了一个资源可以被多次acquire，直到一个线程所有 的acquire都被release，其他线程才能获得递归锁，进而访问资源。
+- 如果让t1在f()中sleep(0.01)，程序就不会死锁了,因为破坏了'循环等待条件'
 
 ```python
-from threading import Thread,currentThread, RLock
+from threading import Thread, Lock,currentThread
 import time
 
 
-mutexA = mutexB = RLock()			# 链式赋值
+mutexA = Lock()
+mutexB = Lock()
 
 class MyThread(Thread):
     def run(self):
@@ -1045,7 +1048,8 @@ class MyThread(Thread):
         mutexB.release()
         print('%s release the lock  B' % currentThread().getName())
         mutexA.release()
-        print('%s release the lock  B' % currentThread().getName())
+        print('%s release the lock  A' % currentThread().getName())
+        time.sleep(0.01)
 
     def g(self):
         mutexB.acquire()
@@ -1065,32 +1069,114 @@ t3 = MyThread(name='t3')
 t1.start()
 t2.start()
 t3.start()
-
--------------------------------------------------------------------------------------------------
+--------------------------------------------------
 t1 acquire the lock  A
 t1 acquire the lock  B
 t1 release the lock  B
-t1 release the lock  B
+t1 release the lock  A
+t2 acquire the lock  A
+t2 acquire the lock  B
+t2 release the lock  B
+t2 release the lock  A
+t3 acquire the lock  A
+t3 acquire the lock  B
+t3 release the lock  B
+t3 release the lock  A
 t1 acquire the lock  B
 t1 acquire the lock  A
 t1 release the lock  A
 t1 release the lock  B
-t2 acquire the lock  A
-t2 acquire the lock  B
-t2 release the lock  B
-t2 release the lock  B
-t3 acquire the lock  A
-t3 acquire the lock  B
-t3 release the lock  B
-t3 release the lock  B
 t2 acquire the lock  B
 t2 acquire the lock  A
 t2 release the lock  A
-t2 release the lock  B
 t3 acquire the lock  B
+t2 release the lock  B
 t3 acquire the lock  A
 t3 release the lock  A
 t3 release the lock  B
+
+Process finished with exit code 0
+```
+
+
+
+- 递归锁（可重入锁）
+	- python中为了支持在同一个线程中多次请求同一资源，python提供了递归锁
+	- threading.RLock()
+		- 在一个RLock的内部存在着两个变量lock和count。当count的计数为0的时候，锁被释放，然后其他线程才能获得该锁
+		- count记录的是每一个递归锁的使用情况
+			- 每一次acquire，count计数都会增加1
+			- 每一次release，count计数都会减1
+		- 保证了一个资源可以被多次acquire，直到一个线程所有 的acquire都被release，其他线程才能获得递归锁，进而访问资源。
+			- 对多段共享数据进行保护 
+			- 拥有递归锁一个线程独享该锁保护的多段共享资源
+
+```python
+from threading import Thread,currentThread, RLock
+import time
+
+
+mutex =RLock()			# 链式赋值
+
+class MyThread(Thread):
+    def run(self):
+        self.f()
+        self.g()
+
+    def f(self):
+        mutex.acquire()
+        print('%s acquire the lock  '%currentThread().getName())
+        mutex.acquire()
+        print('%s acquire the lock  ' % currentThread().getName())
+        mutex.release()
+        print('%s release the lock  ' % currentThread().getName())
+        mutex.release()
+        print('%s release the lock  ' % currentThread().getName())
+
+    def g(self):
+        mutex.acquire()
+        print('%s acquire the lock  ' % currentThread().getName())
+        time.sleep(2)
+        mutex.acquire()
+        print('%s acquire the lock  ' % currentThread().getName())
+        mutex.release()
+        print('%s release the lock  ' % currentThread().getName())
+        mutex.release()
+        print('%s release the lock  ' % currentThread().getName())
+
+t1 = MyThread(name='t1')
+t2 = MyThread(name='t2')
+t3 = MyThread(name='t3')
+
+t1.start()
+t2.start()
+t3.start()
+
+-------------------------------------------------------------------------------------------------
+t1 acquire the lock  
+t1 acquire the lock  
+t1 release the lock  
+t1 release the lock  
+t2 acquire the lock  
+t2 acquire the lock  
+t2 release the lock  
+t2 release the lock  
+t1 acquire the lock  
+t1 acquire the lock  
+t1 release the lock  
+t1 release the lock  
+t3 acquire the lock  
+t3 acquire the lock  
+t3 release the lock  
+t3 release the lock  
+t3 acquire the lock  
+t3 acquire the lock  
+t3 release the lock  
+t3 release the lock  
+t2 acquire the lock  
+t2 acquire the lock  
+t2 release the lock  
+t2 release the lock  
 
 Process finished with exit code 0
 ```

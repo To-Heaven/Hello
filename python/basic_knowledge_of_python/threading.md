@@ -114,23 +114,6 @@ Process finished with exit code 0
 
 
 ## two ways to create threads
-- **Note**：
-	- Once a thread object is created, its activity must be started by calling the thread’s start() method.
-		- this invokes the run() method in a seprate thread of control  
-	-  Once the thread’s activity is started, the thread is considered ‘alive’
-		1. It stops being alive when its run() method terminates or by raising an unhandled exception
-		2. threading.is_alive()
-	- A thread has a name. The name can be passed to the constructor, and read or changed through the name attribute.
-		- see  threading.getName()     obj.name  below
-	- A thread can be flagged as a “daemon thread”
-		1. __The significance of this flag is that the entire Python program exits when only daemon threads are left__
-		2. the flag can be set through the daemon property or the daemon constructor argument.
-	- main thread
-		- corresponds to the initial thread of control in the Python program
-	- **Note about the daemon thread**
-		1. __Daemon threads are abruptly stopped at shutdown. Their resources (such as open files, database transactions, etc.) may not be released properly__
-		2. If you want your threads to stop gracefully, make them non-daemonic and use a suitable signalling mechanism such as an Event.
-
 
 1. passing a callable object to the constructor
 - threading.Thread(group=None, target=None, name=None, args=(), kwargs={}, *, daemon=None)
@@ -174,6 +157,28 @@ m.start()
 Process finished with exit code 0
 
 ```
+
+
+- **Note**：
+	- Once a thread object is created, its activity must be started by calling the thread’s start() method.
+		- this invokes the run() method in a seprate thread of control  
+		- <参考multiprocessing.join()中对start()和run()开启进程的区别>
+	-  Once the thread’s activity is started, the thread is considered ‘alive’
+		1. It stops being alive when its run() method terminates or by raising an unhandled exception
+		2. threading.is_alive()
+	- A thread has a name. The name can be passed to the constructor, and read or changed through the name attribute.
+		- see  threading.getName()     obj.name  below
+	- A thread can be flagged as a “daemon thread”
+		1. __The significance of this flag is that the entire Python program exits when only daemon threads are left__
+		2. the flag can be set through the daemon property or the daemon constructor argument.
+	- main thread
+		- corresponds to the initial thread of control in the Python program
+	- **Note about the daemon thread**
+		1. __Daemon threads are abruptly stopped at shutdown. Their resources (such as open files, database transactions, etc.) may not be released properly__
+		2. If you want your threads to stop gracefully, make them non-daemonic and use a suitable signalling mechanism such as an Event.
+
+
+
 
 ## variables  of  Thread objects
 - t.name
@@ -270,7 +275,7 @@ Process finished with exit code 0
 
 ## Condition  Objects 
 <br>
-<待补充>
+
 
 
 ## Semaphore   Objects 信号量（联锁）
