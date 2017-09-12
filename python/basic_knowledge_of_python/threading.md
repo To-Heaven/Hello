@@ -1,9 +1,10 @@
-## module functions
+# threading 模块
+## Module Level Functions
 > dummy    仿制的， 挂名的，虚拟的
 > exclude    不包括   
 
 
-- threading.enumerate()
+- threading.enum9erate()
 	- Return a list of all Thread objects currently alive
 	- the list includes:
 		-  the main thread
@@ -106,10 +107,26 @@ Process finished with exit code 0
 ## Thread_Local Data（单个线程私有的数据）
 - Thread-local data is data whose values are thread specific
 - values will be different for separate threads
+	- 当进行多线程任务的同时，又需要每一个线程保存一个单独的数据供当前线程操作的时候，使用这种方法简单有效。
+		- ps：多线程下载，对每个线程下载的数据做不同的处理
+	- 实现这种功能有很多方法，比如实例化一个dict对象，以线程名作为key，对应的数据作为value，以达到相同效果，但明显没有这种方法方便灵巧 
 
 ```python
->>> mydata = threading.local()
->>> mydata.x = 1
+from threading import local, Thread, get_ident
+
+local_data = local()
+local_data.value = 'main thread'
+
+def task(args):
+    local_data.value = args
+    print('%s : %s'%(get_ident(), local_data.value))
+
+if __name__ == '__main__':
+    print('主线程: %s'%get_ident())
+    for i in range(3):
+        t = Thread(target=task, args=(i, ))
+        t.start()
+    task(local_data.value)
 ```
 
 
@@ -279,10 +296,11 @@ Process finished with exit code 0
 
 
 ## Semaphore   Objects 信号量（联锁）
-> Semaphore object 本质上就是多个锁，用来控制最大线程数
+> Semaphore object 本质上就是多个锁，用来控制最大线程数    
+> Semaphore  实现了控制多个线程共享同一段数据。而递归锁则是让一个线程能独享多段共享资源    
 
 - a semaphore object manages a counter which is decreamented by each acquire() call and incremented by each release() call 
-	- this ocunter can never fo below zero
+	- this counter can never  below zero
 	- when acquire() finds that it is zero, it blocks, waiting until some other thread calls release().
 - threading.Semaphore(value=1)
 	- return a semphore object 
@@ -347,6 +365,11 @@ Process finished with exit code 0
 
 > mechanism     机制    
 
+
+
+## Event Objects  ——the simplest mechanisms for commucation between threads 
+- one thread signals an event and other threads wait for it
+
 - threading.Event()
 	- return an event object manage a flag 
 	- flag set to True:
@@ -355,9 +378,6 @@ Process finished with exit code 0
 		- clear()
 	- wait()
 		- blocks until the flag is True  
-
-## Event Objects  ——the simplest mechanisms for commucation between threads 
-- one thread signals an event and other threads wait for it
 
 - **Methods of Event object**
 - e.set()
