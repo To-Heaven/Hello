@@ -1,6 +1,8 @@
 # 协程
+
+[点击查看我整理的协程思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/coroutine.png?raw=true)
 ## 协程是什么鬼？
-- 在一个线程内，（伪）并发的实现多个任务。
+- 在一个线程内，并发的实现多个任务。
 
 
 
@@ -31,24 +33,30 @@
 # yield 并发生产者消费者
 import time
 
-def customer():
-    while True:
-        res = yield '接收procuder发送的数据'
+class Produser:
+    def produce(self, gene):
+        print('producing . . . ')
+        next(gene)
+        for i in range(1000000):
+            gene.send(i)
 
-def producer():
-    c = customer()
-    next(c)
-    for i in range(10000000):
-        c.send(i)
 
+class Customer:
+    l = []
+    def custom(self):
+        while True:
+            res = yield
+            self.l.append(res)
+    def get_length(self):
+        return len(self.l)
 start = time.time()
-producer()
-end = time.time()
-print('total time: %s'%(end-start))
-------------------------------------------------------------------
-total time: 2.500823736190796
-
-Process finished with exit code 0
+p = Produser()
+c = Customer()
+c_gene = c.custom()
+p.produce(c_gene)
+print('total time %s'%(time.time()-start))
+l_length = c.get_length()
+print(l_length)
 ```
 
 - 上面的例子中，遇到的是计算密集型的并发，并没有遇到I/O阻塞，因此与产生相同结果的串行相比反而会浪费cpu性能，降低效率。因为在不存在I/O的任务中，单纯的切换是浪费时间的，切换的过程反而降低运行效率
@@ -71,10 +79,6 @@ start = time.time()
 producer()
 end = time.time()
 print('total time : %s'%(end-start))
---------------------------------------------------------
-total time : 2.821392059326172			# 理论上，他确实要比上面例子要小，大概我的电脑是假的
-
-Process finished with exit code 0
 ```
 
 - 综上所述，要想让一个线程最大化的发挥其效率，必须满足以下两点
@@ -86,21 +90,33 @@ Process finished with exit code 0
 ```python
 import time
 
-def customer():
-    while True:
-        res = yield '接收procuder发送的数据'
+class Produser:
+    def produce(self, gene):
+        print('producing . . . ')
+        next(gene)
+        for i in range(1000000):
+            time.sleep(0.00001)
+            gene.send(i)
 
-def producer():
-    c = customer()
-    next(c)
-    for i in range(10000000):
-        time.sleep(0.00000001)		# yield无法实现I/O切换
-        c.send(i)
+
+class Customer:
+    l = []
+    def custom(self):
+        while True:
+            res = yield
+            self.l.append(res)
+    def get_length(self):
+        return len(self.l)
+
 
 start = time.time()
-producer()
-end = time.time()
-print('total time: %s'%(end-start))
+p = Produser()
+c = Customer()
+c_gege = c.custom()
+p.produce(c_gege)
+print('total time %s'%(time.time()-start))
+l_length = c.get_length()
+print(l_length)
 
 ```
 
@@ -140,7 +156,7 @@ print('total time: %s'%(end-start))
 		- concurrent.futures.ProcessPoolExecutor.submit().result()
 	- 异步调用
 		- 定义：当发出一个功能调用时，调用者不会立即得到调用的结果，当该异步功能完成之后，通过状态、通知或回调来通知调用者。
-			1. **通过状态**：每隔一定时间就需要见车一次，效率低（循环检查）
+			1. **通过状态**：每隔一定时间就需要检查一次，效率低（循环检查）
 			2. **通过通知**：效率高，不需要额外的操作
 			3. **通过回调**：multiprocessing.Pool 模块的apply_async()方法提供了回调功能，会自动的将异步调用产生的结果传递给另一个callable对象
 		- concurrent.futures.ProcessPoolExecutor().submit()
