@@ -94,3 +94,49 @@ if __name__ == '__main__':
     test = Test()
     test.start()
 ```
+
+
+## bugs concurrent.futures实现爬虫
+
+```python
+
+import requests
+from concurrent.futures import ProcessPoolExecutor
+
+
+def get_page(url):
+    print(url)
+    response = requests.get(url)
+    if response.status_code == requests.codes.ok:
+        print(response.url)
+        return response
+
+
+
+def parser(future_obj):
+    response = future_obj.result()
+    filename = str(hash(response.url))
+    with open(filename, 'wb') as fw:
+        for chunk in response.iter_content(1024):
+            fw.write(chunk)
+        else:
+            print(response.url, '完毕')
+
+
+urls = [
+    'https://www.baidu.com',
+    'http://www.openstack.org',
+    'https://www.python.org',
+    'https://help.github.com/',
+    'http://www.sina.com.cn/',
+    'http://www.ziawang.com'
+]
+
+
+
+if __name__ == '__main__':
+    p = ProcessPoolExecutor(2)
+    for url in urls:
+        res = p.submit(get_page, (url, )).add_done_callback(parser)
+    p.shutdown()
+```

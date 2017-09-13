@@ -357,6 +357,13 @@ Process finished with exit code 0
 	- **Returns the number of bytes sent**
 	- ** If the system call is interrupted and the signal handler does not raise an exception, the method now retries the system call instead of raising an InterruptedError exception**
 
+- socket.sendall(bytes[, flages])
+	- Send data to the socket
+	- Unlike send(), this method continues to send data from bytes until either all data has been sent or an error occurs. None is returned on success. On error, an exception is raised, and there is no way to determine how much data, if any, was successfully sent.
+
+
+
+
 ```python
 # 服务端
 from socket import *
