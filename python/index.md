@@ -19,9 +19,10 @@
 - 数据处理
 	- [字符编码](basic_knowledge_of_python/character_encoding.md)
 
-- 语法结构
+- 语法结构 
 	- [流程控制](basic_knowledge_of_python/process_control.md)
 	- [迭代器与生成器](basic_knowledge_of_python/iterator_generator.md)
+
 
 - 函数
 	- [函数](basic_knowledge_of_python/function.md)
@@ -49,6 +50,7 @@
 - python standard library
 	- [os模块，操作系统常用变量和方法](basic_knowledge_of_python/os.md)
 	- [os.path模块，常用文件路径处理](basic_knowledge_of_python/os_path.md)
+	- [contextlib 实用的with语句上下文](basic_knowledge_of_python/contextlib.md)
 	- [time模块，获取多种时间格式](basic_knowledge_of_python/time.md)
 	- [random模块，随机生成指定数据](basic_knowledge_of_python/random.md)
 	- [sys模块，与python解释器进行交互](basic_knowledge_of_python/sys.md)
