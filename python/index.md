@@ -80,7 +80,8 @@
 - [装饰器练习](question_bank/question_bank_decorator.md)
 
 # python Bugs
-> 千里之堤，以蝼蚁之穴溃；百尺之室，以突隙之烟焚   ——韩非子
+> 千里之堤，以蝼蚁之穴溃；百尺之室，以突隙之烟焚   ——韩非子     
+> let's see the funking bug!
 
 - 语法错误bug
 
