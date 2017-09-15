@@ -38,14 +38,13 @@ def parser_page(url):
 
 if __name__ == '__main__':
     p_l = []
-    for i in range(len(urls)):
-        p = Process(target=parser_page, args=(urls[i],))
+    for url in urls:
+        p = Process(target=parser_page, args=(url,))
         p_l.append(p)
         p.start()
     for p in p_l:
         p.join()
     print('任务完成')
-
 
 ```
 

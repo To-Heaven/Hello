@@ -140,6 +140,7 @@ host=localhost
 - 启动：
 	1. 终端命令行下输入`mysqld` ，服务端就跑起来了，这个时候，该命令行会卡在该位置，关掉该窗口并不会导致MySQL服务端关闭
 	2. Windows下，将服务端添加到系统服务列表中启动
+	3. `net start mysql`
 
 - 关闭：
 	- **用上述什么方式打开的就用什么方式关闭**
@@ -147,6 +148,8 @@ host=localhost
 		-  `tskill mysqld`
 		-  注意，使用这种方法应先检查任务是否是在运行   `tashlist  | findstr mysql`
 	2. 对于第二种，直接手动在服务列表中停用服务器
+	3. `net stop mysql`
+
 
 
 memory  关掉服务端
@@ -423,5 +426,21 @@ mysql>
 ```
 
 
+## 在命令行界面执行SQL语句
+- `mysql -u 用户名 -p 密码 -e 'SQL语句'`
+	- 注意，在Windows系统命令行中，要sql语句要用双引号，在Linux中是单引号
 
+```sql
+C:\WINDOWS\system32>mysql -u root -p -e "use db1; show tables;"
+Enter password: ****
++---------------+
+| Tables_in_db1 |
++---------------+
+| course        |
+| student       |
+| teacher       |
++---------------+
+
+C:\WINDOWS\system32>
+```
 
