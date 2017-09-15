@@ -60,7 +60,7 @@
 	- [python其他容器类型collections](basic_knowledge_of_python/collections.md)
 	- [logging模块，最常用的日志记录工具](basic_knowledge_of_python/logging.md)
 	- [hashlib模块，各种主流加密算法](basic_knowledge_of_python/hashlib.md)
-	- [requests模块，爬虫首选]()
+	- [pyMySQL模块——实现与MySQL服务端的交互](basic_knowledge_of_python/pymysql.md)
 	- [greenlet模块，实现同一线程下多任务之间的切换](basic_knowledge_of_python/greenlet.md)
 	- [socket模块，低级的网络接口](basic_knowledge_of_python/socket.md)
 	- [selectors模块，高级I/O多路复用]()
