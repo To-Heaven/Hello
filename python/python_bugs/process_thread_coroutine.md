@@ -1,4 +1,5 @@
 ### Bugs——多进程并发实现服务端和客户端socket简单通信
+<hr>
 
 ```python
 # 服务端
@@ -56,6 +57,107 @@ def client(ip, port):
 
 client('127.0.0.1', 8080)
 ```
+
+<hr>
+
+
+```python
+# 服务端
+import select
+from socket import *
+
+
+address = '127.0.0.1', 8080
+
+with socket(AF_INET, SOCK_STREAM) as s:
+    s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+    s.bind(address)
+    s.listen(5)
+    s.setblocking(False)
+    read_list = [s,]
+    while True:
+        rl, _, _ = select.select(read_list, [], [])
+        for fd in rl:
+            if fd == s:
+                conn, client_addr = fd.accept()
+                rl.append(conn)
+            else:
+                try:
+                    msg = fd.recv(1024)
+                    if not msg:
+                        fd.close()
+                        rl.remove(fd)
+                        continue
+                    fd.send(msg.upper())
+                except BlockingIOError:
+                    pass
+                except ConnectionResetError:
+                    fd.close()
+                    rl.remove(fd)
+```
+
+```python
+# 客户端
+from socket import  *
+
+server_addr = '127.0.0.1', 8080
+with create_connection(server_addr) as c:
+    while True:
+        msg = input('>>>').strip()
+        if not msg:continue
+        c.send(msg.encode('utf-8'))
+        data = c.recv(1024)
+        print(data.decode('utf-8'))
+```
+
+<hr>
+
+```python
+# 服务端
+from socket import *
+import select
+
+server = socket(AF_INET, SOCK_STREAM)
+server.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+server.bind(('127.0.0.1', 8080))
+server.listen(5)
+server.setblocking(False)
+
+read_list = [server, ]
+
+while True:
+    rl, _, _ = select.select(read_list, [], [])
+    for file_obj in rl:
+        if file_obj == server:
+            conn, _ = file_obj.accept()
+            print(conn)
+            rl.append(conn)
+        else:
+            try:
+                msg = file_obj.recv(1024)
+                if not msg:
+                    file_obj.close()
+                    rl.remove(file_obj)
+                    continue
+                file_obj.send(msg.upper())
+            except ConnectionResetError:
+                file_obj.close()
+                rl.remove(file_obj)
+```
+
+```python
+# 客户端
+from socket import *
+
+with create_connection(('127.0.0.1', 8080)) as c:
+    while True:
+        msg = input('>>>').strip()
+        if not msg:continue
+        c.send(msg.encode('utf-8'))
+        data = c.recv(1024)
+        print(data.decode('utf-8'))
+```
+
 
 
 ### Bugs——生产者消费者模型
@@ -139,4 +241,57 @@ if __name__ == '__main__':
     for url in urls:
         res = p.submit(get_page, (url, )).add_done_callback(parser)
     p.shutdown()
+```
+
+
+```python
+urls = [
+    'https://www.baidu.com',
+    'http://www.openstack.org',
+    'https://www.python.org',
+    'https://help.github.com/',
+    'http://www.sina.com.cn/',
+    'http://www.ziawang.com'
+]
+import requests
+from concurrent.futures import ThreadPoolExecutor
+
+
+def get_page(url):
+    response = requests.get(url)
+    print(response.url, response.status_code)
+
+
+if __name__ == '__main__':
+    with ThreadPoolExecutor(6) as executor:
+        res = executor.map(get_page, urls)
+        print(type(res))
+
+```
+
+```python
+class Mylittlespider:
+    chunksize = 1024
+
+    def __init__(self, url):
+        self.url = url
+        self.response = requests.get(url)
+        print(self.url, self.response.status_code)
+        if self.response != requests.codes.ok:
+            raise ConnectionError('连接失败')
+        print('1111')
+        self.parser()
+
+    def parser(self):
+        print('%s begin parser'%self.response.url)
+        filename = str(hash(self.url))
+        with open(filename, 'w') as fw:
+            for item in self.response.headers.items():
+                fw.write('{} : {} \n'.format(*item))
+            for chunk in self.response.iter_content(self.chunksize,
+                                                    decode_unicode='utf-8'):
+                fw.write(chunk)
+            else:
+                print('%s complete'%self.url)
+
 ```

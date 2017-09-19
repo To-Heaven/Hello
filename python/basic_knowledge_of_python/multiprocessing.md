@@ -1274,6 +1274,152 @@ Process finished with exit code 0
 
 ```
 
+- map(func, iterable[, chunksize])
+	- Pool的map方法运行机制和python内置map函数运行机制相同。但是，Pool中的map方法会阻塞程序，直到返回任务结果（类似apply）。
+	- func 就是要执行的任务对应的函数
+	- iterable是一个可迭代对象，map函数可以将该对象中的值一个(chunk)个的作为func的参数传递给func处理
+	- chunksize ----> The (approximate) size of these chunks can be specified by setting chunksize to a positive integer.
+	- 注意：
+		- 进程池的大小控制了可以同时并发的任务书，map返回会将iterable对象的元素依次遍历再传递给func
+
+```python
+import time
+from multiprocessing import Pool
+
+def task(i):
+    time.sleep(1)
+    print(i)
+
+if __name__ == '__main__':
+    p = Pool(5)
+    p.map(task, range(20))
+    p.close()
+    p.join()
+
+```
+
+- map_async(func, iterable[, chunksize[, callback[, error_callback]]])
+	- 类似apply_async, map_async方法是异步的提交func任务，当callback指向一个callable对象的时候，**map(func, iterable)的result封装到一个列表**中作为回调函数的参数，实现回调
+	- 关于`error_callback`
+		- 如果func在运行时出现错误，可以将错误这个exception object作为参数传递给error_callback的对象进行其他操作
+	
+
+```python
+import time
+from multiprocessing import Pool
+
+def task(i):
+    time.sleep(1)
+    return  i
+
+def f(res):
+    print('callback result:', res)
+
+
+if __name__ == '__main__':
+    p = Pool(5)
+    res = p.map_async(task, range(20), callback=f)
+    print('res.get() = ',res.get())
+    p.close()
+    p.join()
+# -----------------------------------------------------------------
+callback result: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+res.get() =  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+
+Process finished with exit code 0
+```
+
+
+```python
+from multiprocessing import Pool
+
+def f(i):
+    return i / 0
+
+
+def p(res):
+    print(res)
+
+
+def exp(exception):
+    if isinstance(exception, ZeroDivisionError):
+        print('handlers of Exception ')
+        p.close()
+
+
+if __name__ == '__main__':
+    p = Pool()
+    p.map_async(f, range(5), callback=p, error_callback=exp)
+    p.close()
+    p.join()
+
+```
+
+- 上面的map()和map_async()在targe func参数不止一个的时候明显就不再适用了，multiprocessing提供了下面这个方法
+- startmap(func, iterable[, chunksize])
+- startmap_async(func, iterable[, chunksize])
+	- 作用和multiprocessing.map()与multiprocessing.map_async()一样，但是他可以为func传入多个参数，这些参数可以作为子序列存放在iterable对象中，在传递给func的时候会将子序列中的参数unpack拆包。
+	- startmap也会阻塞程序直到返回func的结果
+	- startmsp_async在提交完任务之后就直接返回一个result object，类似apply_async返回的apply_result对象一样，对于result对象，可以使用其get()方法获取返回值
+
+
+- 使用map完成爬虫
+
+```python
+urls = [
+    'https://www.baidu.com',
+    'http://www.openstack.org',
+    'https://www.python.org',
+    'https://help.github.com/',
+    'http://www.sina.com.cn/',
+    'http://www.ziawang.com'
+]
+
+from multiprocessing import Pool
+import requests
+
+
+def get_page(url):
+    response = requests.get(url)
+    print(response.status_code)
+    return response
+
+
+def parser(res):
+    filename = str(hash(res.url))
+    with open(filename, 'w') as f:
+        for item in res.header:
+            f.write('%s : %s' % item)
+        for chunk in res.iter_content(1024, decode_unicode='utf-8'):
+            f.write(chunk)
+        else:
+            print(res.url, ' ........end.........')
+
+
+if __name__ == '__main__':
+    p = Pool(4)
+    res = p.map_async(get_page, urls, callback=parser)
+    p.close()
+    p.join()
+```
+
+- 注意
+	1. 进程池的大小对程序运行效率是有影响的，要耐心调试
+	2. python中有两个能够用map函数完成并发的库
+		1. `multiprocessing.Pool`
+		2. `multiprocessing.dummy`   ，dummy是多进程模块的一个克隆文件，dummy使用的是线程
+
+```python
+# 使用multiprocessing.dummy
+from multiprocessing.dummy  import Pool  as ThreadPool
+p = ThreadPool()
+
+```
+
+ 
+
+
+
 ## Pool methods待补充
 
 - map(func, iterable, [chunksize])
