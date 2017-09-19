@@ -52,6 +52,7 @@
 	- [os.path模块，常用文件路径处理](basic_knowledge_of_python/os_path.md)
 	- [contextlib 实用的with语句上下文](basic_knowledge_of_python/contextlib.md)
 	- [time模块，获取多种时间格式](basic_knowledge_of_python/time.md)
+	- [re模块与正则表达式，数据清洗必须](basic_knowledge_of_python/re.md)
 	- [random模块，随机生成指定数据](basic_knowledge_of_python/random.md)
 	- [sys模块，与python解释器进行交互](basic_knowledge_of_python/sys.md)
 	- [序列化---json，跨越语言障碍的数据类型](basic_knowledge_of_python/json.md)
