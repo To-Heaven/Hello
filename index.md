@@ -3,7 +3,7 @@
 # Get Knowledge
 - [Python教程 ](python/index.md) 
 - [关系型数据库教程](relational_database/index.md)
-- [web页面设计](page\html\index.md)
+- [web页面设计](page\index.md)
 
 # Navigation For Useful Site 
 
