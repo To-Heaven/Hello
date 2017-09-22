@@ -1,27 +1,19 @@
-> implement	实现  
+# collections
+[点击查看我整理的namedtuple思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/namedtuple.png?raw=true)
+[点击查看我整理的deque思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/deque.png?raw=true)
+[点击查看我整理的OrderedDict思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/OrderedDict.png?raw=true)
+
 > specialize	专门  
-> container	容器  
-> separated        分开的  
-> whitespace	空白符，空字符，空白格  
 > commas		逗号  
-> identifier		标识符  
-> valid		有效的  
-> underscore	下划线  
-> letter		字母  
-> digit			数字  
-> consist		组成  
-> keyword 	关键字  
-> convert		修改	
+> consist		组成  	
 > eliminate		消除  
-> duplicate		重复，复制  
-> option		选项  
 > outdated	过时的  
-> definition	定义，解释  
 > verbose		冗长的，落得  
 > per-instance	基于实例的  
 > map			比对   
-> corresponding	对应的  
 > introspection		内省  
+
+
 ## collections模块提供除了python内置的dict, list , set, tuple容器数据类型之外的其他数据容器
 - namedtuple
 - deque
@@ -55,6 +47,8 @@ AttributeError: 'Course' object has no attribute 'period'
 - collections.namedtuple(typename, field_names, *, verbose=False, rename=False, module=None)
 - returns a new tuple subclass named typename. The new subclass is used to  create tuple-like objects that have fields accessible by attribute lookup as well as being indexable and iterable（就是创建的对象可以通过对象访问属性的方式获取对应的值，同样还可一用索引，因为他是tuple的子类）。
 - instances of the subclass also have a helpful docstring and helpful __repr__()method which list the tuple contents in a name=value format （__repr__方法可以将tuple中的内容按照name=value的格式获取出来）。
+
+
 ```python
 >>> tu = collections.namedtuple('my_tuple', ['x', 'y'])
 >>> tu
@@ -78,17 +72,26 @@ my_tuple(x=1, y=2)
 - Any valid Python identifier may be used for a fieldname except for names starting with an underscore .Valid identifers consist of letters ,digits,and underscores but do not start with a figit or underscore . and can not be a keyword such as class, for ,return, global, pass, or raise （龟叔说了下fieldname的命名方式，和标识符的命名方式一样，不能以数字和下划线开头的数字，字母，下划线的任意组合，而且不能和关键字相同）
 - if rename is true ,invalid fieldnames are automatically replaced with positional names.for example:
 （就是当field_name不生效的时候，如果rename是True，就会帮我们把无效的field_name改成下划线加上对应索引的形式 ）['abc', 'def', 'ghi', 'abc']  is converted to ['abc', '_1', 'ghi', '_3']
+
+
 ```python
->>> s = collections.namedtuple('ss', ['def', 'abc', 'haha'])
-Traceback (most recent call last):
-  File "<pyshell#17>", line 1, in <module>
-    s = collections.namedtuple('ss', ['def', 'abc', 'haha'])
-  File "D:\Python36\lib\collections\__init__.py", line 403, in namedtuple
-    'keyword: %r' % name)
-ValueError: Type names and field names cannot be a keyword: 'def'				# 3.6直接报错了
+from collections import namedtuple
+
+s = namedtuple('S', ['def', 'global', 'haha'])
+a = s(1, 2, 3)
+print(a)   # 报错   
+
+# -------------------------------------------
+from collections import namedtuple
+
+s = namedtuple('S', ['def', 'global', 'haha'], rename=True)
+a = s(1, 2, 3)
+print(a)  # 不报错但是fieldname被修改成合法的了    S(_0=1, _1=2, haha=3)
+
+
 ```
 
-- Named tuple instance do not have per-instance dictionaries, so they are lightweight and require no more memory than regular tuples.（命名元组namedtuple的实例是轻量级的，比tuple占用更小内存，而且他的实例不是基于实例的字典）
+- Named tuple instance do not have per-instance dictionaries, so they are lightweight and require no more memory than regular tuples.（命名元组namedtuple的实例是轻量级的，比tuple占用更小内存，而且他的实例不是基于字典的实例）
 
 ```python
 >>> from collections import namedtuple
@@ -123,8 +126,12 @@ AttributeError: 'name_tuple' object has no attribute 'first'
 ```
 
 ### somenamedtuple.Methods
+> 通过namedtuple创建的tuple 的子类继承了tuple的所有方法    
+> 常用的有  t.index(value)   e.count(value)
+
 - somenamedtuple._make(iterable)
 	- makes a new instance from an existing sequence or iterable（不会改变原先的对象）
+	-但是要注意参数的个数要一一对应
 
 ```python
 >>> ziawang.first_name + ziawang.last_name
@@ -164,11 +171,26 @@ name_tuple(first_name='wang', last_name='zihao')
 >>> 
 ```
 
+
+- To convert a dict to a named tuple ,use the double-star-oprator (Unpacking Argument Lists)
+
+```python
+>>> point = namedtuple('point', 'x  y')
+>>> d = {'x':100, 'y':200}
+>>> point(**d)
+point(x=100, y=200)
+>>> 
+```
+
+
+## Somenamedtuple Variables
+
 - somenamedtuple._source
-	- A string with the pure Python source code userd to create the named tuple 
+	- A string with the pure Python source code used to create the named tuple 
 	- ?????????????
 - somenamedtuple._fields
-	- tuple of string  listing field names.Userful for introspection and for creating new named tuple tyes from existing named tuples（利用现有的field_name创建新的named tuple）
+	- tuple of string  listing field names.
+	- Userful for introspection and for creating new named tuple tyes from existing named tuples（利用现有的field_name创建新的named tuple）
 
 ```python
 >>> point = namedtuple('point', 'x  y')
@@ -182,15 +204,7 @@ Pixel(x=11, y=22, red=128, blue=255, green=0)
 >>> 
 ```
 
-- To convert a dict to a named tuple ,use the double-star-oprator (Unpacking Argument Lists)
 
-```python
->>> point = namedtuple('point', 'x  y')
->>> d = {'x':100, 'y':200}
->>> point(**d)
-point(x=100, y=200)
->>> 
-```
 
 
 > bounded		有限制的  
@@ -208,22 +222,36 @@ point(x=100, y=200)
 	- Note: if length of iterble bigger than maxlen. then create a deque from the left
 
 ```python
+import time
 from collections import deque
-l = list(range(10))
-l_deque = deque(l, 5)
-print(l)
-print(l_deque)
+
+d = deque(maxlen=5)
+
+for i in range(10):
+    d.append(i)
+    print(d)
+    time.sleep(1)
 
 -------------------------------------------
 # 结果
-[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+deque([0], maxlen=5)
+deque([0, 1], maxlen=5)
+deque([0, 1, 2], maxlen=5)
+deque([0, 1, 2, 3], maxlen=5)
+deque([0, 1, 2, 3, 4], maxlen=5)
+deque([1, 2, 3, 4, 5], maxlen=5)
+deque([2, 3, 4, 5, 6], maxlen=5)
+deque([3, 4, 5, 6, 7], maxlen=5)
+deque([4, 5, 6, 7, 8], maxlen=5)
 deque([5, 6, 7, 8, 9], maxlen=5)
 ``` 
 
 ### deque.Method
 - deque.append(value)
+	- 将value从右边插入deque对象中，左进右出
 - deque.appendleft(value)
-
+	- 将value从左边插入的deque对象中，右进左出
+	
 ```python
 >>> l = list(range(10))
 >>> from collections import deque
@@ -246,8 +274,9 @@ deque(['appendleft', 6, 7, 8, 9], maxlen=5)
 - deque.count(element)
 	- return the number of deque equal to elelment
 - deque.extend(iterable)
+	- 把iterable的值按照顺序插入到deque中
 - deque.extendleft(iterable)
-	- Note: the series of left appends results in reversing the order of elements in the iterable argument（当使用dque.extendleft()方法的时候，传入的iterbale会被倒序插入到deque的左边）
+	- Note: the series of left appends results in reversing the order of elements in the iterable argument（当使用deque.extendleft()方法的时候，传入的iterbale会被**倒序插入到deque的左边**）
 
 ```python
 >>> from collections import deque
@@ -312,7 +341,7 @@ deque([2, 1, 5], maxlen=5)
 	- remove the first occurence of value from the deque ,if not found , raises a ValueError
 
 - deque.reverse()
--  deque.rorate(n)
+-  deque.rotate(n)
 	-  rotate the deque n steps to the right.
 	- if n is negative , rotate to the left . 
 	- rotate one step to the right is equivalent to : deque.appendleft(deque.pop())
@@ -344,13 +373,17 @@ deque([5, 6, 7, 8, 9], maxlen=5)
 
 ```
 
-- deque.maxlen()
+## deque object variables
+
+- deque.maxlen
 	- Maximum size of a deque 
 	- Note: None if unbounded
 
+
+
 ### other bulitin functions
 - deques support iteration, pickling, len(d), reversed(d), copy.copy(d), copy.deepcopy(d), membership testing with the '  in   '  operator, and subscript references such as d[-1]
-- **Don't support slice!!!!!!!!!!!!**
+- **Don't support slice!!!!!!!!!!!!**（支持索引，但不支持切片）
 ```python
 >>> d = deque(maxlen = 5)
 >>> d
@@ -378,14 +411,13 @@ TypeError: sequence index must be integer, not 'slice'
 
 > ordered           规则的，有序的
 
-## OrderDict
-- DrderedDcit objects
+## OrderDict Object
 - ordereddict = collections.OrderedDict([items])
-	- Return an instance of a dict subclass, supporting the usual dict methods
+	- Return an instance of a dict subclass, **supporting the usual dict methods**
 	- An OrderedDict is a dict that remembers the order that keys were first inserted.
 		- OrderedDict会记住先插入到其中的key
 	- If a new entry overwrites an existing entry, the original insertion position is left unchanged.
-		- 如果插入了相同的key，就会在原key位置上进行覆盖，位置不变
+		- __如果插入了相同的key，就会在原key位置上进行覆盖，位置不变_-
 	-   Deleting an entry and reinserting it will move it to the end.
 		-   改变key的位置可以通过这种方式
 
@@ -431,7 +463,8 @@ OrderedDict([('a', 1), ('b', 2), ('c', 3)])
 
 - od.move_to_end(key, last=True)
 	- Move an existing key to either end of an ordered dictionary.
-		- DEFAULT:moved to the right end if last is true
+		- DEFAULT Trye
+			- :moved to the right end if last is true
 		- moved to the beginning if last is false
 	-  Raises KeyError if the key does not exist:
 

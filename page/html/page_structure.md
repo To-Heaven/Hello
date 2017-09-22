@@ -37,11 +37,23 @@
 ## 标签的分类
 > 使用 backgroundcolor属性可以用来判断标签是否是块级标签
 
-- 块级标签
+- 块级标签block
 	- 标签及描述信息独占一行
-	- 
-- 内联标签
+	- 在文档流中的排列方式
+		- 独立的一块区域，独占一行
+		- 如果有多个block元素，那么他们会各自新起一行
+		- __默认block的宽度会填充满其父元素的宽度__
+	- 可以设置`width height margin padding 等属性` 
+	- 常见的块级标签
+		- `p table tr td hn div ul ol form dl `
+- 内联标签inline
 	- 标签及描述信息按描述信息的内容占位
+	- 在文档流中的排列方式
+		- 不会独占一行
+		- 多个相邻的inline元素会百列在同一行中，直到排列不下才会新换一行
+		- __宽度随着元素内容变化，width height属性对inline元素无效__
+	- 常见内联标签
+		- `span a b em strong label input select textarea img br` 
 
 ## 标签的属性
 - 为HTML标签提供附加的信息，用来更丰富的描述对象
