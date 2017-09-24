@@ -297,16 +297,12 @@ me
 	- (new_string, number_of_subs_made)  即替换的结果，替换的次数
 
 ```python
-s = 'ziawang is 23 years old 23 years old'
-print(re.sub('\d*?', '18', s, 1))
-print(re.sub('\d*?', '18', s, 2))
-print(re.subn('\d*?', '18', s, 1))
-print(re.subn('\d*?', '18', s, 2))
------------------------------------------------------
-18ziawang is 23 years old 23 years old
-18z18iawang is 23 years old 23 years old
-('18ziawang is 23 years old 23 years old', 1)
-('18z18iawang is 23 years old 23 years old', 2)
+import re
+
+s = 'ziawang is a handsome boy. aha '
+
+new_s = re.sub('^z.+? ', 'wangzihao', s)
+print(new_s)
 ```
 
 
@@ -338,8 +334,8 @@ if match :
 ```
 
 - match_attribute
-	- 
-	- 
+
+
 ## match_Method
 - match.group([group1, . . . ]) 返回match对象的一个或多个子组
 	- 如果只有一个参数，就返回单个字符串
@@ -406,31 +402,33 @@ if match :
 
 - match.groups(default = None) 返回一个元组，存放了所有组匹配到的字符串
 	- 在利用组对string匹配的时候，有的组并不会匹配到值，通过default可以为这些没匹配到的对象设置默认值，python默认为None
+	- 注意：当有同一个分组匹配到了多个结果的时候，groups返回的元组中只包含最后匹配到的结果
 
 
 ```python
-s = '24'
-mat = re.match(r'(\d+)\.?(\d*)?', s)
-print(mat.groups())
-print(mat.groups(default='hahaha'))
-----------------------------------------------------------
-('24', '')
-('24', '')			# 没有输出'hahaha'  难道我写错了   =  = ！
+import re
 
+s = 'ziawang is a handsome boy. aha '
+
+match_obj = re.match('(?P<group_name>\w+? )*', s)
+
+if match_obj:
+    print('do something with the result : ', match_obj.groups())
 ```
 
 - match.groupdict(default = None) 返回组名和匹配到的字符串对应的字典，不包含没有别名的组
-	- 
+	- 注意：当有同一个分组匹配到了多个结果的时候，groupdict中只包含最后匹配到的结果和该改组名组成的字典 
 
 ```python
-s = '24'
-mat = re.match(r'(?P<biubiubiu>\d+)\.?(?P<bangbangbang>\d*)?', s)
-print(mat.groupdict())
-print(mat.groupdict(default='hahaha'))
---------------------------------------------------------
-# 这个默认值貌似也是改不了的  = =！
-{'biubiubiu': '24', 'bangbangbang': ''}
-{'biubiubiu': '24', 'bangbangbang': ''}
+import re
+
+s = 'ziawang is a handsome boy. aha '
+
+match_obj = re.match('(?P<group_name>\w+? )*', s)
+
+if match_obj:
+    print('do something with the result : ', match_obj.groupdict())
+
 
 ```
 

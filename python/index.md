@@ -59,6 +59,7 @@
 	- [序列化---shelve，超级实用的数据对象存取模块](basic_knowledge_of_python/shelve.md)
 	- [序列化---pickle，python对象的序列](basic_knowledge_of_python/pickle.md)
 	- [python其他容器类型collections](basic_knowledge_of_python/collections.md)
+	- [enum python支持枚举的模块](basic_knowledge_of_python/enum.md)
 	- [logging模块，最常用的日志记录工具](basic_knowledge_of_python/logging.md)
 	- [hashlib模块，各种主流加密算法](basic_knowledge_of_python/hashlib.md)
 	- [pyMySQL模块——实现与MySQL服务端的交互](basic_knowledge_of_python/pymysql.md)

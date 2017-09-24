@@ -405,7 +405,253 @@ TypeError: sequence index must be integer, not 'slice'
 >>> 
 ```
 
-## defaultdict
+
+## Counter objects(sunclass of dict, but some methods are different)
+> tally   计数器   
+> rapid 快速的
+
+-  a counter object is provided for rapid tallies.
+
+-  Counter object
+	- `c = Counter([iterable-or-mapping-or-keywords_arguments-other_counter])`
+	- a counter is a subclass of dict for counting **hashable objects**
+	- futures
+		- used for counting hashable objects
+		- counters are unordered collection as dicts
+			- keys ---> the elements to count 
+			- values ---> the count number for elements, can be a integer or zero and negative counts
+
+```python
+from collections import Counter
+
+c_empty = Counter()                        # 创建一个空counter对象
+
+c_iter = Counter('abcabcabc')              # 通过可迭代对象创建counter对象
+
+c_map = Counter({'a': 1, 'b': 2, 'c': 3})  # 通过映射关系创建counter对象
+
+c_kw = Counter(a=1, b=2, c=3)              # 通过关键字传参创建counter对象
+
+c_pairs = Counter(dict([('a', 1), ('b', 2), ('c', 3)]))  # 通过pairs数据结构创建counter对象
+
+```
+
+## Methods of Counter Objects
+- c.elements()
+	- returns : iterator. elements repeating each as many times as its count
+	- note:
+		1. elements are returned in arbitrary order.
+		2. elements wil be ingored if the count of this element less than one 
+
+- c.most_common([n])
+	- arg : n(int).  the first 'n' most common elements,  is also the length of the returned list
+		-   returns all elements in the counter if n is omitted or None
+	- return : list.  list of tuples which contain the element and their counts
+
+- substract([iterable-or-mapping-or-keywords_arguments-other_counter])
+	- substract counts of elements from the specified iterable/mapping or other objects
+	- return : None
+	- note:
+		1.  theis methods just substracts counts instead of replacing the element from counter
+		2.  inputs and outputs may be zero or negative
+
+## Methods between Counter  object and dict object 
+- Counter object **do not support the `fromkeys(iterable)` methods**
+- `d.update([iter-or-mapping])` of Counter obejct is just adds counts instead of replacing them. 
+	- return : None
+	- **iterable is expected to be a sequence of elements, not a sequence of (key, value) pairs.**
+
+
+## mathematical operations of Counter obejects
+- `c1 + c2`
+- `c1 - c2`
+- `c1 & c2`
+- `c1 | c2`
+- `-c`
+- `+c`
+- note:
+	- `c1.update(c2)` <==> `c1 + c2`  等价
+	- `c1.subtract(c2)`  !<==> `c1+ c2`   不等价 
+
+
+```python
+from collections import Counter
+
+c_part1 = Counter(a=1, b=2, c=3)
+
+c_part2 = Counter(a=1, b=3, d=3)
+
+print('c_part1 & c_part2 : ', c_part1 & c_part2)
+print('c_part1 | c_part2 : ', c_part1 | c_part2)
+print('c_part1 + c_part2 : ', c_part1 + c_part2)
+print('c_part1 - c_part2 : ', c_part1 - c_part2)
+
+c_part1.subtract(c_part2)
+print('subtract : ', c_part1)
+
+c_part1.update(c_part2)
+print('update : ', c_part1)
+```
+
+
+```python
+c_part1 = Counter(a=1, b=2, c=3)
+
+c_part2 = Counter(a=1, b=3, d=3)
+
+print(c_part1 - c_part2)
+
+c_part1.subtract(c_part2)
+print(c_part1)
+# ---------------------------------------
+Counter({'c': 3})
+Counter({'c': 3, 'a': 0, 'b': -1, 'd': -3})
+```
+
+```python
+c_part1 = Counter(a=1, b=2, c=3)
+
+c_part2 = Counter(a=1, b=3, d=3)
+
+print(c_part1 + c_part2)
+
+c_part1.update(c_part2)
+print(c_part1)
+# ---------------------------------
+Counter({'b': 5, 'c': 3, 'd': 3, 'a': 2})
+Counter({'b': 5, 'c': 3, 'd': 3, 'a': 2})
+```
+
+
+## defaultdict object
+> 注意，在python2.5以下版本（包括2.5）是不支持defaultdict的，这就需要自己创建一个defaultdict类
+
+- defaultdict is a subclass of the built-in dict class
+	- default是dict的子类，除了覆盖了的方法，其他方法和dict方法相同
+	
+- defaultdict([default_factory [ mapping-or-iterable-or-list_pairs]])
+	-  args:
+		-  default_factory: 
+			-  a builtin_factory_method or method defined by user without arguments
+			- default None
+		- [ . . . ]  
+			- arguments  passed to the dict constructor, including keyword arguments.
+## defaultdict.__missing__（key）
+-  先看官方文档
+
+```python
+__missing__(key) # Called by __getitem__ for missing key; pseudo-code:
+  if self.default_factory is None: raise KeyError((key,))
+  self[key] = value = self.default_factory()
+  return value
+```
+
+- if  default_factory is None,  raises a KeyError exception with the key
+- If default_factory is not None, it provide a default value for the given key, and return the value 
+- note
+	- This method is called by the __getitem__() method of the dict class when the requested key is not found
+
+- **variables for defaultdict object**
+	- default_factory	
+		- 可以用来指定和修改defaultdict的default_factory属性值
+
+```python
+from collections import defaultdict
+
+d_list = defaultdict(list)
+print(d_list['a'])
+
+d_list.default_factory = int
+print(d_list)
+```
+
+- note
+	- 当__geiitem__()没有获取到对应的值之后，defaultdict的__missing__(key)方法会通过default_factory将key及对应default_factory返回值的pair存放到defaultdict对象
+
+``` python
+>>> d_list = defaultdict(list)
+>>> 'haha' in  d_list
+False
+>>> d_list['haha']
+[]
+>>> 'haha' in  d_list
+True
+>>>
+```
+
+## default_factory of defaultdict
+- `list` group a sequence of key-value pairs into a dictionary of lists
+	- use the `list.append(value)` method
+- `int`  useful for counting
+	- use the `+=` mathematical operation
+- `set` useful for building a dictionary of sets（去重）
+	- use the `s.add(value)`method
+
+- 自定义default_factory
+	- 注意：用户自定义的default_factory属性值必须是没有参数的
+
+```python
+from collections import defaultdict
+
+def my_default_factory():
+    return 'default value'
+
+d_my = defaultdict(my_default_factory)
+print(d_my)
+print(d_my['key'])
+```
+
+## 自定义defaultdict类兼容python2.5以下版本
+
+```python
+try:
+    from collections import defaultdict
+except ImportError:
+    class defaultdict(dict):
+        def __init__(self, default_factory=None, *args, **kwargs):
+            super().__init__()
+            if (default_factory is not None) and\
+                (not hasattr(default_factory, '__call__')):
+                raise TypeError('first argument must be callable')
+            self.default_factory = default_factory
+
+        def __getitem__(self, key):
+            try:
+                return dict.__getitem__(key)
+            except KeyError:
+                return self.__missing__(key)
+
+        def __missing__(self, key):
+            if self.default_factory is None:
+                raise KeyError(key)
+            self[key] = value = self.default_factory()
+            return value
+
+        def __reduce__(self):
+            if self.default_factory is None:
+                args = tuple()
+            else:
+                args = self.default_factory
+            return type(self), args, None, None, self.items()
+
+        def copy(self):
+            return self.__copy__()
+
+        def __copy__(self):
+            return type(self)(self.default_factory, self)
+
+        def __deepcopy__(self, memo):
+            import copy
+            return type(self)(self.default_factory,
+                              copy.deepcopy(self.items()))
+
+        def __repr__(self):
+            return 'defaultdict({}, {})'.format(self.default_factory, 
+                                                dict.__repr__(self))
+        
+```
+
+
 
 
 
