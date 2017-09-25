@@ -4,6 +4,7 @@
 - [Python教程 ](python/index.md) 
 - [关系型数据库教程](relational_database/index.md)
 - [web页面设计](page/index.md)
+- [算法之美]()
 
 # Navigation For Useful Site 
 
