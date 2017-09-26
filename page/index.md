@@ -8,4 +8,4 @@
 
 ## CSS
 - [CSS介绍和选择器](css/selector.md)
-- [CSS介绍和选择器](html/attribute.md)
+- [CSS属性](html/attibute.md)
