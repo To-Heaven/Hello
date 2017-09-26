@@ -1,10 +1,84 @@
-## 字符串
-- 定义字符串
-	- name = 'ziawang'    --->   name = str('ziawang')
-		- 引号可以是单引号，双引号，三引号
-	- type(name)
-- 原始字符串  r  (raw)
-	-  r' prefix that disables most escape sequence processing'
+# 字符串对象
+
+## 获取字符串
+
+- name = 'ziawang'   
+	- 引号可以是单引号，双引号，三引号
+	- type(name)可以获取对象类型
+
+
+- 实例化字符串类获取字符串
+	-  class str(object='')
+	-  class str(object=b'', encoding='utf-8', errors = 'strict')   
+	-  return a string of object（**返回的是一个字符串，不是bytes类型的数据**）
+		-  if the object is empty, return a empty string
+	- arguments:
+		- if neither encoding nor errors is given, str(object) return object.__str__()
+		- if this object does not has the __str__method, str() fall back to returning repr(object)
+	- Note: 
+		- if at least  encoding or errors is given, object must be a byte-like object(bytes or bytearray）
+		- if  object is a byte-like object , str(object, encoding, errors)   <==> bytes.decode(encoding, errors)
+
+```python
+>>> str()
+''
+>>> str(b'ziawang', encoding='utf-8')
+'ziawang'
+>>> str(b'ziawang')
+"b'ziawang'"
+>>> b'ziawang'
+b'ziawang'
+>>> 
+```
+
+## 字符串的特点
+
+- **字符串不可以被更改，因为他们是不可变的**
+
+
+```python
+>>> b = 'qa'
+>>> b[0] = 'a'
+Traceback (most recent call last):
+  File "<pyshell#18>", line 1, in <module>
+    b[0] = 'a'
+TypeError: 'str' object does not support item assignment
+>>> 
+```
+
+
+## 字符串的常用操作 common operations
+
+- 字符串的连接
+	- 一个字符串是一个整体，它是不可变的类型，因此字符串连接总是返回一个新字符串
+	- 可以用 ` + ` 操作符连接（粘到一起，中间不会有空格）
+	- 可以用逗号隔开，连接后会在中间存在空格
+	- 如果没有加号，相邻的两个字符串会自动的连接在一起，但是这种情况不适用于一个字符串加上一个指向字符串的变量。这种情况下只能使用加号来连接代表字符串的变量和字符串
+
+
+``` python
+>>> str1 = 'ziawang'
+>>> str2 = 'haha'
+>>> str1+str2
+'ziawanghaha'
+>>> 'ziawang', 'haha'
+('ziawang', 'haha')
+>>> print('ziawang','haha')
+ziawang haha
+>>> 'ziawang''haha'
+'ziawanghaha'
+>>> 
+```
+
+- 可以用 *   来重复
+
+``` python 
+>>> 3*'ziawang' + ',haha'
+ziawangziawangziawang,haha
+```
+
+- 原始字符串 `r`  (raw-string)
+	- ` r'prefix that disables most escape sequence processing'`
 
 ```python
 >>> print('asdasdas\tdasd')
@@ -14,9 +88,6 @@ asdasdas\tdasd
 >>> 
 ```
 
-
-## 字符串的获取
-- using the str constructor
 - 字符串的切片
 	- 过大的索引值（下标值大于实际长度）会被字符串实际长度代替
 	- 当从下边界指向上边界方向与步长方向相反的时候，就会返回空字符串
@@ -44,48 +115,7 @@ True
 >>> 
 ```
 
-- **字符串不可以被更改，因为他们是不可变的**
 
-
-```python
->>> b = 'qa'
->>> b[0] = 'a'
-Traceback (most recent call last):
-  File "<pyshell#18>", line 1, in <module>
-    b[0] = 'a'
-TypeError: 'str' object does not support item assignment
->>> 
-```
-
-
-## 字符串操作
-- 字符串的连接方式
-	- 一个字符串是一个整体，它是不可变的类型
-	- 可以用  +  操作符连接（粘到一起，中间不会有空格）
-	- 可以用逗号隔开，连接后会在中间存在空格
-	- 如果没有加号，相邻的两个字符串会自动的连接在一起，但是这种情况不适用于一个字符串加上一个指向字符串的变量。这种情况下只能使用加号来连接代表字符串的变量和字符串
-
-
-``` python
->>> str1 = 'ziawang'
->>> str2 = 'haha'
->>> str1+str2
-'ziawanghaha'
->>> 'ziawang', 'haha'
-('ziawang', 'haha')
->>> print('ziawang','haha')
-ziawang haha
->>> 'ziawang''haha'
-'ziawanghaha'
->>> 
-```
-
-- 可以用 *   来重复
-
-``` python 
->>> 3*'ziawang' + ',haha'
-ziawangziawangziawang,haha
-```
 
 - 字符串也可以用索引来获取组成字符串中的元素
 - 以str = 'abcde'为例
@@ -103,7 +133,6 @@ ziawangziawangziawang,haha
 >>> 
 ```
 
-## 字符串的比较
 - 字符串的比较是按照字符位置一次比较。   'A'<'Z'<'a'<'z'
 
 ```python
@@ -120,34 +149,14 @@ True
 >>> s1 > s2
 True
 >>> 
+
 ```
 
-## class str(object='')
-## class str(object=b'', encoding='utf-8', errors = 'strict')
--  return a string of object
-	-  if the object is empty, return a empty string
-- arguments:
-	- if neither encoding nor errors is given, str(object) return object.__str__()
-	- if this object does not has the __str__method, str() fall back to returning repr(object)
-	- Note: 
-		- if at least  encoding or errors is given, object must be a byte-like object(bytes or bytearray）
-		- if  object is a byte-like object , str(object, encoding, errors)   <==> bytes.decode(encoding, errors)
-
-```python
-
->>> str()
-''
->>> str(b'ziawang', encoding='utf-8')
-'ziawang'
->>> str(b'ziawang')
-"b'ziawang'"
->>> b'ziawang'
-b'ziawang'
->>> 
-```
+## 字符串的属性variables
+- 待补充
 
 
-## String Methods
+## 字符串的方法methods
 
 - str.splitlines(keepends=False)
 	- return a list of the lines in the string , breaking at the boundaries . line breaks are not included in the resulting list unless keepends is given and True
@@ -240,8 +249,8 @@ True
 ```
 
 - str.expandtabs(tabsize=8) 返回一个字符串的副本，并选择指定的tabsize对字符串进行扩展
-- 当tabsize<len(str)的时候，tabsize为从\t位置开始将要空出的空格数
-- 当len(str)<tabsize的时候，从\t位置要空出的空格数为tabsize-len(str)
+	- 当tabsize<len(str)的时候，tabsize为从\t位置开始将要空出的空格数
+	- 当len(str)<tabsize的时候，从\t位置要空出的空格数为tabsize-len(str)
 
 ```python
 >>> str = '1234\t1234\t1234'
@@ -273,11 +282,11 @@ True
 ``` 
 
 - str.find(sub[start[end]]) 从字符串的左边开始找
-- Return the lowest index in the string where substring sub is found within the slice  s[start:end].Optional arguments start and end are inter preted as in slice notation. **Return -1 if sub is not found.**
+	- Return the lowest index in the string where substring sub is found within the slice  s[start:end].Optional arguments start and end are inter preted as in slice notation. **Return -1 if sub is not found.**
 
 - str.rfind(sub[start[end]])  从字符串的右边开始找
-- **注意**
-	- 两种方法得到的结果是相同的，即该字符sub所在的索引是固定不变的
+	- **注意**
+		- 两种方法得到的结果是相同的，即该字符sub所在的索引是固定不变的
 
 ```python
 >>> str = 'asdwqfcqfrwef'
@@ -343,7 +352,7 @@ haha, 1, 2, 3, 4
 
 ```
 - str.format(*args, **kwargs) 格式化字符串，并返回格式化处理后的字符串。
-- 在定制类时的操作
+	- 在定制类时的操作
 
 ```python
 class Demo:
@@ -365,7 +374,7 @@ Demo(1, 2)
 ```
 
 
-- 常用操作
+- s.format常用操作
 
 ```python
 args = ['ziawang', 23, 'Beijing', 'stock and python']
@@ -472,7 +481,11 @@ my name is ziawang, I'm 23 years old this year, I'm living in Beijing now. I lov
 
 - str.index(sub[start[end]])  和find一样，但是当没有找到substring的时候会爆出ValueError错误
 - str.rindex(sub[start[]end])  从右边开始，也会爆出Value错误
+
+
 ##  用于检测字符串的方法
+
+
 - str.isdigit()  检测字符串是否是只由数字组成。是则返回True
 - str.isnumeric()检测字符串是否只由数字组成，但是只针对Unicode对象
 - str.isalpha()检测字符串是否是只由字母组成
@@ -503,6 +516,7 @@ my name is ziawang, I'm 23 years old this year, I'm living in Beijing now. I lov
 'asdasd'
 >>> 
 ```
+
 - str.ljust(width[fillchar])  返回一个源字符串左对齐，并且使用指定字符（默认空格）填充至长度width的新字符串
 - str.rjust(width[fillchar]) 返回一个源字符串右对齐，并且使用指定字符（默认空格）填充至长度为width的新字符串
 
@@ -517,6 +531,7 @@ my name is ziawang, I'm 23 years old this year, I'm living in Beijing now. I lov
 >>> 
 
 ```
+
 - str.lstrip([char]) 截掉字符串左边指定的字符或字符串中存在的字符（默认是空格, \n, \t）
 - str.rstrip([char]) 截取掉字符串右边指定的字符，或字符串中存在的字符（默认是空格,\n, \t）
 - str.strip([char]) 截掉字符串首尾指定的字符或字符串中存在的字符（默认是空格, \n, \t），
@@ -549,6 +564,7 @@ my name is ziawang, I'm 23 years old this year, I'm living in Beijing now. I lov
 'wang'
 >>> 
 ```
+
 - **用处**
 	- 用于对用户输入的信息进行格式化（去除无用的内容）
 
@@ -558,10 +574,10 @@ password  = input().strip(' ')
 ```
 
 - str.maketrans(intab, outtab)  创建子字符隐射的转换表，进行字符转换，返回值是新的字符串，源字符串不会改变
-- intab 字符串中要被替代的字符组成的字符串
-- outtab对应intab中字符的字符串
-- **注意：python2.x**
-	- 使用str.maketrans()方法必须要先从模块string中调用maketrans方法
+	- intab 字符串中要被替代的字符组成的字符串
+	- outtab对应intab中字符的字符串
+	- **注意：python2.x**
+		- 使用str.maketrans()方法必须要先从模块string中调用maketrans方法
 - str.translate(table)  根据参数table提供的表来转换字符串中的字符
 - 翻译表table通过maketrans()方法转换而来
 
@@ -605,8 +621,8 @@ password  = input().strip(' ')
 ```  
 
 - string.split(s = '',  num = string.count(s))  通过分隔符  s 对字符串进行切片，参数num为切割的次数
-- str默认为所有的空字符，包括空格，换行\n，制表符\t
-- num分割次数
+	- str默认为所有的空字符，包括空格，换行\n，制表符\t
+	- num分割次数
 
 
 ```python
@@ -639,6 +655,7 @@ while True :
 >>> 
 
 ```
+
 - str.isdigit()判断一个字符串里面是否全是由数字组成，在python3中，isdigit只能识别str，byte和unicode，无法进行字符串中中文数字和罗马数字的判断
 - str.isdecimal()在python3中只可以对str和unicode进行识别，不能识别byte，中文数字和罗马数字
 - str.isnumberic()可以判断str，unicode，中文，罗马数字
@@ -656,7 +673,6 @@ while True :
 
 
 
-----------
 ## python字符串连接的三种方法以及其效率、适用场景
 - 方法一：直接用加号连接
 
@@ -697,8 +713,6 @@ info = ['ziawang', 'is  23  years old  ', 'living  in  Beijing']
 
 
 
-
-----------
 ##  将字符串中的字母转换成字符存储到列表中
 
 - 下面是笨方法
@@ -711,7 +725,7 @@ info = ['ziawang', 'is  23  years old  ', 'living  in  Beijing']
 >>> 
 ```
 - 其实直接用list()函数对tr进行处理即可
- * list(iterable) -> new list initialized from iterable's items
+	- list(iterable) -> new list initialized from iterable's items
 
 ```python
 >>> s = 'ziawang'
@@ -730,12 +744,16 @@ info = ['ziawang', 'is  23  years old  ', 'living  in  Beijing']
 > precedence      优先权
 
 
-## 超实用的模板字符串Template string
+# 模板字符串对象Template string
+## 模板字符串
+
 - **template string support $-based substitutions**
 	- $$ is an escape, it is replaced with a single $ 
 	- $identifier  names a substitution palceholder matching a mapping key of 'identifier'
 	- ${identifier} is equivalent to $identifier. 
 		- required when vaild identifier characters follow the placeholder but are not the part of the placeholder, such as ' ${noun}ification'
+
+## 模板字符串的方法
 
 - string.Template(template_string)
 	- create a template object
