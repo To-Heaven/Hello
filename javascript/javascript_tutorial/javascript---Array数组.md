@@ -117,3 +117,6 @@ console.log(arr_concat);	// [0, 1, 2, 3, 4, "haha", "xixi"]
 - a.join(seperator)
 	- 将数组中的元素用指定字符连接起来拼接成字符串，并返回该字符串
 	- seperator: 字符串，用来连接数组中过的元素
+
+- a.map(func)
+	- 将数组a中的元素经过func处理之后存放到一个新的数组中返回

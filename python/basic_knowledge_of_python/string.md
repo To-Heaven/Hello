@@ -33,6 +33,8 @@ b'ziawang'
 
 ## 字符串的特点
 
+- **字符串是序列，是可迭代的对象**，可以通过索引来获取字符串的子字符
+
 - **字符串不可以被更改，因为他们是不可变的**
 
 
@@ -45,6 +47,7 @@ Traceback (most recent call last):
 TypeError: 'str' object does not support item assignment
 >>> 
 ```
+
 
 
 ## 字符串的常用操作 common operations
@@ -139,7 +142,7 @@ True
 >>> s1 = 'a'
 >>> s2 = 'asdfff'
 >>> s1 == s2
-False
+False 
 >>> s1 > s2
 False
 >>> s1<s2
@@ -158,86 +161,9 @@ True
 
 ## 字符串的方法methods
 
-- str.splitlines(keepends=False)
-	- return a list of the lines in the string , breaking at the boundaries . line breaks are not included in the resulting list unless keepends is given and True
-	
-```python
->>> s = '012301230123'
->>> s = '12\n3\n\n456\r\n789\f4567\v'
->>> s
-'12\n3\n\n456\r\n789\x0c4567\x0b'
->>> s.splitlines()
-['12', '3', '', '456', '789', '4567']
->>> s.splitlines(keepends = True)
-['12\n', '3\n', '\n', '456\r\n', '789\x0c', '4567\x0b']
->>> 
-
-``` 
-
-- str.capitalize()返回一个字符串，首字母大写，其他的字母小写
-> **原str并未被修改**
-
-    Return a capitalized version of S, i.e. make the first character
-    have upper case and the rest lower case.
-
-```python
->>> str  = 'ziawang'
->>> str.capitalize
-<built-in method capitalize of str object at 0x00000155690D4DF8>
->>> str.capitalize()
-'Ziawang'
-```
-
-- str.title()  返回一个标题化的字符串，所有的单词以大写开始，其余字母均变成小写
-
-```python
->>> s = 'ziawang   is  23 years old'
->>> s.title()
-'Ziawang Is 23 Years Old '
->>> 
-```
-
--  str.casefold()返回一个字符串，全部小写（支持多种编码，lower只支持ASCII编码，即支队A—Z有效）
-> **原str并未被修改**
-
-```python
->>> str.casefold()
-'ziawang'
->>> str
-'ZiaWang'
->>> 
-```
-
-- str.swapcase()反转字符串中字母的大小写
-	Return a copy of S with uppercase characters converted to lowercase
-	and vice versa.
+### 查询字符串
 
 
-- str.center(width[fillchar])返回一个指定width长度的字符串，并将原字符放在中间，其他位置用fillchar填充
-
-```python
->>> str = 'ZiaWang'
->>> str.center(20, '-')
-'------ZiaWang-------'
->>> str
-'ZiaWang'
->>> 
-```
-
-- str.count(sub[start[end]])返回字符串中某字符串出现的次数，可以用start和end来限制统计范围
-
-```python
->>> str = 'qwertqwerqwer'
->>> len(str)
-13
->>> str.count('q')
-3
->>> str.count('q',1)
-2
->>> str.count('q',1,8)
-1
->>> 
-```
 - str.endswith(sub[start[end]])判断字符串的结束位置的字符是否是指定值，也可以用start和end限定判断范围
 
 ```python
@@ -248,45 +174,13 @@ True
 True
 ```
 
-- str.expandtabs(tabsize=8) 返回一个字符串的副本，并选择指定的tabsize对字符串进行扩展
-	- 当tabsize<len(str)的时候，tabsize为从\t位置开始将要空出的空格数
-	- 当len(str)<tabsize的时候，从\t位置要空出的空格数为tabsize-len(str)
-
-```python
->>> str = '1234\t1234\t1234'
->>> str
-'1234\t1234\t1234'
->>> print(str)
-1234	1234	1234
->>> str.expandtabs(10)
-'1234      1234      1234'
->>> str.expandtabs(0)
-'123412341234'
->>> str.expandtabs(2)
-'1234  1234  1234'
->>> str.expandtabs(7)
-'1234   1234   1234'
->>> str = '12345'
->>> str.expandtabs(0)
-'12345'
->>> str = '12345\t12345\t12345'
->>> str.expandtabs(0)
-'123451234512345'
->>> str.expandtabs(5)
-'12345     12345     12345'
->>> str.expandtabs(9)
-'12345    12345    12345'
->>> str.expandtabs(11)
-'12345      12345      12345'
->>> 
-``` 
 
 - str.find(sub[start[end]]) 从字符串的左边开始找
 	- Return the lowest index in the string where substring sub is found within the slice  s[start:end].Optional arguments start and end are inter preted as in slice notation. **Return -1 if sub is not found.**
 
 - str.rfind(sub[start[end]])  从字符串的右边开始找
 	- **注意**
-		- 两种方法得到的结果是相同的，即该字符sub所在的索引是固定不变的
+		- 两种方法得到的结果是相同的，即该字符sub所在的索引是固定不变的（但是当一个字符串中存在了重复的字符的时候得到的结果就是不一样的）
 
 ```python
 >>> str = 'asdwqfcqfrwef'
@@ -305,7 +199,131 @@ True
 >>> 
 ```
 
-- str.join(iterable) 将序列sequence中的元素用str连接起来，返回一个生成新的字符串。但是要注意的是，该序列的元素应该是字符串，如果是数字就会报错
+
+- str.index(sub[start[end]])  和find一样，但是当没有找到substring的时候会爆出ValueError错误
+- str.rindex(sub[start[]end])  从右边开始，也会爆出Value错误
+- str.count(sub[start[end]])返回字符串中某字符串出现的次数，可以用start和end来限制统计范围
+
+```python
+>>> str = 'qwertqwerqwer'
+>>> len(str)
+13
+>>> str.count('q')
+3
+>>> str.count('q',1)
+2
+>>> str.count('q',1,8)
+1
+>>> 
+```
+
+- max(str) 
+- min(str)
+-  返回字符串中最大/小的字母
+
+### 字符串切割
+- str.partition(string)  返回一个三元元组。该方法将str的副本进行分割，第一个元素是分隔符左边的子字符串，第二个为分隔符本身，第三个为分隔符右边的子字符串
+
+```python
+>>> str = 'ziawangisfrom Bozhou'
+>>> str.partition('is')
+('ziawang', 'is', 'from Bozhou')
+>>> 
+```
+
+- str.splitlines(keepends=False)
+	- return a list of the lines in the string , breaking at the boundaries .
+	-  line breaks are not included in the resulting list unless keepends is given and True
+	
+```python
+>>> s = '012301230123'
+>>> s = '12\n3\n\n456\r\n789\f4567\v'
+>>> s
+'12\n3\n\n456\r\n789\x0c4567\x0b'
+>>> s.splitlines()
+['12', '3', '', '456', '789', '4567']
+>>> s.splitlines(keepends = True)
+['12\n', '3\n', '\n', '456\r\n', '789\x0c', '4567\x0b']
+>>> 
+
+``` 
+
+- string.split(s = '',  num = string.count(s))  通过分隔符  s 对字符串进行切片，参数num为切割的次数
+	- str默认为所有的空字符，包括空格，换行\n，制表符\t
+	- num分割次数
+
+
+```python
+>>> str  = 'haha \t haha \thaha \thaha'
+>>> str.split(' ', 2)
+['haha', '\t', 'haha \thaha \thaha']
+>>> str.split()
+['haha', 'haha', 'haha', 'haha']
+>>> 
+```
+
+- 应用场景：获取字符串中指定的子字符串（可以对用户输入的字符串进行格式化，每隔一定长度插入一个特定字符，这样方便之后用split切分成列表）
+
+```python
+while True :
+	cmd = input('>> : ').strip()
+	if len(cmd) == 0   :    continue
+	cmd_new = cmd.split()
+	print('命令shi:%s, 命令的参数是%s'%(cmd_new[0], cmd_new[1]))	
+```
+
+
+### 字符串判断
+
+- str.islower()检测字符串是否由小写字母组成
+- str.isupper()检测字符串中所有字母是否全部都是大写
+- str.isalpha()检测字符串是否是只由字母组成
+- - str.isalnum()检测字符串是否是由字母和数字组成
+- str.istitle() 检测字符串中所有单词的首字母是否全部都大写
+- str.isspace()检测字符串是否只由空格组成
+- str.isdigit()  检测字符串是否是只由数字组成。是则返回True
+- str.isnumeric()检测字符串是否只由数字组成，但是只针对Unicode对象
+
+
+- str.isdigit()判断一个字符串里面是否全是由数字组成，在python3中，isdigit只能识别str，byte和unicode，无法进行字符串中中文数字和罗马数字的判断
+- str.isdecimal()在python3中只可以对str和unicode进行识别，不能识别byte，中文数字和罗马数字
+- str.isnumberic()可以判断str，unicode，中文，罗马数字
+> bytes 没有 isdecimal(), isnumber()方法
+**应该选择str.isdigit()来进行数值判断，因为它适用于大部分场景**
+
+```python
+AGE = 56
+while True :
+	age = input('please input the age :').strip()
+	if len(age) == 0:   continue
+	if age.isdigit() :
+		...balabala...
+```
+
+
+### 返回新字符串
+
+- str.maketrans(intab, outtab)  创建子字符隐射的转换表，进行字符转换，源字符串不会改变
+	- 返回值是一个映射表，用来作为`translate()`的参数
+	- intab 字符串中要被替代的字符组成的字符串
+	- outtab对应intab中字符的字符串
+	- **注意：python2.x**
+		- 使用str.maketrans()方法必须要先从模块string中调用maketrans方法
+- str.translate(table)  根据参数table提供的表来转换字符串中的字符
+- 翻译表table通过maketrans()方法转换而来
+
+```python
+>>> s = 'ziawang'
+>>> s = 'haha'
+>>> l = s.maketrans('ha', 'xi')
+>>> l
+{104: 120, 97: 105}
+>>> s.translate(l)
+'xixi'
+>>> 
+```
+
+- str.join(iterable) 将序列sequence中的元素用str连接起来，返回一个生成新的字符串。但是要注意的是，该**序列的元素应该是字符串，如果是数字就会报错**
 
 > 官方文档
 > join(...)
@@ -341,7 +359,7 @@ TypeError: sequence item 1: expected str instance, int found
 >>> 
 ```
 
-- **其实根本不用这么麻烦，完全可以用print函数这样写**
+- **可以用print函数这样写**
 
 ```python
 >>> row = ['haha', 1, 2, 3, 4]
@@ -349,8 +367,137 @@ TypeError: sequence item 1: expected str instance, int found
 haha, 1, 2, 3, 4
 >>> 
 
-
 ```
+
+
+- str.lstrip([char]) 截掉字符串左边指定的字符或字符串中存在的字符（默认是空格, \n, \t）
+- str.rstrip([char]) 截取掉字符串右边指定的字符，或字符串中存在的字符（默认是空格,\n, \t）
+- str.strip([char]) 截掉字符串首尾指定的字符或字符串中存在的字符（默认是空格, \n, \t），
+
+```python
+>>> s = '   ahha  haha   '
+>>> s_new = s.strip(' ')
+>>> s_new
+'ahha  haha'
+>>> s_new = s.strip('a')
+>>> s_new
+'   ahha  haha   '
+>>> s_new = s.lstrip(' ')
+>>> s_new
+'ahha  haha   '
+>>> s_new = s.rstrip()
+>>> s_new
+'   ahha  haha'
+>>> s
+'   ahha  haha   '
+>>> str = 'ziawang'
+>>> str = '   zi  wang  haha a '
+>>> str.strip('a')
+'   zi  wang  haha a '
+>>> str.strip('a ')
+'zi  wang  hah'
+>>> str.strip('a z')
+'i  wang  hah'
+>>> str.strip(' ahzi')
+'wang'
+>>> 
+```
+
+- **用处**
+	- 用于对用户输入的信息进行格式化（去除无用的内容）
+
+```python
+name = input().strip(' ')   # 去除多余的空格
+password  = input().strip(' ')
+```
+
+
+-  str.casefold()返回一个字符串，全部小写（支持多种编码，lower只支持ASCII编码，即支队A—Z有效）
+> **原str并未被修改**
+
+```python
+>>> str.casefold()
+'ziawang'
+>>> str
+'ZiaWang'
+>>> 
+```
+
+- str.swapcase()反转字符串中字母的大小写
+	- Return a copy of S with uppercase characters converted to lowercase and vice versa.
+
+- str.center(width[fillchar])返回一个指定width长度的字符串，并将原字符放在中间，其他位置用fillchar填充
+
+```python
+>>> str = 'ZiaWang'
+>>> str.center(20, '-')
+'------ZiaWang-------'
+>>> str
+'ZiaWang'
+>>> 
+```
+
+> **原str并未被修改**
+
+- str.capitalize()返回一个字符串，首字母大写，其他的字母小写
+	- Return a capitalized version of S, i.e. make the first character have upper case and the rest lower case.
+
+```python
+>>> str  = 'ziawang'
+>>> str.capitalize
+<built-in method capitalize of str object at 0x00000155690D4DF8>
+>>> str.capitalize()
+'Ziawang'
+```
+
+- str.title()  返回一个标题化的字符串，所有的单词以大写开始，其余字母均变成小写
+
+```python
+>>> s = 'ziawang   is  23 years old'
+>>> s.title()
+'Ziawang Is 23 Years Old '
+>>> 
+```
+
+
+
+
+- str.expandtabs(tabsize=8) 返回一个字符串的副本，并选择指定的tabsize对字符串进行扩展
+	- 当tabsize<len(str)的时候，tabsize为从\t位置开始将要空出的空格数
+	- 当len(str)<tabsize的时候，从\t位置要空出的空格数为tabsize-len(str)
+
+```python
+>>> str = '1234\t1234\t1234'
+>>> str
+'1234\t1234\t1234'
+>>> print(str)
+1234	1234	1234
+>>> str.expandtabs(10)
+'1234      1234      1234'
+>>> str.expandtabs(0)
+'123412341234'
+>>> str.expandtabs(2)
+'1234  1234  1234'
+>>> str.expandtabs(7)
+'1234   1234   1234'
+>>> str = '12345'
+>>> str.expandtabs(0)
+'12345'
+>>> str = '12345\t12345\t12345'
+>>> str.expandtabs(0)
+'123451234512345'
+>>> str.expandtabs(5)
+'12345     12345     12345'
+>>> str.expandtabs(9)
+'12345    12345    12345'
+>>> str.expandtabs(11)
+'12345      12345      12345'
+>>> 
+``` 
+
+
+
+
 - str.format(*args, **kwargs) 格式化字符串，并返回格式化处理后的字符串。
 	- 在定制类时的操作
 
@@ -361,11 +508,11 @@ class Demo:
         self.y = y
 
     def __repr__(self):
-        return 'Demo({self.x}, {self.y})'.format(self=self)
+        return 'Demo({self.x}, {self.y})'.format(self=self)	
 
 
 d = Demo(1, 2)
-print(d)\
+print(d)
 
 ------------------------------------------------------------
 
@@ -375,11 +522,12 @@ Demo(1, 2)
 
 
 - s.format常用操作
+	- 在`{}`中不指定元素索引或key的时候，如果左侧`{}`数量多余args或kwargs中元素数量，就会报错，但是如果args或kwargs中元素数量多余`{}`数量，就不会报错
 
 ```python
 args = ['ziawang', 23, 'Beijing', 'stock and python']
 
-s1 = "my name is {}, I'm {} years old this year, I'm living in {} now. I love {}".format(*args)
+s1 = "my name is {}, I'm {} years old this year, I'm living in {} now. I love {}".format(*args)    	
 print(s1)
 # 通过列表索引来设置参数
 s2 = "my name is {0[0]}, I'm {0[1]} years old this year, I'm living in {0[2]} now. I love {0[3]}".format(args)
@@ -479,25 +627,6 @@ my name is ziawang, I'm 23 years old this year, I'm living in Beijing now. I lov
 
 
 
-- str.index(sub[start[end]])  和find一样，但是当没有找到substring的时候会爆出ValueError错误
-- str.rindex(sub[start[]end])  从右边开始，也会爆出Value错误
-
-
-##  用于检测字符串的方法
-
-
-- str.isdigit()  检测字符串是否是只由数字组成。是则返回True
-- str.isnumeric()检测字符串是否只由数字组成，但是只针对Unicode对象
-- str.isalpha()检测字符串是否是只由字母组成
-- str.isalnum()检测字符串是否是由字母和数字组成
-- str.islower()检测字符串是否由小写字母组成
-- str.isspace()检测字符串是否只由空格组成
-- str.istitle() 检测字符串中所有单词的首字母是否全部都大写
-- str.upper()检测字符串中所有字母是否全部都是大写
-
-
-----------
-
 - str.lower()返回一个全是小写字母的字符串，源字符串未改变
 - str.upper()返回一个全是大写字母的字符串，源字符串未改变
 
@@ -532,117 +661,6 @@ my name is ziawang, I'm 23 years old this year, I'm living in Beijing now. I lov
 
 ```
 
-- str.lstrip([char]) 截掉字符串左边指定的字符或字符串中存在的字符（默认是空格, \n, \t）
-- str.rstrip([char]) 截取掉字符串右边指定的字符，或字符串中存在的字符（默认是空格,\n, \t）
-- str.strip([char]) 截掉字符串首尾指定的字符或字符串中存在的字符（默认是空格, \n, \t），
-
-```python
->>> s = '   ahha  haha   '
->>> s_new = s.strip(' ')
->>> s_new
-'ahha  haha'
->>> s_new = s.strip('a')
->>> s_new
-'   ahha  haha   '
->>> s_new = s.lstrip(' ')
->>> s_new
-'ahha  haha   '
->>> s_new = s.rstrip()
->>> s_new
-'   ahha  haha'
->>> s
-'   ahha  haha   '
->>> str = 'ziawang'
->>> str = '   zi  wang  haha a '
->>> str.strip('a')
-'   zi  wang  haha a '
->>> str.strip('a ')
-'zi  wang  hah'
->>> str.strip('a z')
-'i  wang  hah'
->>> str.strip(' ahzi')
-'wang'
->>> 
-```
-
-- **用处**
-	- 用于对用户输入的信息进行格式化（去除无用的内容）
-
-```python
-name = input().strip(' ')   # 去除多余的空格
-password  = input().strip(' ')
-```
-
-- str.maketrans(intab, outtab)  创建子字符隐射的转换表，进行字符转换，返回值是新的字符串，源字符串不会改变
-	- intab 字符串中要被替代的字符组成的字符串
-	- outtab对应intab中字符的字符串
-	- **注意：python2.x**
-		- 使用str.maketrans()方法必须要先从模块string中调用maketrans方法
-- str.translate(table)  根据参数table提供的表来转换字符串中的字符
-- 翻译表table通过maketrans()方法转换而来
-
-```python
->>> s = 'ziawang'
->>> s = 'haha'
->>> l = s.maketrans('ha', 'xi')
->>> l
-{104: 120, 97: 105}
->>> s.translate(l)
-'xixi'
->>> 
-```
-
-
-- max(str) 
-- min(str)
--  返回字符串中最大/小的字母
-
-
-- str.partition(string)  返回一个三元元组。该方法将str的副本进行分割，第一个元素是分隔符左边的子字符串，第二个为分隔符本身，第三个为分隔符右边的子字符串
-
-```python
->>> str = 'ziawangisfrom Bozhou'
->>> str.partition('is')
-('ziawang', 'is', 'from Bozhou')
->>> 
-```
-
-- str.replace(old, new[maxtimes])把字符串中的old字符串替换成new字符串，maxtimes为替换的最大次数
-
-```python
->>> str = 'ziawangisfrom Bozhou'*3
->>> str
-'ziawangisfrom Bozhouziawangisfrom Bozhouziawangisfrom Bozhou'
->>> s = str.replace('ziawang', 'wangzihao',2)
->>> s
-'wangzihaoisfrom Bozhouwangzihaoisfrom Bozhouziawangisfrom Bozhou'
->>> 
->
-```  
-
-- string.split(s = '',  num = string.count(s))  通过分隔符  s 对字符串进行切片，参数num为切割的次数
-	- str默认为所有的空字符，包括空格，换行\n，制表符\t
-	- num分割次数
-
-
-```python
->>> str  = 'haha \t haha \thaha \thaha'
->>> str.split(' ', 2)
-['haha', '\t', 'haha \thaha \thaha']
->>> str.split()
-['haha', 'haha', 'haha', 'haha']
->>> 
-```
-
-- 应用场景：获取字符串中指定的子字符串（可以对用户输入的字符串进行格式化，每隔一定长度插入一个特定字符，这样方便之后用split切分成列表）
-
-```python
-while True :
-	cmd = input('>> : ').strip()
-	if len(cmd) == 0   :    continue
-	cmd_new = cmd.split()
-	print('命令shi:%s, 命令的参数是%s'%(cmd_new[0], cmd_new[1]))	
-```
 
 - str.zfill(width)  返回指定长度的字符串，字符串右对齐，前面填充0
 
@@ -656,20 +674,6 @@ while True :
 
 ```
 
-- str.isdigit()判断一个字符串里面是否全是由数字组成，在python3中，isdigit只能识别str，byte和unicode，无法进行字符串中中文数字和罗马数字的判断
-- str.isdecimal()在python3中只可以对str和unicode进行识别，不能识别byte，中文数字和罗马数字
-- str.isnumberic()可以判断str，unicode，中文，罗马数字
-> bytes 没有 isdecimal(), isnumber()方法
-**应该选择str.isdigit()来进行数值判断，因为它适用于大部分场景**
-
-```python
-AGE = 56
-while True :
-	age = input('please input the age :').strip()
-	if len(age) == 0:   continue
-	if age.isdigit() :
-		...balabala...
-```
 
 
 

@@ -72,9 +72,12 @@
 # python进阶
 > 我们愈是学习，愈觉得自己的贫乏。——雪莱
 
-- [数据结构](advanced_knowledge_of_python/data_structure.md)
-- [数据模型](advanced_knowledge_of_python/data_model.md)
-- [对象引用、可变性、垃圾回收](advanced_knowledge_of_python/object_reference_garbage.md)
+- [代码进阶](advanced_knowledge_of_python/advanced_pythonic.md)
+- [语法结构与效率](advanced_knowledge_of_python/advanced_grammar.md)
+- [数据结构](advanced_knowledge_of_python/advanced_data_struct.md)
+- [函数进阶](advanced_knowledge_of_python/advanced_function.md)
+- [异常处理](advanced_knowledge_of_python/advanced_try_except.md)
+- [模块与包处理](advanced_knowledge_of_python/advanced_module_package.md)
 
 # python题库
 > 学习知识要善于思考，思考，再思考。我就是靠这个方法成为科学家的。—— 爱因斯坦
