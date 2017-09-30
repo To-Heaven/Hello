@@ -52,6 +52,25 @@ TypeError: 'str' object does not support item assignment
 
 ## 字符串的常用操作 common operations
 
+- python3.6新操作`f'...{value}'` 拼接字符串
+	- 除了简单的拼接字符串的功能外，还可以在大括号中传入表达式比如可以传入`"zia" + "wang"`这样也能输出相同结果
+	- 表达式内可以直接是数字、列表，对数字可以在大括号内进行运算并输出
+	- 在平常使用时，为了保证可阅读性，可以用变量指向该表达式，传入变量即可
+
+```python
+>>> name = 'ziawang'
+>>> str_say = f'my name is {name}'
+>>> str_say
+'my name is ziawang'
+>>> str_num = f'result is {1_5856_1230 ** 2}'
+>>> str_num
+'result is 25141663659112900'
+>>> str_list = f'result is {[1, 2] * 2}'
+>>> str_list
+'result is [1, 2, 1, 2]'
+>>>
+```
+
 - 字符串的连接
 	- 一个字符串是一个整体，它是不可变的类型，因此字符串连接总是返回一个新字符串
 	- 可以用 ` + ` 操作符连接（粘到一起，中间不会有空格）
