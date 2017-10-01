@@ -111,8 +111,7 @@ for (初始条件;判断条件;递增/减条件){
 
 
 ## for in  遍历
-- 常用来遍历数组、对象（遍历对象的属性，其实array的每一个元素的索引被认为数组的属性）
-- 结构
+- 用来遍历数组，**for...in...**遍历得到的是对象的属性名，对于数组对象来说，`for...in...`遍历得到的是对象的索引（索引是数组对象的属性），因此要通过`for ...in ...`获取数组中存放的值，需要配合索引或者使用`for . . . of . . .`循环
 
 ```
 for (var i in container){
@@ -126,6 +125,18 @@ for (var i in arr_num){
     alert(val);
 }
 ```
+
+## for of 遍历
+- 与`for . . . in `不同， `for. . . of`遍历得到的是对象中的元素值
+
+```javascript
+var iter_array = ['ziawang', 20, 'non-marriage', 'has-girlfriend'];
+for (var i of iter_array) {
+    console.log(i);
+}
+```
+
+
 
 ## 死循环
 - for实现死循环
