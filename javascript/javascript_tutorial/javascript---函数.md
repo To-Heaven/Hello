@@ -117,3 +117,18 @@ func_rest(1, 2);            // 1 2 []
 func_rest(1, 2, 3, 4);      // 1 2 [3, 4]
 ```
 
+
+## 函数作为返回值
+
+```javascript
+var arr_num = [1, 2, 3, 4, 5];
+
+function sum_arr(arr) {
+    return arr.reduce(function (p1, p2) {
+        return p1 + p2
+    })
+}
+
+res_arr = sum_arr(arr_num);
+console.log(res_arr);
+```
