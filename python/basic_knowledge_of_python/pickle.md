@@ -33,19 +33,20 @@
 - pickle.dump(obj, file, protocol=None, *, fix_imports=True)
 	-  write a bytes object represent the object to the specified file
 	-  file:   
-		1. must have a write() method that accepts a single bytes argument
-		2. can be an on-disk file opened for binary writing
+		1. **must have a write() method that accepts a single bytes argument**
+		2. can be a file object of an on-disk file opened for binary writing
 		3. can also be an io.BytesIO instance or any other custom object that meets this interface.
 
 
 - pickle.loads(bytes_object, *, fix_imports=True, encoding=”ASCII”, errors=”strict”)
-	- Read a pickled objec from a bytes object and return the reconstituted object specified therein.
+	- Read a pickled object from a bytes object and return the reconstituted object specified therein.
 
 - pickle.load(file, *, fix_imports=True, encoding=”ASCII”, errors=”strict”)
 	- Read a pickled object representation from the open file object 'file' and return the reconstituted object specified therein
 	- the 'file' must have two methods
 		- a read() method that takes an integer argument
 		-  a readline() method that requires no arguments
+		-  the mode of this open file object must in a binary way  
 
 
 ## values can be pickled
@@ -92,3 +93,4 @@ with open('info.pickle', 'rb') as rb:
 
 Process finished with exit code 0
 ```
+
