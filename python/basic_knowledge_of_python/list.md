@@ -1,3 +1,5 @@
+[点击查看我整理的列表思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/list.png?raw=true)
+
 ## sequence comparison
 
 > additional		补充的
@@ -130,7 +132,11 @@ l.append(555)
 >>> 
 ```
 
-- list.extend(list) 将一个给定列表中的所有元素都添加到另一个列表中
+- list.extend(iterable) 将一个将以个iterable中的元素添加到列表中
+	- Iterable
+		- 对于字典，添加的是字典的key
+		- 对于集合，添加的是集合的元素
+		- 对于元组，添加的是元组中的值
 	- **注意：这个方法的返回值为None，无返回值，注意下面的例子**
 
 > 相当于   list[len(list):] = l
