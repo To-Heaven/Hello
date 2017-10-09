@@ -14,6 +14,20 @@
 	- `outerHeight`
 		- 浏览器的整个高度  
 
+- 重要的方法
+	- setInterval(code, millisec)
+		- code:要被调用的函数或者要执行的代码串
+		- millisec：周期性调用code的时间间隔，以毫秒计数
+		- 返回一个对应此次调用的ID值，作为clearIterval()参数，用于关闭重复调用code
+	- clearIterval(ID_of_setiterval)
+		- 取消由ID_of_setiterval对应setIterval方法设置的timeout
+	-  setTimeout(code, millisec)
+		-  在指定毫秒数millisec之后调用code
+	-  clearTimeout()
+		-  取消由setTimeout()设置的timeout
+	
+
+
 
 ## navigate
 - navigate对象用来获取浏览器及计算机的相关信息
