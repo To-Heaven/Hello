@@ -1,4 +1,5 @@
 # 表操作
+[点击查看我整理的本节思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/table_operation.png?raw=true)
 
 ## 基础简单操作
 - 创建一个表
