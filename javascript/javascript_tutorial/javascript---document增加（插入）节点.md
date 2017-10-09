@@ -2,7 +2,7 @@
 - 创建节点对象
 	- `document.createElement(str_tag)`
 	
-- 为节点对象绑定属性
+## 为节点对象绑定属性
 	- 使用`obj.xxx = xxx`方式绑定
 		- obj.innertext='xxx'
 		- obj.type='text/css'
@@ -10,13 +10,14 @@
 	- 使用`obj.setAttribute(str_attr, str_value)`
 		- str_attr是要绑定的属性名
 		- str_value是要绑定的属性值
-	
+
+## 添加子节点	
 - 使用节点对象的appendChild方法为其添加节点
 	- 子节点会被添加到children列表的最后
 	- `par.appendChild(sub)`
 
 ## 修改节点位置
-- 直接节点对象作为参数传递给目标节点的appendChild方法即可
+- 直接将节点对象作为参数传递给目标节点的appendChild方法即可
 
 ## 插入节点到指定位置
 - 使用节点对象的`par.insertBefore(sub, ref)`方法
