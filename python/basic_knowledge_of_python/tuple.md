@@ -1,3 +1,4 @@
+[点击查看我整理的元组思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/tuple.png?raw=true)
 ## tuple
 - class tuple(object)
 	- tuple() -> empty tuple
