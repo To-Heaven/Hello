@@ -32,7 +32,10 @@
 	- 返回子节点列表中的第一个子节点
 - ele.lastElementChild
 	- 返回节点列表中最后一个子节点 
-
+- nextElementSibling
+	- 下一个兄弟标签元素
+- previousElementSibiling
+	- 上一个兄弟标签原元素
 
 ## 通过css选择器获取
 > [CSS选择器](http://www.ziawang.com/page/css/selector.html)
