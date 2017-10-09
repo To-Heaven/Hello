@@ -1,11 +1,31 @@
+# 修改标签
+## 替换标签
+- par.replaceChild(new_sub, old_sub)
+
+
+
+
+# 修改标签属性
+- 设置属性
+	- 使用`obj.attr_name = xxx`
+	- 使用`obj.setAttrbute(name, value)`
+
+- 获取属性/查询属性值
+	- `obj.attr_name`
+	- `obj.getAttribute(属性名)`
+
+- 删除属性
+	- `obj.removeAttribute(属性名)`
+
+
+
+
 # 修改节点内容
 
 ## 修改标签内文本
 - 使用节点对象的`innerHTML`属性、`innerText`属性以及`textContent`属性
 - 注意
 	- 使用上述属性修改节点对象的内容后，页面被加载并执行script标签中js代码之后，页面中节点标签内的所有内容都会被修改成新内容。即原来该标签的样式会被清除
-
-
 #### innerHTML
 - 即可以修改节点文本而且可以修改节点内的节点树
 
@@ -39,4 +59,12 @@
 
 ```
 
-
+- 操作标签class
+	- 查看标签类名
+		- `obj.className`属性
+	- 获取类名组成的list
+		- `obj.classList` 
+	- 为节点增加类
+		- `obj.classlist.add(cls_name)`
+	- 移除节点类
+		- `obj.classlist.remove(cls_name)`  
