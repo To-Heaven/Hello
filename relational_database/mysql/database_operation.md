@@ -1,5 +1,8 @@
 # 数据库操作
 
+[点击查看我整理的本节思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/mysql_database_operation.png?raw=true)
+
+
 > 对于某些数据库和表共有的命令关键字，比如select, drop, create, alter等，这些关键字后面一定要加上被操作对象的类型，因此在写这一类命令的时候要指明是database还是table。
 > 对于数据库或者表自己独有的关键字命令，就不用声明关键字作用的对象了，直接使用该关键字作用到对应的名称上就好，比如数据库的use方法
 
