@@ -1,9 +1,7 @@
 # 修改标签
 ## 替换标签
 - par.replaceChild(new_sub, old_sub)
-
-
-
+	- 通过父标签来替换目标标签
 
 # 修改标签属性
 - 设置属性
@@ -17,6 +15,7 @@
 - 删除属性
 	- `obj.removeAttribute(属性名)`
 
+- **注意**，对于`input, select, textarea`标签来说，要操作标签中的内容，不能使用`obj.innertext`或`obj.innerHTML`或`obj.textContent`。应该使用`obj.value`
 
 
 
