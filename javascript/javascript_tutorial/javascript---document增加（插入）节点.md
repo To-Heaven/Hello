@@ -2,6 +2,7 @@
 - 创建节点对象
 	- `document.createElement(str_tag)`
 	
+
 ## 为节点对象绑定属性
 	- 使用`obj.xxx = xxx`方式绑定
 		- obj.innertext='xxx'
@@ -23,7 +24,7 @@
 - 使用节点对象的`par.insertBefore(sub, ref)`方法
 	- par是父节点对象
 	- sub是要插入的节点对象
-	- ref是sub系欸但对象的位置参考对象
+	- ref是sub节点对象的位置参考对象
 
 
 
