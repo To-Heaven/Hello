@@ -2,7 +2,7 @@
 
 ## 插入数据 INSERT
 - 插入一条完整数据
-	- `INSERT INTO 表名(字段1,字段2,字段3…字段n) VALUES(值1,值2,值3…值n);`
+	- `INSERT INTO 表名(字段1,字段2,字段3…字段n) VALUES(值a1,值a2,值a3…值an);`
 	- `INSERT INTO 表名 VALUES (值1,值2,值3…值n);`
 		- 当不指定字段的时候，默认所有字段
 
