@@ -19,11 +19,15 @@
 #### 返回节点对象组成的列表
 - ele.getElementsByTagName(str_tag_name)
 	- 返回标签名为str_tag_name的节点对象组成的列表
-	
+- ele.getElementsByName('name_value')
+	- 返回标签name属性为'name_value'的标签都想组成的列表
+
 - ele.getElementsByClass(str_class)
 	- 返回类为str_class的节点对象组成的列表 
 
 ### 属性
+- ele.parElement
+	- 返回节点的父节点对象
 - ele.children
 	- 返回一个子节点对象组成的列表
 	- 节点的属性
