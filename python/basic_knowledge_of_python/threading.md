@@ -112,21 +112,30 @@ Process finished with exit code 0
 	- 实现这种功能有很多方法，比如实例化一个dict对象，以线程名作为key，对应的数据作为value，以达到相同效果，但明显没有这种方法方便灵巧 
 
 ```python
-from threading import local, Thread, get_ident
+from threading import Thread, local, get_ident
 
-local_data = local()
-local_data.value = 'main thread'
 
-def task(args):
-    local_data.value = args
-    print('%s : %s'%(get_ident(), local_data.value))
+class Widge:
+    pass
+
+
+def test():
+    local_data = local()
+    local_data.x = 1
+
+    def thread_func():
+        print(f'has x in new thread : {hasattr(local_data, "x")}')
+        local_data.x = 2
+        print(f'has x in new thread : {hasattr(local_data, "x")}')
+
+    t = Thread(target=thread_func)
+    t.start()
+    t.join()
+    print(f'x in pre thread is {local_data.x}')
+
 
 if __name__ == '__main__':
-    print('主线程: %s'%get_ident())
-    for i in range(3):
-        t = Thread(target=task, args=(i, ))
-        t.start()
-    task(local_data.value)
+    test()
 ```
 
 
