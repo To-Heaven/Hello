@@ -118,9 +118,9 @@ class StockProcess(Process):
 
     def run(self):
         self.last_count()
-        self.mutex.acquire()
-        self.get_stock()
-        self.mutex.release()
+        with self.mutex:
+            print(self.pid, d, id(d))		# 每一个进程内的d都是不同的
+            self.get_stock()
 
     def last_count(self):
         print(d)
