@@ -599,6 +599,19 @@ def my_default_factory():
 d_my = defaultdict(my_default_factory)
 print(d_my)
 print(d_my['key'])
+
+# =====================================
+from collections import defaultdict
+
+count = defaultdict(int)
+
+print(count)
+
+l = ['a', 'b', 'a', 'c', 'b', 'd', 'c', 'e']
+for i in l:
+    count[i] += 1
+
+print(count)
 ```
 
 ## 自定义defaultdict类兼容python2.5以下版本
