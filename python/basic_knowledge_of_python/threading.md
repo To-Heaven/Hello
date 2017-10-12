@@ -541,6 +541,5 @@ my_timer = Timer(5, f)
 my_timer.start()
 time.sleep(4)
 my_timer.cancel()
-
 ```
 
