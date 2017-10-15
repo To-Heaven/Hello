@@ -276,6 +276,7 @@ section: [('user', 'ziawang'), ('password', 'pass'), ('phone', '123-45677897'), 
 
 - config.has_sections(section)
 	- Return True if the given section exists
+	- 查询`DEFAULT`section会返回False
 
 - config.has_option(section, option)
 	- Return True if the given option exists in the given section
@@ -287,6 +288,8 @@ section: [('user', 'ziawang'), ('password', 'pass'), ('phone', '123-45677897'), 
 
 - config.options(section)
 	- Return list of configuration options for the named section
+	- 注意：
+		- 只能查找非`DEFAULT`section下的配置信息（会报错），因为conf.sections()能查找的也是非`DEFAULT`的section
 
 
 
@@ -315,6 +318,9 @@ section: [('user', 'ziawang'), ('password', 'pass'), ('phone', '123-45677897'), 
 	- **Values are automatically converted to strings**
 
 #### 删
+> 注意，以下所有删除操作，都只是在内存中删除了config对象中的配置信息，需要使用`config.write()`方法将变化写入文件，文件中才会被修改
+
+
 - config.remove_option(section, option)
 	- Remove the specified option from the specified section
 	- section不存在，抛出NoSectionError
