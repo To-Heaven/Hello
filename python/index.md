@@ -68,6 +68,7 @@
 	- [selectors模块，高级I/O多路复用]()
 	- [timeit模块，测试程序运行效率的计时器](basic_knowledge_of_python/timeit.md)
 	- [pprint，让输出更友好](basic_knowledge_of_python/pprint.md)
+	- [configparser，高效处理配置文件](basic_knowledge_of_python/configparser.md)
 	                                                                                                                        
 # python进阶
 > 我们愈是学习，愈觉得自己的贫乏。——雪莱
