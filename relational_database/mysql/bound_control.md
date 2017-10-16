@@ -311,6 +311,7 @@ mysql>
 ```
 
 
+## 唯一键
 
 - unique key
 	- `not null unique `   --> `primary key` 
@@ -320,6 +321,9 @@ mysql>
 	- 保证多个字段插入的值的组合不重复
 - 为unique key 创建键名
 	- `constraint name unique(field1, field2)`
+
+- 在表外给表添加唯一键使用`alter table tb add unique(xxx, xxx)`s
+
 
 ```sql
 # 单列唯一
@@ -393,6 +397,7 @@ mysql> insert into srvices values
 ERROR 1062 (23000): Duplicate entry '127.0.0.1-8080' for key 'ip_port'
 mysql>
 ```
+
 
 
 
