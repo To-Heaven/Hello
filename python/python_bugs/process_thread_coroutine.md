@@ -295,3 +295,22 @@ class Mylittlespider:
                 print('%s complete'%self.url)
 
 ```
+
+## multiprocessing.Pipe实现简单通讯
+
+```python
+from multiprocessing import Pipe, Process
+
+
+def f(conn):
+    conn.send(['hello'])
+    conn.close()
+
+
+if __name__ == '__main__':
+    parent_conn, child_conn = Pipe()
+    p = Process(target=f, args=(child_conn, ))
+    p.start()
+    print(parent_conn.recv(), type(parent_conn.recv()))	
+    p.join()
+```
