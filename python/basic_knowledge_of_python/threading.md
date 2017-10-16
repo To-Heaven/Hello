@@ -283,6 +283,9 @@ Process finished with exit code 0
 		-  block for at most the number of seconds specified by timeout  as long as the lock cannot be acquired
 		-  A timeout argument of -1 specifies an unbounded wait
 		-  注意，当block为False的时候，即使指定了timeout，该参数也将被忽略
+	- 返回值
+		- 当成功为线程上锁之后会返回一个True
+  
 
 > proceed      收获，获取    
 
@@ -290,18 +293,106 @@ Process finished with exit code 0
 	- Release a lock
 	- **When invoked on an unlocked lock, a RuntimeError is raised.**
 	- If any other threads are blocked waiting for the lock to become unlocked, allow exactly one of them to proceed.
+	- 注意
+		- 无返回值
 
 
 
 ## RLock  Objects  递归锁
 - 请看在[进程与线程原理](http://www.ziawang.com/python/basic_knowledge_of_python/processes_and_threads.html)中的解释
 - Rlock.acquire(blocking=True, timeout)
+	- 注意：
+		- 当锁被acquired之后，会返回一个True
 - Rlock.release()
+	- 注意：
+		- 此方法没有返回值
 
 
 ## Condition  Objects 
-<br>
+> condition object可以让多个线程间通过通知的方式交互式的运行
 
+- threading.Condition(lock=None)
+	- A condition variable allows one or more threads to wait until they are notified by another thread
+	- lock
+		-  must be a Lock or RLock object
+		-  注意：如果lock为None，Condition会自动创建一个Rlock递归锁对象并使用。
+	- **A condition variable obeys the context management protocol: using the with statement acquires the associated lock for the duration of the enclosed block**
+- c.wait(timeout=None)
+	- return True or False
+		- return True
+			- awakened by a notify() or notify_all() 
+		- return False
+			-   given timeout expired or not awakened
+	- Wait until notified or until a timeout occurs
+	- if the calling thread has not acquired the lock
+		- raise a RuntimeError
+	- if the calling thread has acquired the lock
+		- blocks until it is awakened by a notify() or notify_all() call for the same condition variable in another thread,or until the optional timeout occurs
+		- releases the lock, and then blocks until another thread awakens it by calling notify() or notify_all(). 
+		- Once awakened, wait() re-acquires the lock and returns. It is also possible to specify a timeout
+
+- wait_for(predicate, timeout=None)
+	- 待补充
+
+- notify(n=1)
+	- wake up one thread waiting on this condition by default
+		- If the calling thread has not acquired the lock when this method is called, a RuntimeError is raised
+- notify_all()
+	- Wake up all threads waiting on this condition
+		- If the calling thread has not acquired the lock when this method is called, a RuntimeError is raised
+
+```python
+import threading
+import time
+
+
+class Producer(threading.Thread):
+    def run(self):
+        global count
+        while 1:
+            if cond.acquire():
+                if count > 1000:
+                    cond.wait()
+                else:
+                    count += 100
+                    print(f'{self.name} produce 100, count = {count}')
+                    cond.notify()
+                cond.release()
+                time.sleep(1)
+
+
+class Consumer(threading.Thread):
+    def run(self):
+        global count
+        while 1:
+            if cond.acquire():
+                if count < 100:
+                    cond.wait()
+                else:
+                    count = count - 3
+                    print(f'{self.name} consume 3, count={str(count)}')
+                    cond.notify()
+                cond.release()
+                time.sleep(1)
+
+
+count = 500
+cond = threading.Condition()
+
+
+def test():
+    for i in range(2):
+        p = Producer(name=f'producer {i}')
+        p.start()
+
+    for j in range(5):
+        c = Consumer(name=f'consumer {j}')
+        c.start()
+
+
+if __name__ == '__main__':
+    test()
+```
 
 
 ## Semaphore   Objects 信号量（联锁）
