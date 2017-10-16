@@ -837,7 +837,7 @@ if __name__ == '__main__':
 
 > A manager returned by Manager() will support types list, dict, Namespace, Lock, RLock, Semaphore, BoundedSemaphore, Condition, Event, Barrier, Queue, Value and Array. 
 
-- m.list()     ,     m.list(sequence)
+- m.list(),  m.list(sequence)
 	- Create a shared list object and return a proxy for it.
 
 ```python
@@ -912,6 +912,40 @@ if __name__ == '__main__':
 
 - m.Lock()
 	- Create a shared threading.Lock object and return a proxy for it.
+
+
+```python
+from multiprocessing import Manager, Process
+
+
+def modify(ns, lproxy, dproxy):
+    ns.a **= 2
+    lproxy.extend(['b', 'c'])
+    dproxy['b'] = 0
+
+
+if __name__ == '__main__':
+    manager = Manager()
+    
+    ns = manager.Namespace()
+    ns.a = 2
+
+    lproxy = manager.list()
+    lproxy.append('a')
+
+    dproxy = manager.dict()
+    dproxy['b'] = 2
+
+    p = Process(target=modify, args=(ns, lproxy, dproxy))
+    p.start()
+    print(f'PID: {p.pid}')
+    p.join()
+
+    print(ns)
+    print(ns.a)
+    print(lproxy)
+    print(dproxy)
+```
 
 
 
@@ -1418,6 +1452,51 @@ p = ThreadPool()
 
  
 
+## multiprocessing.managers实现分布式进程间通信
+
+```python
+# --------------服务端-----------------
+from multiprocessing.managers import BaseManager
+
+host = '127.0.0.1'
+port = 8080
+authkey = 'pass'.encode('utf-8')
+
+shared_list = []
+
+
+class RemoteManager(BaseManager):
+    pass
+
+
+RemoteManager.register('get_list', callable=lambda: shared_list)
+mgr = RemoteManager(address=(host, port), authkey=authkey)
+server = mgr.get_server()
+server.serve_forever()
+
+
+# --------------客户端-----------------
+from multiprocessing.managers import BaseManager
+
+
+host = '127.0.0.1'
+port = 8080
+authkey = 'pass'.encode('utf-8')
+
+
+class RemoteManager(BaseManager):
+    pass
+
+
+RemoteManager.register('get_list')
+mgr = RemoteManager(address=(host, port), authkey=authkey)
+mgr.connect()
+
+l = mgr.get_list()
+print(l)
+l.append(1)
+print(mgr.get_list())
+```
 
 
 ## Pool methods待补充
