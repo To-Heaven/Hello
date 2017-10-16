@@ -57,6 +57,28 @@ else
 ``` 
 
 
+## JavaScript三元运算符
+- 结构
+	- `(Boolean表达式)?(值T):(值F)`
+		- 值T：表达式结果为True时执行的语句
+		- 值F：表达式结果为False时执行的语句
+	- 应该在满足可读性的情况下使用三元运算符
+	
+```javascript	
+    var exp_bool = false;
+    (exp_bool)?(a = 'true'):(a = 'false');
+    console.log('a: ', a)
+
+//  有时候使用 if 语句更具有可读性
+ 
+    var exp_bool = false;
+    if (exp_bool)
+        a = 'true';
+    a = 'false';
+    console.log('a:', a)
+``` 
+
+
 
 ## while 循环
 - 在每次循环开始的时候判断条件，然后再决定是否运行循环体中的代码
