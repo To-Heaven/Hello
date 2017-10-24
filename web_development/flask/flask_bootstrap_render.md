@@ -1,0 +1,32 @@
+# 使用flask_bootstrap渲染模板
+- 安装	
+	- `pip3 install flask-bootstrap`
+- 导入
+	- 在子模板文件中导入
+		- `{% extends 'bootstrap/base.html' %}`
+	- 在`.py`python脚本中导入
+		- 安装的`flask-bootstrap`扩展存放在`flask.ext`命名空间中
+		- `from flask.ext.flask-bootstrap import Bootstrap`  
+- 初始化
+	- 在python脚本中导入扩展包中的Bootstrap类之后，将Flask对象(app)作为参数传入到`Bootstrap()`中，实例化得到的就是`Bootstrap对象`
+	- 初始化bootstrap对象之后，就可以使用包含bootstrap所有文件的基模板
+- bootstrap基模板及定义的块
+	- 基模板
+		- 在flask-bootstrap提供的基模板中，由于其使用的使jinja2引擎，所以通过`block块`来定制自己的模板
+	- flask-bootstrap提供的`block块`
+		- __在`block块`中，可以使用bootstrap提供的各种CSS样式和组件__
+		- doc	整个HTML文档
+		- head			<head>标签的内容
+			- 即`<head>{% block head %}...{% endblock %}</head>`
+		- metas			一组<meta>标签 
+		- title			<title>标签中的内容
+		- styles		<style>层叠样式表
+		- body			<body>标签中的内容
+		- navbar		导航条
+		- content		页面内容
+		- scripts		<script>标签JavaScript声明
+		- html			<html>标签中的内容
+		- html_attribs	<html>标签的属性
+		- body_attribs	<body>标签的属性
+- 注意事项
+	- 不要将自己的`block块`名称与bootstrap基模板提供的块名称冲突。如果要想已有的block块中添加新内容，**必须使用super()**函数
