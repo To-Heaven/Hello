@@ -103,20 +103,34 @@ True
 >>>
 ```
 
-- python中数据为空的对象
+- python中数据布尔值为False的对象
 	- None
 	- False
 	- 任何数值形式值为0的对象：0、0.0、0j
 	- 空序列
 	- 空字典
 	- **用户定义的类中如果存在`__nonzero__()`和`__len__()方法`**
-		- 如果`__nozero__()`返回值的布尔值为False
-		- 如果`__len__()`返回值的布尔值为False
+		- 如果`__nozero__()`返回值的布尔值为False(python3 没有__nozero__())
+		- 如果`__len__()`返回值的布尔值为0
 
 
 ```python
 
+class NoneTest1:
+    def __len__(self):
+        return 1
 
+
+
+
+class NoneTest2:
+
+    def __len__(self):
+        return 0
+
+
+print('NoneTest1', bool(NoneTest1()))
+print('NoneTest2', bool(NoneTest2()))
 ```
 
 
