@@ -7,7 +7,7 @@
 - [记录操作](mysql/record_operation.md)
 - [数据类型](mysql/data_type.md)
 - [约束条件](mysql/bound_control.md)
-- [表的关联](mysql/association.md)
+- [表的关联](mysql/table_association.md)
 - [数据备份](mysql/data_back_up.md)
 - [索引](mysql/mysql_index.md)
 - [常用函数](mysql/function.md)
