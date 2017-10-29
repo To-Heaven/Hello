@@ -38,23 +38,39 @@ map_obj = new Map(arr_kv);
 
 ## Map对象要注意的地方
 - 与对象不同，对象虽然也是大括号中的一个个键值对，但是对象的key最终都是字符串，而Map对象中的键可以是任意类型！
-- 多次项同一个Map对象中插入相同key的键值对，js只会记住最后插入的key-value
+- 多次向同一个Map对象中插入相同key的键值对，js只会记住最后插入的key-value
 
 ## Map的常用操作
 
+## Map对象的属性
+- m.size Map对象的元素个数
 
 ## Map对象的方法
+#### 增
 - m.set(key, value)
 	- 将键值对添加到Map对象中
-	
-- m.get(key)
-	- 返回Map对象中key对应的value
-	
+
+#### 删
 - m.clear()
 	- 清除映射对象中的所有元素，即将map对象变成空映射
 	
 - m.delete(key)
 	- 从映射中删除指定元素
+
+
+#### 改
+
+
+
+#### 查
+
+
+
+	
+- m.get(key)
+	- 返回Map对象中key对应的value
+	
+
 	
 - m.has(key)
 	- 判断映射中是否包含指定key的元素，如果是则返回true
@@ -65,6 +81,4 @@ map_obj = new Map(arr_kv);
 - m.toString()
 	- 返回映射的字符串表示形式
 
-## Map对象的属性
-- m.size Map对象的元素个数
 
