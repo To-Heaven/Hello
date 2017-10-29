@@ -58,12 +58,12 @@
 
 ```
 
-- 操作标签class
-	- 查看标签类名
-		- `obj.className`属性
-	- 获取类名组成的list
-		- `obj.classList` 
-	- 为节点增加类
-		- `obj.classlist.add(cls_name)`
-	- 移除节点类
-		- `obj.classlist.remove(cls_name)`  
+## 修改标签的类
+- 查看标签类名
+	- `obj.className`属性
+- 获取类名组成的list
+	- `obj.classList` 
+- 为节点增加类
+	- `obj.classlist.add(cls_name)`
+- 移除节点类
+	- `obj.classlist.remove(cls_name)`  
