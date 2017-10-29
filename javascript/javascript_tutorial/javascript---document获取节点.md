@@ -5,10 +5,8 @@
 	- 利用css选择器获取
 
 ## 通过DOM树获取
-- 注意
-	- 以下方法适用于所有标签对象，可以是document，也可以是通过document得到的标签对象
-	- 比如`ele = document.getElementsByClass('animal').getElementByTagName('p')`
-		- 获取页面中类为animal的p元素
+
+
 
  
 ### 方法
@@ -25,7 +23,7 @@
 - ele.getElementsByClass(str_class)
 	- 返回类为str_class的节点对象组成的列表 
 
-### 属性
+### DOM节点对象属性
 - ele.parElement
 	- 返回节点的父节点对象
 - ele.children
