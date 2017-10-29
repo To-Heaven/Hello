@@ -226,12 +226,12 @@
     var outer = document.getElementsByClassName('outer')[0];
     var inner = document.getElementsByClassName('inner')[0];
     outer.onclick = function () {
-        alert("this is outer's onclick ")
+        alert("this is outer's onclick ");
     };
 
     inner.onclick = function (event) {
         alert("this is inner's onclick ");
-        event.stopPropagation()
+        event.stopPropagation();
     }
     
 </script>
