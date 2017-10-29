@@ -1,25 +1,4 @@
 # 数组
-
-## 表示形式
-- 使用方括号包含起来
-- **数组中的数据可以是JavaScript的任意数据类型**
-
-```javascript
-var arr_my = [1, 'ziawang', '', true, undefined, ['2', 0, null]];
-console.log(arr_my);		// 1, "ziawang", "", true, undefined, Array(3)]
-arr_my[5];				//  ['2', 0, null]
-arr_my[-1];				// undefined   -1不会得到['2', 0, null]
-arr_my[4];				// undefined
-
-```
-
-## 特点
-- 可以通过索引来访问数组中存放的元素
-- 索引越界在JavaScript中不会报错
-	- 索引操作时会返回undefined
-	- 使用`slice()`切片的时候，索引越界会返回字符串切片的到的最大长度
-
-
 ## 创建方式
 - 直接通过方括号创建
 
@@ -49,6 +28,30 @@ arr_num[8] = 1;
 console.log(arr_num);			// [1, undefined × 7, 1]
 ```
 
+## 表示形式
+- 使用方括号包含起来
+- **数组中的数据可以是JavaScript的任意数据类型**
+
+```javascript
+var arr_my = [1, 'ziawang', '', true, undefined, ['2', 0, null]];
+console.log(arr_my);		// 1, "ziawang", "", true, undefined, Array(3)]
+arr_my[5];				//  ['2', 0, null]
+arr_my[-1];				// undefined   -1不会得到['2', 0, null]
+arr_my[4];				// undefined
+
+```
+
+## 特点
+- 可以通过索引来访问数组中存放的元素
+- 索引越界在JavaScript中不会报错
+	- 索引操作时会返回undefined
+	- 使用`slice()`切片的时候，索引越界会返回字符串切片的到的最大长度
+	
+- 索引赋值时，如果赋值的宽度大于数组长度，数组长度会边长 
+
+
+
+
 
 
 
@@ -75,37 +78,83 @@ console.log(arr_num);				// [0, 1, 2, 3, 4, 5, undefined, undefined, 8]
 ```
 
 ## 常用方法
-- a.indexOF(value)
-
-- a.slice(start, stop)
-	- 不传入参数的情况下，默认截取所有元素。用来复制数组
-	
-- a.push(items)
+#### 增
+- a.push(value1, value2...)
+	- value可以是任意类型
+		- 如果是容器类型比如组，就会将数组中的元素一个个添加要现有数组中
 	- Appends new items to an array, and returns the new length of the array 将多个element添加到从后面按顺序添加到数组中，并返回数组的长度
+
+
+
+
+- a.unshift([start, count,] value1, value2...)
+	- value可以是任意类型
+		- 如果是容器类型比如组，就会将数组中的元素一个个添加要现有数组中
+	- Inserts new elements at **the start of an array.**
+	- 从start指定的位置开始移除count指定数量的元素，在移除元素的位置插入指定的元素item
+	- 返回值为被移除的元素
+
+
+
+
+#### 删
+
+- a.shift()
+	- Removes the first element from an array and returns it.
+	- 移除并返回数组的第一个元素
+
 
 - a.pop() 
 	- Removes the last element from an array and returns it 将数组最后一个元素移除并返回
 	- 对于空数组，继续pop会返回`undefined`
+
+
+
+
+
+
+
+
+#### 修改自身并返回
+
+- a.reverse()
+	- 反转数组中的元素
+
 
 - a.sort(comparefunc)
 	- Sorts an array.
 	- 默认的使用ASCII排序
 	- comparefunc: The name of the function used to determine the order of the elements. If omitted, the elements are sorted in ascending, ASCII character order.
 
-- a.unshift(start, count, items)
-	- Inserts new elements at the start of an array.
-	- 从start指定的位置开始移除count指定数量的元素，在移除元素的位置插入指定的元素item
-	- 返回值为被移除的元素
-
-- a.shift()
-	- Removes the first element from an array and returns it.
-	- 移除并返回数组的第一个元素
-
-- a.reverse()
-	- 反转数组中的元素
 
 
-- a.concat(items)
+
+
+
+
+#### 查
+- a.indexOF(value)
+
+#### 处理数组
+- a.slice(start, stop)
+	- 不传入参数的情况下，默认截取所有元素。用来复制数组
+	
+
+
+
+
+
+
+
+
+#### 返回对象，原数组不变
+
+
+
+
+- a.concat(value1, value2...)
+	- value可以是任意类型
+		- 如果是容器类型比如组，就会将数组中的元素一个个添加要现有数组中
 	- 把参数中的元素添加到数组中，如果参数中有数组，那么就会将数组中的元素添加到当前数组中，而不是将整个数组当作一个元素添加到当前数组中
 
 ```javascript
