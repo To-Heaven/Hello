@@ -10,7 +10,7 @@
 
 
 ## 可迭代对象的特点
-- 可以不以来索引遍历取值
+- 可以不依赖索引遍历取值
 
 
 
@@ -80,3 +80,14 @@ iter_set.forEach(my_callback);
 [](http://www.jianshu.com/p/0534746020a2)
 
 ## 可迭代对象要注意的地方
+
+```javascript
+var arr_li = document.getElementsByTagName('li');
+console.log(arr_li);
+var s = new Set(arr_li);        // 列表貌似不支持forEach
+
+s.forEach(function (value, index) {
+    value.innerText = 'AAA';
+});
+
+```
