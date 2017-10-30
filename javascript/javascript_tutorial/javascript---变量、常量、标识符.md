@@ -79,5 +79,7 @@ console.log(PI);         // 抛出ReferenceError错误
 	4. 标识符不能与JavaScript内置的关键字（js中称为保留字）相同
 
 ## 关于布尔值
-- 在JavaScript中，`null  undefined  0  NAN  空字符串` 视为false 
+- 在JavaScript中，`null  undefined  0  NAN  空字符串 空数据对象（空列表、空Map的等）` 视为false 
+
+
 
