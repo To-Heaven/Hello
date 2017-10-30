@@ -14,6 +14,10 @@ console.log(typeof arr_num);		// object
 ```javascript
 var arr_cls = new Array(1, 'haha', undefined, null, true);
 console.log(typeof arr_cls);		// object
+
+// 注意下面的数据只有一个元素，Array(*args)
+var arr = new Array([1,2,3]);	// [[1, 2, 3]]
+
 ```
 
 - 注意，还有一种创建数组的方式，在实例化数组对象的时候只声明数组的长度，然后在需要的时候通过对索引赋值的方式给数组添加元素
@@ -139,11 +143,6 @@ console.log(arr_num);				// [0, 1, 2, 3, 4, 5, undefined, undefined, 8]
 - a.slice(start, stop)
 	- 不传入参数的情况下，默认截取所有元素。用来复制数组
 	
-
-
-
-
-
 
 
 
