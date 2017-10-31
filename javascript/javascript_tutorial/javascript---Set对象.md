@@ -68,6 +68,8 @@ weight
 	- 向集合中添加新的值
 
 #### 删除
+- s.clear()
+	- 清空集合内的所有元素
 
 - s.delete(value)
 	- 从集合中删除value，删除成功则返回true，否则就返回false
