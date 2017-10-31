@@ -7,7 +7,7 @@
 
 ```javascript
 
-
+{key1: value1, key2: value2, ...}
 
 ```
 
@@ -39,8 +39,20 @@ map_obj = new Map(arr_kv);
 ## Map对象要注意的地方
 - 与对象不同，对象虽然也是大括号中的一个个键值对，但是对象的key最终都是字符串，而Map对象中的键可以是任意类型！
 - 多次向同一个Map对象中插入相同key的键值对，js只会记住最后插入的key-value
+- 不能用"句点符"`.`和中括号`m["key"]`的形式来访问Map中key对应的value 
 
 ## Map的常用操作
+- 使用中括号查看value
+
+```javascript
+var info_ziawang = new Map();
+info_ziawang.set("name", "ziawang");
+
+var name = m.get("name");								// ziawang
+info_ziawang.get("name") == info_ziawang["name"]    	// true
+
+```
+
 
 ## Map对象的属性
 - m.size Map对象的元素个数
@@ -59,26 +71,40 @@ map_obj = new Map(arr_kv);
 
 
 #### 改
-
+- m.set(key, value)
+	- 修改key对应的值，其实本质上就是覆盖已有的key-value键值对
 
 
 #### 查
 
-
-
-	
 - m.get(key)
 	- 返回Map对象中key对应的value
-	
-
 	
 - m.has(key)
 	- 判断映射中是否包含指定key的元素，如果是则返回true
 
--  m.forEach(func[, thisArg])
-	-  待补充
- 
 - m.toString()
 	- 返回映射的字符串表示形式
+
+#### 使用中括号操作Map对象的方法和属性
+- 偶然发现使用中括号也可以调用Map对象的内置方法，但是一定要注意，对于Map对象内保存的key-value键值对，是不能通过"句点符"`.`和"中括号"`m["xx"]`来访问的，但是Map内置的属性和方法可以
+
+###### 操作属性
+- `map_obj["attribute"]`
+
+```javascript
+info_ziawang["size"]				// 1
+```
+
+###### 操作方法 
+- `map_obj["method_name"](args)`
+
+```javascript
+m["has"]("name")					// true
+
+m["delete"]("name")					// true
+
+m["size"]							// 0
+```
 
 
