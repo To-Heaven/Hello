@@ -15,7 +15,7 @@
 - 请求信息的第一行内容，包含了请求方法、目标资源的位置、HTTP协议版本、换行符CRLF
 - 结构
 
-```
+``` 
 Method  URL  http-version CRLF
 ```
 
