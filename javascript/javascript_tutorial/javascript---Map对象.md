@@ -79,7 +79,13 @@ info_ziawang.get("name") == info_ziawang["name"]    	// true
 
 - m.get(key)
 	- 返回Map对象中key对应的value
-	
+
+- m.keys()
+	- 返回存放key的迭代器
+
+- m.values()
+	- 返回存放value 的迭代器	
+
 - m.has(key)
 	- 判断映射中是否包含指定key的元素，如果是则返回true
 
