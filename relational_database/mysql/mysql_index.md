@@ -103,7 +103,7 @@ INDEX(id, obj_name)
 		- `alter table tb add unique key(field1[, field2. . . ] )`
 	- 创建普通索引
 		- `create index index_name on table(field1[,field2. . . ])`	
-		- `alter table table_name add index_name  field`  
+		- `alter table table_name add index index_name(field1, field2..)`  
 
 ```sql
 CREATE [UNIQUE|FULLTEXT|SPATIAL] INDEX index_name
