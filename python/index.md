@@ -3,6 +3,8 @@
 # python 基础
 > 得之在俄顷，积之在平日。——袁守侗
 
+- [测试页面](basic_knowledge_of_python/test.html)
+
 - 学习之前
 	- [计算机硬件](basic_knowledge_of_python/hardware.md)
 	- 计算机操作系统
