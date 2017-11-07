@@ -2,13 +2,16 @@
 #### 什么是HTTP协议
 > 协议本质上都是用来通信的
 
+- HTTP协议是超文本传输协议，处于TCP/IP五层模型的应用层，其传输数据是基于TCP/IP协议来完成的
+
+
 - 用三点来说明HTTP到底多牛
 1.  **超文本传输协议**，可以传输任意类型的数据
 2.  **客户端和服务端请求和应答的标准**。
 3.  存在于TCP/IP五层模型的应用层，它是**整个万维网数据通信的基础**
 
 ###### user agent 与 origin server
-- 通过使用**网页浏览器、网络爬虫或者其他工具**，由客户端发起一个HTTP请求到服务端指定的端口（默认80），服务端上存储客户都按需要的数据资源，通过响应将数据传输给客户端，客户都按与服务端之间可能存在多个"中间层"，比如代理服务器，网管、隧道。
+- 通过使用**网页浏览器、网络爬虫或者其他工具**，由客户端发起一个HTTP请求到服务端指定的端口（默认80），服务端上存储客户端需要的数据资源，通过响应将数据传输给客户端，客户端与服务端之间可能存在多个"中间层"，比如代理服务器，网管、隧道。
 	- 这个客户端就称为用户代理程序 ———— user agent
 	- 服务端就是源服务器 ———— origin server
 
@@ -19,6 +22,7 @@
 
 #### 注意
 - HTTP并不是只用于网页的浏览（主要应用）。协议的本质时进行通信，**只要建立链接的双方遵守这个协议，HTTP就可以进行数据的传输**（QQ，迅雷）
+- HTTP传输数据是基于TCP/IP协议的
 
 
 
@@ -43,13 +47,16 @@
 	- HTTP协议传输的是一个个数据对象，这些数据对象可以是任意类型，用Content-Type标识
 
 - 简单快速
-	- 客户端只需要提供请求方和和请求路径，而且HTTP协议简单，使得服务端的程序规模小，所以通讯比较快。
+	- 客户端只需要提供请求方法和请求路径，而且HTTP协议简单，使得服务端的程序规模小，所以通讯比较快。
 
 - 无连接
 	- 1.0
 		- 每次基于TCP三次握手建立connection只能处理一次客户端的请求，服务端返回response响应之后就断开connection（网上诸多文章说1.0版本的连接方式可以节省时间，但是我认为这个特点反而会产生更多的IO操作，浪费时间）
 	- 1.1
 		- 由于每次建立connection都要基于TCP三次握手建立链接，这个过程存在IO，而且浪费服务器的性能。 1.1版本中一次请求响应之后不会立马断开连接，有一个默认等待时间（这段时间内，服务端会一直监听建立的链接） 
+> 无连接本质上体现在socket请求响应断开
+
+
 
 
 - 无状态
@@ -112,3 +119,27 @@
 - 举例
 	- `http://www.ziawang.com/python/re/test;id=5689?name=ziawang&password=pass#stuff`
 
+## HTTP协议本质
+#### 基于socket套接字实现的通讯协议
+
+###### GET请求
+```
+socket = socket.socket()
+
+conn, _ = socket.connect((ip, port))
+
+conn.send(b'GET http://www.xxx.com/?name=xxx&age=xxx HTTP1.1\r\nContent-Type:xxx&User-Agent:xxx\r\n\r\n')
+```
+
+
+###### POST请求
+
+```
+socnket = socket.socket()
+
+conn, _ = socket.connect((ip, port))
+
+...
+
+conn.send(b'GET http://www.xxx.com/?name=xxx&age=xxx HTTP1.1\r\nContent-Type:xxx&User-Agent:xxx\r\n\r\nname=ziawang&password=pass')
+```
