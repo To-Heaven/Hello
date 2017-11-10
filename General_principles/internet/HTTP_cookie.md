@@ -36,6 +36,11 @@
 	1. 同一个用户使用不同的浏览器登陆某个网站时，不同浏览器记录下来的Cookie是不同的
 	2. 不同用户即使使用了相同的浏览器，也不会善生相同的Cookie 
 
+###### 分块
+- 同一个浏览器的Cookie访问不同的站点会携带不同站点对应的Cookie。
+
+
+
 #### cookie的分类
 ###### 按存储位置分
 - 内存Cookie
@@ -51,6 +56,8 @@
 - 非持久Cookie
 - 持久Cookie
 
+#### 优点
+- 数据存放在客户端，减轻服务端压力，增强了服务器性能
 
 #### 缺陷
 - 安全问题
@@ -69,6 +76,26 @@
 
 #### 用户登陆验证
 - 客户端有一个"记住密码"的选项，当用户勾选的这个选项的时候，服务端接收到客户端的这个请求之后，会根据用户的登录名和登陆密码生成一个登录凭证，存放在用户磁盘中（硬盘Cookie），当用户再次访问同一个网站的时候，只要保存在客户端硬盘中的Cookie数据没有过期，用户不需要密码就可以登录到网站
+
+- 举例
+
+```
+# 用户登录过程一般有三次请求
+
+
+# 第一次登陆，GET请求，获取login页面
+www.jd.com/login.html  GET 				#	还没有Cookie  
+
+# 用户提交账号和密码
+www.jd.com/login.html  POST user pwd	# 	登陆成功，客户端收到服务端发送来的Cookie
+
+# 登陆成功重定向至用户home
+www.jd.com/user/home.html  redirect		# 	客户端浏览器Cookie中存在了该网站返回的的Cookie键值对信息
+```
+
+
+
+
 
 ### 不安全的应用
 #### 网页臭虫
@@ -121,8 +148,29 @@ Set-Cookie:name=ziawang
 	- 存在与HTTP请求头中的Cookie信息只包含cookie的值（即键值对），其他选项全被去除
 
 ```
-Connection:keep-alive
-Cookie:name=ziawang
+age:16723
+date:Wed, 01 Nov 2017 00:52:19 GMT
+etag:"59f8d886-2698"
+status:304
+via:1.1 varnish
+x-cache:HIT
+x-cache-hits:53
+x-served-by:cache-jfk8126-JFK
+x-timer:S1509497540.692029,VS0,VE0
+Request Headers
+:authority:docs.python.org
+:method:GET
+:path:/3/
+:scheme:https
+accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+accept-encoding:gzip, deflate, br
+accept-language:zh-CN,zh;q=0.8
+cache-control:max-age=0
+cookie:__utma=32101439.632045304.1509495511.1509495511.1509495511.1; __utmc=32101439; __utmz=32101439.1509495511.1.1.utmcsr=baidu|utmccn=(organic)|utmcmd=organic
+if-modified-since:Tue, 31 Oct 2017 20:09:42 GMT
+if-none-match:"59f8d886-2698"
+upgrade-insecure-requests:1
+user-agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36
 ```
 
 
