@@ -1,11 +1,67 @@
 # 事件
 
+
+
+
+## 加载事件与加载顺序
+- 在文件中，如果匹配对象的相关调用出现在了匹配元素创建之前，那么相关的调用并不会被执行。因为调用该对象的方法时，该对象并不存在。
+- 解决这种情况的常用方法是使用document对应jQuery对象的`ready`方法。有三种调用方式
+	- `$(document).on('ready', function(){...})`
+	- `$(document).ready(function(){...})`
+	- `$(function(){...})` 
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../jquery-3.2.1.js"></script>
+
+</head>
+<body>
+<script>
+    $(function () {
+        $('button').click(function () {
+            alert(1111)
+        })
+    })
+</script>
+
+<form action="">
+    <input type="text" placeholder="...">
+    <button>点点点</button>
+</form>
+
+</body>
+</html>
+```
+
+
+
+
+
+
+## 事件中使用this
+- 在触发事件的回调函数中，this代表触发事件的对象
+
+
+```javascript
+$('.container form button[type="submit"]').click(function () {
+    alert(this)
+})
+
+// this代表$“('.container form button[type="submit"]')”匹配的对象
+```
+
+
+
 ## jQuery的事件委派
 - 什么是事件委派
 	- 将原来加在子元素身上的事件绑定在父类身上，通过父类来触发子类的事件
 - 为什么要用事件委派
 	- 如果给每一个子元素都绑定事件，是非常耗费资源和性能的
-	- 如果只给每一个子元素绑定事件，对于后期使用js动态的子元素，将不会拥有这个事件，因此最好的翻噶发是将事件绑定到父元素身上，通过父元素来触发子元素的事件
+	- 如果只给每一个子元素绑定事件，对于后期使用js动态的子元素，将不会拥有这个事件，因此最好的方法是将事件绑定到父元素身上，通过父元素来触发子元素的事件
 
 - 使用`on(events, [selector, ], [data], fn)`实现
 	- events
@@ -50,6 +106,39 @@
     })
 </script>
 ``` 
+
+
+## 事件参数
+- 所有的事件内执行任务的函数都可以传入一个参数作为事件参数，通过这个参数可以获取该jQuery对象的其他相关属性
+
+```htnl
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../jquery-3.2.1.js"></script>
+</head>
+<body>
+<ul id="u1">
+    <li>这是li : 1</li>
+    <li>这是li : 2</li>
+    <li>这是li : 3</li>
+    <li>这是li : 4</li>
+    <li>这是li : 5</li>
+</ul>
+
+<script>
+    $('li').click(function (e) {
+        $(e.target).text('duang ')
+    })
+
+</script>
+</body>
+</html>
+```
+
+
 
 
 ## 滚动事件
@@ -110,3 +199,14 @@
     })
 </script>
 ```  
+
+
+## 移除事件
+- `$(selector).off('event_type')`
+	- 移除匹配元素的事件
+	- event_type 为事件的名称
+
+```html
+
+```
+
