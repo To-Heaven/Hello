@@ -233,3 +233,94 @@ while 1:
         gene_f.close()
     i += 1
 ```
+
+
+## 讨论一下双层循环（多层）的结束问题
+- 结束双层循环有多种方式，这里列出三种方式，分别对每一种方式的“可读性”，“性能”进行分析
+
+#### 假设
+- 假设现在循环的次数非常多
+
+#### 代码
+
+```python
+from multiprocessing import Process
+import timeit
+
+setup = 'n = 10000'
+
+
+def g():
+    for i in range(10000):
+        for j in range(i):
+            if j == i == 5000:
+                return
+
+
+statement1 = '''\
+for i in range(n):
+    for j in range(i):
+        if j == i == 5000:
+            break
+    else:
+        continue
+    break
+'''
+
+statement2 = '''\
+flag = False
+for i in range(n):
+    for j in range(i):
+        if j == i == 5000:
+            flag = True
+            break
+    if flag:
+        break
+'''
+statement3 = '''\
+try:
+    for i in range(n):
+        for j in range(i):
+            if j == i == 5000:
+                raise Exception('找到9啦')
+except Exception as e:
+    pass
+'''
+
+time_fuc = timeit.timeit('g()', 'from __main__ import g', number=1)
+time_continue = timeit.timeit(stmt=statement1, setup=setup, number=1)
+time_flag = timeit.timeit(stmt=statement2, setup=setup, number=1)
+time_try = timeit.timeit(stmt=statement3, setup=setup, number=1)
+
+print(f'time_fuc:  {time_fuc}')
+print(f'time_continue: {time_continue}')
+print(f'time_flag: {time_flag}')
+print(f'time_try: {time_try}')
+
+```
+
+#### 分析
+- 上面的结果看，这些方法中使用continue貌似更快些，而对于使用了额外变量flag的方式终结循环，花费时间最多
+- 分析如下
+	- 对于flag这种方式
+		- 可读性：一般
+		- 性能： 每一次循环都需要判断一次flag，处理量比较庞大的数据时，每一次判断显然都会损耗时间
+	- 对于continue
+		- 可读性： 较差
+		- 性能： 较好
+	- 对于函数
+		- 可读性： 较好
+		- 性能：较好
+	- 对于try
+		- 可读性：较好
+		- 性能： 较好
+		- 注意， 使用try对于多层循环时，我们可以自定义错误类型，当满足我们需要的某种类型的时候，抛出错误，获取这个值，但是使用这样方法的场景较少
+
+#### 补充
+- 可能时测试环境问题，在之后的测试中，结果变成了这样
+	- 因此在生产环境中，可以按照具体测试结果进行选择
+
+```python
+
+```
+
