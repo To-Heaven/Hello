@@ -98,9 +98,13 @@
 
 
 - 表单标签`<form></form>`
+	- **注意**: 
+		- 对于不同的浏览器来说，如果不设置`<input type="submit"/>`的value属性，不同的浏览器可能不会显示按钮中的提示信息，因此我们应该每次都指定value值
+		- 浏览器会自动对表单中要提交的的内容进行验证，如果想要关闭该功能，给form表单添加`novalidate`属性 `<form novalidate>`
+		- 当在Web后端编辑表单选项的时候，需要将每一个标签的value默认显示，但是form表单的`<input type="password">`是不会被显示的，即使我们将其value设置为对应数据
 	- 所有的表单都是收集用户的输入信息，实现用户与web服务器之间的交互
 	- 属性
-		- `action`指定服务端的URL地址
+		- `action`指定服务端的URL地址，__默认是当前页面————
 		- `method`会顶用于发送表单数据的HTTP方法
 			- GET
 			- POST
