@@ -10,14 +10,14 @@
 	- 类选择器		`$('.value_class')`
 	- 标签选择器		`$('tag_name')`
 - 组合选择器		
-	- 多元素选择（并列）      `$('selector1, selector2')`
+	- 多元素选择（并列）      `$('selector1, selector2')` “或”的关系
 	- 后代选择				`$('par_selector sub_selector')`
 	- 兄弟选择				`$('selector1~selector2')`
 	- 子类选择器				`$('par_selector>child_selector')`
 	- 毗邻选择(必须紧挨着)		`$('selector1+selector2')`
 - 指定标签的类		`$('tag.value_cls')`
 - 指定标签的id		`$('tag#value_id')`
-- 属性选择器 
+- 属性选择器
 	- 只通过属性选择					`$('[attr]')`
 	- 通过属性及值选择				`$('[attr=value]')`
 	- 选择指定标签的属性值 			`$('tag[attr=value]')`
@@ -127,6 +127,12 @@
 	- 返回匹配到元素的所有同级别元素
 
 
+## 多重选择器
+- jQuery的选择器支持深度选择
+
+```python
+$('.container form button[type="submit"]')
+```
 
 
 ## 遍历转换方法map()
