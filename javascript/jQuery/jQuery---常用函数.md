@@ -8,13 +8,93 @@
 - 在遍历过程中实现惰性运算
 	- 在function中return false
 
+#### 在each中使用this
+- **在each函数内的回调函数使用this关键字的时候，this代表的是当前被遍历出来的DOM对象**
+
 ```html
-var arr_num = ['a', 'b', 'c', 'd', 'e'];
-$.each(arr_num, function (e, v) {
-    console.log(e);
-    console.log(v);
-})
+# 登陆校验
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录校验</title>
+    <link rel="stylesheet" href="bootstrap-3.3.7/css/bootstrap.min.css">
+    <style>
+        .c1 {
+            margin-top: 100px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 c1 col-md-offset-4">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control" id="inputEmail3" placeholder="Email" aria-describedby="helpBlock1">
+                        <span id="helpBlock1" class="help-block"></span>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword3" class="col-sm-2 control-label">密码</label>
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" id="inputPassword3" placeholder="Password" aria-describedby="helpBlock2">
+                        <span id="helpBlock2" class="help-block"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"> Remember me
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-default">Sign in</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="jquery-3.2.1.js"></script>
+<script src="bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script>
+
+    $("form button").on("click", function () {
+       // 先清空状态
+        $("form .form-group").removeClass("has-error");
+        $("form span").text("");
+        // each循环
+    $("form input").each(function () {
+        // 做判断
+        if ($(this).val().length === 0){
+            // 给他的爸爸加has-error
+            $(this).parent().parent().addClass("has-error");
+            // 给span写内容
+            // 找到我这是什么input  --> 找到对应的label的文本内容
+            var name = $(this).parent().prev().text();
+            $(this).next().text(name + "不能为空");
+            return false;
+        }
+    });
+        return false;
+    });
+
+</script>
+</body>
+</html>
 ```
+
+
 
 
 ## jQuery.is(selector|obj|ele|fn)
@@ -29,3 +109,15 @@ $.each(arr_num, function (e, v) {
 
 ## 过滤方法filter(filter)
 - 可以对jQuery对象进行筛选，只留下被filter过滤后剩下的元素
+
+
+## 在元素上存放数据并返回jQuery对象
+- `$(selector).data([, key][, value])`
+	- key： 要存储的数据名
+	- value： 要存储的数据（可以是任意类型，比如jQuery对象）
+	- 注意
+		- 当只提供key时，返回存储的对象
+		- 当提供所有参数时，在匹配对象上存放数据
+
+- `$(selector).removeData([name | list])`
+	- 从匹配元素中删除之前添加的数据
