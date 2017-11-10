@@ -1,11 +1,7 @@
 http://greenlet.readthedocs.io/en/latest/
 
 # greenlet 模块
-## greenlet.greenlet object
-- greenlet.greenlet(run=None, parent=None)
-	- return a greenlet object
-	- run: the callable object to invoke
-	- parent: the parent greenlet, which defaults to the current greenlet
+
 
 ## Module_level Function
 - greenlet.getcurrent()
@@ -17,6 +13,12 @@ http://greenlet.readthedocs.io/en/latest/
 	-  **This special exception does not propagate to the parent greenlet**
 
 > switch      开关    
+
+## greenlet.greenlet object
+- greenlet.greenlet(run=None, parent=None)
+	- return a greenlet object
+	- run: the callable object to invoke
+	- parent: the parent greenlet, which defaults to the current greenlet
 
 ## greenlet objects Methods
 
@@ -97,10 +99,8 @@ total time : 3.0002005100250244
 Process finished with exit code 0
 ```
 
-- 打刚创建一个greenlet 对象的时候，首先初始化一个空的栈，当该greenlet对象调用switch方法的时候，会先运行构造greenlet对象时传入的函数（callable对象），如果这个函数中存在其他greenlet对象对switch方法的调用，那么当前这个协程就会被挂起，并保存运行状态，等再次调用其对应greenlet对象的时候切换回来。
+- 当刚创建一个greenlet 对象的时候，首先初始化一个空的栈，当该greenlet对象调用switch方法的时候，会先运行构造greenlet对象时传入的函数（callable对象），如果这个函数中存在其他greenlet对象对switch方法的调用，那么当前这个协程就会被挂起，并保存运行状态，等再次调用其对应greenlet对象的时候切换回来。
 - **当一个协程对应函数执行完毕，那么这个协程就变成dead状态**，如果一个协程被挂起后，没有再次被switch唤起，就会发生数据泄露
-
-
 
 
 ```python
