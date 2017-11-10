@@ -102,6 +102,8 @@ bytes---------->decode(终端)---------->Unicode
 	- 程序执行前，内存中确实都是Unicode编码的二进制，但是在程序执行的过程中，会申请内存（与程序代码所存在的内存是两个空间），可以存放指定编码格式的数据，比如name = 'ziawang'，被python解释器识别为字符串，然后申请内存空间存放'ziawang'，然后让name指向该内存的地址，此时保存的'ziawang'是Unicode编码的，如果代码换成这样  name = 'ziawang'.encode('utf-8')，内存中存放的就是utf-8编码的字符串'ziawang'了。
 - `.py`文件被python解释器编码解码，也就是第二步之后，第三部文件中的语法错误才会被报出。
 - python3中字符串都是Unicode格式的二进制存放在内存中，而在python2中，字符串都是已经encode后的结果，即Bytes
+
+
 ## 网络传输中的编码转换
 - 浏览网页的时候，服务器会把动态生成的Unicode内容转换成utf-8再传输给浏览器。
 	- 如果服务端encode的编码格式是utf-8，客户端内存中收到的也是utf-8编码的二进制。
@@ -132,6 +134,11 @@ u'aaa'
 ```
 
 
+###### python3
+- 字符串是Unicode，字节是将Unicode编码之后的utf8或gbk等其他编码的字节 
+	
+###### python2中
+- 字符串就是python3的字节，python2中带有`u`前缀的字符串对应python3中的Unicode字符串
 
 
 
