@@ -5,7 +5,7 @@
 
 ### 通过父级别添加
 - 使用`$(selector).html([str_val])`
-- 使用`$(selector).append(content | fn)`
+- 使用`$(selector).append(content | fn)`。。 
 	- content
 		- string字符串
 			- 字符串可以使用拼接的方式，将变量名和多个字符串连接起来
@@ -55,16 +55,16 @@
 - `$(selector).prepend(content)`
 	- 使用和append相同，但是会把dom对象content添加到匹配元素内部的最前面
 
-- `$(selector).prepend(content)`
+- `$(selector).prependto(content)`
 	- 将匹配到的元素添加到指定content元素内部的前面
 
 
 
 ### 通过同级别添加
 - `$('selector').after(content)`
-	- 使用和append相同，将匹配的对象添加到同级别content标签后面
-- `$('selector').before()`
-	- 使用和append相同，将匹配的对象添加到同级别标签前面
+	-在匹配的对象后添加同级别content标签
+- `$('selector').before(content)`
+	- 在匹配的对象前添加同级别标签
 
 - `$(selector).insertAfter(content)`
 	- 将匹配到的所有元素插入到指定content元素的后面
@@ -80,7 +80,7 @@
 - `$(selector).empty()`
 	- 清空匹配到元素的所有子元素
 	
-- `$(selector).decay()`
+- `$(selector).detach()`
 	- 剪切匹配到的元素，并返回该元素的jQuery对象，使用该对象的appendTo方法将其添加到任意位置
 
 ## 显示和隐藏标签
@@ -109,7 +109,9 @@
 > content参数: String of html, Element, jQuery, Function
 
 - `$(selector).replaceWith(content)`
+	- 将selector匹配到的对象用content替换
 - `$(selector).replaceAll(content)`
+	- 将selector匹配对象替换掉content代表的对象
 
 ## 克隆
 - `$(select).clone([deepevent=true])`
