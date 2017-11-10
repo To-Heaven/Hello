@@ -1,5 +1,5 @@
 ## HTTP 请求
-- HTTP请求就是由有客户端使用特定的方法对服务端资源发起的请求
+- HTTP请求就是由客户端使用特定的方法对服务端资源发起的请求
 
 
 #### 请求信息的结构
@@ -10,6 +10,14 @@
 （这里要空出一行）
 请求体
 ```
+
+
+- 请求首行与请求头之间以换行符`\r\n`隔开
+- 请求首行与请求体之间要用一个空行来隔开，因此请求头之后要有两个换行符`\r\n\r\n`
+
+
+
+
 
 ## 请求首行
 - 请求信息的第一行内容，包含了请求方法、目标资源的位置、HTTP协议版本、换行符CRLF
@@ -36,6 +44,7 @@ Method  URL  http-version CRLF
 		- GET方法需要用Request.QueryString来获取变量的值，而POST通过Request.Form来获取变量值
 		- GET提交数据会带来安全问题
 - **POST**： 向服务端提交数据（表单、文件）。
+	- **POST请求既可以在URL中传递数据也可以在请求体中传递数据**
 	- POST方法要提交的数据保存在请求体中。
 	- **POST请求可能会导致新的资源建立或已有资源的修改**
 
@@ -89,6 +98,7 @@ Method  URL  http-version CRLF
 
 - User-Agent：告诉HTTP服务器，客户端使用的操作系统和浏览器的名称和版本。
 	- 例如： User-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; CIBA; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET4.0C; InfoPath.2; .NET4.0E)。
+	- **应用**： 来源识别
 
 - UA-Pixels，UA-Color，UA-OS，UA-CPU：由某些版本的IE浏览器所发送的非标准的请求头，表示屏幕大小、颜色深度、操作系统和CPU类型。
 
@@ -107,6 +117,7 @@ Method  URL  http-version CRLF
 
 - Content-Type：请求提交内容的类型
 	- 例如：Content-Type: application/x-www-form-urlencoded。
+	- **应用**： Django会先从请求头中获取该值，然后再去request.body中获取数据
 
 - Content-Length：表示请求消息正文的长度。例如：Content-Length: 38。
 
@@ -114,6 +125,7 @@ Method  URL  http-version CRLF
 
 - Referer：包含一个URL，用户从该URL代表的页面出发访问当前请求的页面。提供了Request的上下文信息的服务器，告诉服务器我是从哪个链接过来的，比如从我主页上链接到一个朋友那里，他的服务器就能够从HTTP Referer中统计出每天有多少用户点击我主页上的链接访问他的网站。
 	- 例如: `Referer:http://translate.google.cn/?hl=zh-cn&tab=wT`
+	- 应用： 防盗链
 
 - Connection：链接方式
 	- 1.1默认。 Connection: keep-alive 当一个网页打开完成后，客户端和服务器之间用于传输HTTP数据的TCP连接不会关闭，如果客户端再次访问这个服务器上的网页，会继续使用这一条已经建立的连接。HTTP 1.1默认进行持久连接。利用持久连接的优点，当页面包含多个元素时（例如Applet，图片），显著地减少下载所需要的时间。要实现这一点，Servlet需要在应答中发送一个Content-Length头，最简单的实现方法是：先把内容写入ByteArrayOutputStream，然后在正式写出内容之前计算它的大小。
