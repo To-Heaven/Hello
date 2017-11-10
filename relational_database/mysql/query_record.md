@@ -203,6 +203,7 @@ mysql> SELECT * FROM pet WHERE name REGEXP 'fy$';
 
 ## group by 
 - **可以按照指定的任意字段分组，但是分组完成之后只能查看分组的那个字段，要想获取组内的其他字段信息需要借助函数**
+- **如果查询语句中不使用group by，那么整张表会按照内存中通过where得到的表的每个字段进行分组**
 - 函数
 	- group_concat(field)
 		- `select sex from tb group by sex`
@@ -313,19 +314,8 @@ mysql>
 ## distinct   去重
 
 ```sql
-
-
+select distinct field from tb ....
 ```
-
-
-
-
-
-## 对结果进行计算
-- 可以把MySQL当作一个计算器,因此可以对输出结果进行计算处理
-	- 比如根据平均值计算总值
-- `+ - * / %`  --->  `加,减,乘,除,取余`
-
 ```sql
 mysql> select post from employee;
 +-----------+
@@ -364,6 +354,16 @@ mysql> select distinct post from employee;
 4 rows in set (0.00 sec)
 
 ```
+
+
+
+
+
+## 对结果进行计算
+- 可以把MySQL当作一个计算器,因此可以对输出结果进行计算处理
+	- 比如根据平均值计算总值
+- `+ - * / %`  --->  `加,减,乘,除,取余`
+
 
 
 
