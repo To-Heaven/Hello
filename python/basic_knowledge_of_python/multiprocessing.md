@@ -1,4 +1,3 @@
-
 # multiprocessing 模块
 
 [点击查看我整理的multiprocessing模块思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/multiprocessing-2.png?raw=true)
@@ -244,7 +243,7 @@ Process finished with exit code 0
 - join([timeout])
 	- Wait until the process terminates
 	- blocks the calling process until the process whose join() method is called terminates – either normally or through an unhandled exception – or until the optional timeout occurs.
-		- 这个方法会阻塞调用进程，直到当前进程正常执行完，或者出现异常，或者直到超出timeout限制的时候，其他进程才能开始运行
+		- 这个方法会阻塞调用进程，直到当前进程正常执行完，或者出现异常，或者直到超出timeout限制的时候
 
 ```python
 import time
@@ -1419,20 +1418,26 @@ def get_page(url):
     return response
 
 
+
 def parser(res):
+    print(res)
     filename = str(hash(res.url))
-    with open(filename, 'w') as f:
-        for item in res.header:
-            f.write('%s : %s' % item)
+    with open(filename, 'w', encoding='utf-8') as f:
+        for item in res.headers:
+            f.write('%s' % item)
         for chunk in res.iter_content(1024, decode_unicode='utf-8'):
             f.write(chunk)
         else:
             print(res.url, ' ........end.........')
 
 
+def parser_list(l):
+    for res in l:
+        parser(res)
+
 if __name__ == '__main__':
     p = Pool(4)
-    res = p.map_async(get_page, urls, callback=parser)
+    res = p.map_async(get_page, urls, callback=parser_list)
     p.close()
     p.join()
 ```
@@ -1447,7 +1452,6 @@ if __name__ == '__main__':
 # 使用multiprocessing.dummy
 from multiprocessing.dummy  import Pool  as ThreadPool
 p = ThreadPool()
-
 ```
 
  
@@ -1501,8 +1505,6 @@ print(mgr.get_list())
 
 ## Pool methods待补充
 
-- map(func, iterable, [chunksize])
-- map_async(func, iterable[, chunksize[, callback[, error_callback]]])
 - imap(func, iterable[, chunksize])
 - imap_unordered(func, iterable[, chunksize])
 - starmap(func, iterable[, chunksize])
