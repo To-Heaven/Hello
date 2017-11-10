@@ -4,7 +4,7 @@
 > exclude    不包括   
 
 
-- threading.enum9erate()
+- threading.enumerate()
 	- Return a list of all Thread objects currently alive
 	- the list includes:
 		-  the main thread
