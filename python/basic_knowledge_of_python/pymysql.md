@@ -74,21 +74,27 @@ http://www.cnblogs.com/MySimond/p/4750199.html
 ```python
 import pymysql
 
+
 conn = pymysql.connect(host='localhost',
+                       port=3306,
                        user='root',
                        password='pass',
-                       database='userinfo',
-                       charset='UTF8') #书写标准和MySQL相同，不能有横杠
+                       database='review',
+                       charset='utf8',
+                       cursorclass=pymysql.cursors.DictCursor,
+                       autocommit=True)
 
+print(conn.ping(reconnect=False))
 
-cursor1 = conn.cursor()
-cursor2 = pymysql.cursors.Cursor(conn)
+c1 = conn.cursor(cursor=pymysql.cursors.DictCursor)
+c2 = pymysql.cursors.SSCursor(conn)
 
-print(cursor1)		
-print(cursor2)
------------------------------------------------------------
-<pymysql.cursors.Cursor object at 0x0000021109609320>
-<pymysql.cursors.Cursor object at 0x0000021109609390>
+print(c1)
+print(c2)
+# -------------------result-----------------------------
+<pymysql.connections.OKPacketWrapper object at 0x02EC7830>
+<pymysql.cursors.DictCursor object at 0x02BEB210>
+<pymysql.cursors.SSCursor object at 0x02EC7830>
 ```
 
 ## Cursor Object Methods
