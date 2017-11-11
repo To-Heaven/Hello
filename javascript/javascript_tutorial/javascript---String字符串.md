@@ -91,14 +91,14 @@ ziawang
 
 - `s.toLowerCase()`
 	- 返回一个小写的字符串
+
+
+#### 查询字符串信息
 - `s.charAt(index)`
 	- 返回字符串中指定索引位置的字符
 
 - `s.indexOf(subchar)`
 	- 返回子字符串中首字符位置所在的索引
-
-#### 查询字符串信息
-
 
 - `s.substr(index,  number)`
 	- 从指定索引位置开始截取指定number长度的字符串
