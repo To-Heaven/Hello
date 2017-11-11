@@ -20,7 +20,6 @@
             </div>
         </div>
         <form class="form-horizontal" method="post" action="/login/">
-            {% csrf_token %}
             <div class="form-group form-group-lg">
                 <label for="username" class="col-sm-2 control-label">username</label>
                 <div class="col-sm-5">
