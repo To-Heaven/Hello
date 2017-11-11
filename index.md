@@ -14,7 +14,7 @@
 - [算法之美](Algorithms_and_Data_Structures/index.md)
 - [我的一些思考总结](method/index.md)
 
-
+   
 ## 项目开发记录
 - [权限管理系统的设计](authority_management_system/index.md)
 
