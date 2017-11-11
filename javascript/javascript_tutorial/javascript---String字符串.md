@@ -104,7 +104,7 @@ ziawang
 	- 从指定索引位置开始截取指定number长度的字符串
 
 
-```javascript
+```javascript 
 var str_num = '0123456789';
 console.log(str_num.substr(0, 3));			// 012
 console.log(str_num.substr(1, 3));			// 123
