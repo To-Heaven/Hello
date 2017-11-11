@@ -4,6 +4,7 @@
 ## 知识硬盘
 - [Python](python/index.md)
 - [Linux]()
+- [使用Git](learnGit/index.md)
 - [通用技术原理](General_principles/index.md)
 - [JavaScript](javascript/index.md) 
 - [关系型数据库](relational_database/index.md)
