@@ -58,4 +58,25 @@ test   0.000GB
 >
 ```
 
+## 使用JavaScript操作数据库
+- mongodb是基于JavaScript实现的，因此我们可以将对mongodb的数据库操作嵌入到逻辑代码中。
+
+- 举个栗子
+
+```
+> show dbs;
+admin  0.000GB
+local  0.000GB
+mydb   0.000GB
+shop   0.000GB
+test   0.000GB
+> db;
+shop
+> db == "shop";
+true
+> if (db == "shop"){
+... db.col.insert({"name": "ziawang"});
+... };
+WriteResult({ "nInserted" : 1 })
+```
 
