@@ -4,9 +4,6 @@
 
 
 #### 创建集合
-> mongodb非常占用磁盘，当我们在一个空db下创建一个新的collection时，使用show dbs会发现该数据库已经占用了200多兆内存
-
-- `db.createCollection(str_collectionName)`
 
 - mongodb的collections也支持隐式创建。直接向一个**尚未创建的collection中**插入文档会隐式的创建该collection，并向该collection中插入文档
 	- `db.unexist_collection.insert(document)`
