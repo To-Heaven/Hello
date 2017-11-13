@@ -36,7 +36,7 @@
 ```
 
 - `_id`主键属性总是会被查询出来，如果早查询结果中不想要`_id`属性，可以将`_id`属性值设置为0
-	- `db.colllection.find(查询表达式, {name:'ziawang', _id:0})`
+	- `db.colllection.find({name:'ziawang'}, { _id:0})`
 		- 查询集合中所有满足查询表达式的文档中，满足name=ziawang，并且在结果中不显示_id`字段
 
 
@@ -48,6 +48,12 @@
 
 ###### 查看collection中文档数量
 - `db.collectionName.find().count()`
+- 举例： 查询userinfo集合下姓名为ziawang的用户的个数
+
+```
+db.userinfo.find({"name": "ziawang"}).count()
+
+```
 
 #### 删除数据
 ###### 危险的删除
@@ -81,14 +87,16 @@
 - 使用`$set`修改某一列的值
 	- `db.collectionName.Update(查询表达式, {$set:新JSON文档})`
 
-- 使用`$(unset)`删除某个列
-	- `db`
+- 使用`$(unset)`删除指定文档中的某个列
+	- `db.collectionName.update(查询表达式, { $unset: { <field1>: "", ... } })`
+	- 指定某个列对应字段的值为空字符串即可
 
 - 使用`$rename`重命名某个列
-
+	- `db.collectionName.update(查询表达式, {$rename: { <field1>: <newName1>, <field2>: <newName2>, ... } })`
 
 - 使用`$inc`对匹配列增加指定值
-	
+	- `db.collectionName.update(查询表达式, { $inc: { <field1>: <amount1>, <field2>: <amount2>, ... }})` 
+
 ```sql
 
 ``` 
