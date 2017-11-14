@@ -5,7 +5,7 @@
 	- 布尔值（true、false）
 	- 对象（json对象）
 	- 数组（json数组）
-	- null
+	- null(json中不能使用undefined)
 
 > JavaScript中数据可以是JavaScript中任意类型，包括函数、日期甚至是undefined
 
