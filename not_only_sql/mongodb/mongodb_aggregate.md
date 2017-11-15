@@ -23,7 +23,7 @@
 
 #### 语法
 
-- 当JavaScript参数对象只有一个的时候，直接将该对象按位置传参即可
+- 当JavaScript参数对象只有一个的时候，直接将该对象按位置传参即可 
 
 ```
 db.collectionName.aggregate({key: {...}})
