@@ -1,5 +1,5 @@
 ## 索引
-- 在MySQL中，由于默认使用InnoDB引擎，MySQL使用的是btree组织索引
+- 在MySQL中，由于默认使用InnoDB引擎（InnoDB不支持hash索引），MySQL使用的是btree组织索引
 - 在mongodb中默认也是使用btree组织索引文件，目前也已经支持hash索引
 
 
@@ -18,7 +18,7 @@ WriteResult({ "nInserted" : 1 })
 ```
 
 #### mongodb查询数据的过程
-- 在没有索引的情况下，mongodb会从头开始遍历，直到找到满足条件的数据
+- 在没有索引的情况下，mongodb会**从头开始遍历，直到找到满足条件的数据**
 
 
 #### 索引的优缺点
@@ -46,13 +46,14 @@ WriteResult({ "nInserted" : 1 })
 
 ###### 创建多列索引
 - `db.collectionName.ensureIndex({field1:1/-1, field2:1/-1})`
-	- 注意，这是将多个列绑定成一个整体再建立成索引
+	- 注意，这是将多个列绑定成一个整体再建立成索引，类似于MySQL种的联合索引
 
 
 
 
 ###### 创建子文档索引
-- `db,collectionName.ensureIndex({str_parAttr.subAttr: 1/-1})`
+- `db.collectionName.ensureIndex({str_parAttr.subAttr: 1/-1})`
+	- 要想将文档中子文档的字段设置为索引字段，我们首先要找到这个字段，其实通过句点符我们就可以做到
 
 
 ```
