@@ -235,6 +235,85 @@ mysql> select  group_concat(name) '姓名', post as '职位'  from employee
 mysql>
 ```
 
+## group by 按照多个字段分组
+- 准备表
+
+```sql
+mysql> select * from user;
++----+-------------+------+--------+
+| id | name        | age  | sex    |
++----+-------------+------+--------+
+|  1 | ziawang     |   23 | male   |
+|  2 | liuxiaoqian |   18 | female |
+|  3 | bobo        |   23 | male   |
+|  4 | ziawang     |   23 | male   |
++----+-------------+------+--------+
+4 rows in set (0.00 sec)
+
+mysql>
+
+```
+
+- 现在按照age进行分组
+
+```
+mysql> select age from user group by age;
++------+
+| age  |
++------+
+|   18 |
+|   23 |
++------+
+2 rows in set (0.00 sec)
+
+mysql>
+```
+
+- 按照age, name, sex 进行分组
+
+```
+mysql> select name, age, sex from user group by name, age, sex;
++-------------+------+--------+
+| name        | age  | sex    |
++-------------+------+--------+
+| bobo        |   23 | male   |
+| liuxiaoqian |   18 | female |
+| ziawang     |   23 | male   |
++-------------+------+--------+
+3 rows in set (0.00 sec)
+
+mysql>
+```
+
+- 配合聚合函数
+	- 注意count与sum的区别
+
+```
+mysql> select name, age, sex, count(age) from user group by name, age, sex;
++-------------+------+--------+------------+
+| name        | age  | sex    | count(age) |
++-------------+------+--------+------------+
+| bobo        |   23 | male   |          1 |
+| liuxiaoqian |   18 | female |          1 |
+| ziawang     |   23 | male   |          2 |
++-------------+------+--------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select name, age, sex, sum(age) from user group by name, age, sex;
++-------------+------+--------+----------+
+| name        | age  | sex    | sum(age) |
++-------------+------+--------+----------+
+| bobo        |   23 | male   |       23 |
+| liuxiaoqian |   18 | female |       18 |
+| ziawang     |   23 | male   |       46 |
++-------------+------+--------+----------+
+3 rows in set (0.00 sec)
+
+mysql>
+```
+
+#### 区别
+- 按照所有字段分组与`select * from user`获得的结果是不同的，分组里面去除的重复
 
 
 ## having  过滤
