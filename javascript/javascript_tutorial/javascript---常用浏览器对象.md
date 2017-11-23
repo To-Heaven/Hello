@@ -25,7 +25,8 @@
 		-  在指定毫秒数millisec之后调用code
 	-  clearTimeout()
 		-  取消由setTimeout()设置的timeout
-	
+	- open(url)
+		- 在新窗口打开指定url链接
 
 
 
@@ -47,4 +48,10 @@
 		- 用来设置页面标题
 	- `document.cookie`
 		- 存放一个个键值对
-		- HTTP是无状态的，每一次客户都按发送来的请求信息（状态）都不会被服务端保存，cookie就是用来保存客户都按request中必要的信息（比如用户名，密码等）。客户端认证登陆成功之后，服务端会返回一个cookie给客户端（浏览器），之后浏览器再次访问服务端的时候，会将cookie放在request中，这样服务端就能识别出客户端的身份了 
+		- HTTP是无状态的，每一次客户都按发送来的请求信息（状态）都不会被服务端保存，cookie就是用来保存客户都按request中必要的信息（比如用户名，密码等）。客户端认证登陆成功之后，服务端会返回一个cookie给客户端（浏览器），之后浏览器再次访问服务端的时候，会将cookie放在request中，这样服务端就能识别出客户端的身份了
+ 
+## localtion
+#### 使用location.href实现ajax跳转页面
+- `window.location.href = "/home/"`
+
+
