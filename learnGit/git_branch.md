@@ -149,6 +149,7 @@ $
 ```
 
 - 在这种情况下，git提示我们当前的状态是`merging`，即正在进行合并的过程中，我们需要手动的将master分支上的修改还原才能合并
+	- **如果想要取消这次合并，并取消merging状态**，使用`git merge --abort`命令
 
 ```
 ziawa@DESKTOP-39L1EAK MINGW64 /e/learngit (master|MERGING)
