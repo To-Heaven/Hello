@@ -24,6 +24,50 @@
 </script>
 ```
 
+## 事件委派
+- 所谓事件委派其实就是通过对一个父节点进行事件监听，当存在满足对应的子节点时，该子节点就会执行响应的事件。
+- 为什么要用事件委派？
+	- 假设现在有一个后台管理界面，界面上有一个列表，列表中存放的是一个个用户，并且每一个用户所在的行都有一个“编辑”的按钮，用来编辑用户的所有相关信息，如果我们不使用事件委派，那么我们就必须为每一个按钮添加一个点击事件，触发编辑功能，当有很多用户的时候，这样做显然是不行的，这个时候，事件委派就排上了用场。
+
+#### JavaScript中的事件委派
+- 步骤
+	1. 首先你要获取要添加事件监听的父节点dom对象
+	2. 然后，使用父节点对象的setEventListener('event_name', callback_func, useCapture)
+		- 第一个参数是你要监听的事件类型
+		- 第二个参数是该事件触发时的回调函数
+		- 第三个参数是一个布尔值
+			- 当为false的时候使用事件冒泡传播。默认为false
+			- 当为true的时候，使用捕获传播 
+
+- 举例
+
+```html
+<ul id="resources">
+  <li><a href="http://developer.mozilla.org">MDN</a></li>
+  <li><a href="http://html5doctor.com">HTML5 Doctor</a></li>
+  <li><a href="http://html5rocks.com">HTML5 Rocks</a></li>
+  <li><a href="http://beta.theexpressiveweb.com/">Expressive Web</a></li>
+  <li><a href="http://creativeJS.com/">CreativeJS</a></li>
+</ul>
+```
+
+
+```javascript
+var resources = document.querySelector('#resources'),
+log = document.querySelector('#log');
+resources.addEventListener('mouseover', showtarget, false);
+function showtarget(ev) {  var target = ev.target;
+  if (target.tagName === 'A') {
+    log.innerHTML = 'A link, with the href:' + target.href;
+  }
+  else if (target.tagName === 'LI') {
+    log.innerHTML = 'A list item';
+  }
+  else if (target.tagName === 'UL') {
+    log.innerHTML = 'The list itself';
+  }}
+```
+
 ## 点击事件
 - onclick
 	- 在元素被点击时触发
@@ -240,12 +284,7 @@
 
 
 
-## 事件委派
 
-```html
-
-
-```
 
 
 
@@ -369,6 +408,7 @@
 </body>
 </html>
 ```
+
 
 
 ## 内容事件
