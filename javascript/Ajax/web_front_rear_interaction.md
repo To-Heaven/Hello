@@ -59,3 +59,8 @@
 - [](https://www.web-tinker.com/article/20372.html)
 - [](https://www.ibm.com/developerworks/cn/web/1112_huangxa_websocket/)
 - [](https://zh.wikipedia.org/wiki/WebSocket)
+
+
+## ajax发送数据ContentType
+- ContentType指定的是客户端发送给服务端的数据的编码格式，默认为"urlencoded"，发送的是bytes类型的数据，格式为`?key=value&key=value`。
+- 在Django开发过程中，请求的内容在经过WSGI之后会将数据打包成类字典形式，比如在POST请求中，我们可以使用get请求获取其内保存的指定key对应的value
