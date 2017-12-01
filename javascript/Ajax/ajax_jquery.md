@@ -5,9 +5,14 @@
 #### $.ajax(args, [settings])
 - 参数
 	- args: 以JavaScript对象的形式传递参数，常用的有
+		- headers
+			- 
 		- url: 	请求的路径（这个url可以从浏览器的network中查看）
 		- type: 请求方法
 		- data: 请求要发送的数据。data数据对应的结构是一个js对象（json对象也可以），Ajax根据请求头中Content-Type指定的类型封装data中的数据
+			- 如果以GE特请求发送json的对象（注意是json对象而不是json字符串），并且指定contentType为"application/json"，在这种情况下
+				- 如果在Ajax中没有使用JSON.stringfy()，服务端接收到的数据就是`key1=value1&key2=value2`这种json无法解析的格式。
+				- 如果指定了JSON.stringfy()将data转换成了json，在指定了contentType='application/json'的情况下，数据在request.body中就是以json字符串形式存在的`b'{"key1": "value1", "key2":"value2"}'`
 		- success: 请求成功接收到响应后要执行的回调函数。回调函数的参数是服务端返回的响应体中内容
 		- error: 服务端发生错误时，要执行的回调函数。
 			- 该回调函数有三个参数分别是`"jqXHR", "textStatus", "err"`
@@ -15,18 +20,161 @@
 		- statusCode
 		- contentType: 发送信息至服务器时内容的编码类型，用来指明当前请求的数据编码格式，服务端会按照请求头中的content-Type来解析请求体中数据。默认application/x-www-form-urlencoded， `?name=ziawang&password=xxx`
 			- `application/json`: ，一旦声明contentType为这个值，data对应的数据就必须是json字符串
-		- processData: 声明当前data数据是否要进行编码/预处理，默认为True，当设置为false的时候，data中的数据就不会被Ajax按照contentType转换
+		- processData: 
+			- 声明当前data数据是否要进行编码/预处理，默认为True
+			- 当设置为false的时候，data中的数据就不会被Ajax按照contentType转换
 		- traditional
 		- dataType
 			- 与其服务端返回的数据类型，客户端会按照dataType指定的值解析响应内容，如果不指定该值，dataType默认就等于服务端返回的响应头中Content-Type指定的值进行转换
 			- dataType的值可以是`"html", "xml", "json", "script", "text"`
 
+###### 1. 设置contentType = 'application/json'
 ```javascript
+// index.html
+<body>
+
+
+{% csrf_token %}
+<p>username:<input type="text" id="username" name="username"></p>
+<p>age: <input type="text" id="age" name="age"></p>
+<button id="submit" class="btn btn-default">ajax提交数据</button>
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+    $("#submit").click(function () {
+        $.ajax({
+            url: '/index/',
+            headers: {
+                'X-CSRFToken': $("[name='csrfmiddlewaretoken']").val()
+            },
+            type: 'post',
+            data: JSON.stringify({
+                username: $("#username").val(),
+                age: $("#age").val()
+            }),
+            contentType: 'application/json',
+            success: function (data) {
+                console.log(data);
+            }
+        })
+    });
+
+</script>
+```
+
+```python
+# views.py 视图函数
+
+from django.shortcuts import render, HttpResponse
+import simplejson as json
+
+
+def index(request):
+    if request.method == 'POST':
+        print(request.body)
+        print(request.POST)
+        data = json.dumps(request.body.decode('utf-8'))
+        return HttpResponse(data)
+    return render(request, 'index.html')
+
+# ======= 结果 =======
+b'{"username":"ziawang","age":"18"}'
+<QueryDict: {}>
+[30/Nov/2016 15:38:36] "POST /index/ HTTP/1.1" 200 1568
+
+```
+
+- 设置 `contentType = application/json`的时候，服务端WSGI无法对传递过来的json字符串进行解析，因此`request.POST`中无法获取提交的数据，需要我们自己对`request.body`进行转换获取
+
+###### 使用contentType默认设置(contentType= application/x-www-form-urlencoded)
+
+```javascript
+    $("#submit").click(function () {
+        $.ajax({
+            url: '/index/',
+            type: 'post',
+            data: {
+                username: $("#username").val(),
+                age: $("#age").val(),
+                csrfmiddlewaretoken: $("[name='csrfmiddlewaretoken']").val()
+            },
+            success: function (data) {
+                console.log(data);
+            }
+        })
+    });
+```
+
+```python
+# views.py
+from django.shortcuts import render, HttpResponse
+import simplejson as json
+
+
+def index(request):
+    if request.method == 'POST':
+        print(request.body)
+        print(request.POST)
+        return HttpResponse("ok")
+    return render(request, 'index.html')
+
+# ========== 结果 ============
+b'username=ziawang&age=18&csrfmiddlewaretoken=UBcNe4PmfrhuyAs6UNdPPxPDFzqj5NdWm1sd4w1U0phvb3l9xHZIbr8OHNZxxc46'
+<QueryDict: {'username': ['ziawang'], 'age': ['18'], 'csrfmiddlewaretoken': ['UBcNe4PmfrhuyAs6UNdPPxPDFzqj5NdWm1sd4w1U0phvb3l9xHZIbr8OHNZxxc46']}>
 
 ```
 
 
 
+#### 注意
+- 当contentType为`application/json`的时候，不要将csrftoken对应的键值对存放在data中，因为被编码成json字符串，成为字符串的csrf键值对不会被Django的csrf中间件解析。
+- 解决这个问题的方法是在**headers**参数中指定csrftoken数据
+
+```
+$,ajax({
+	url: '/home/'
+	type: 'post',
+	headers: {"X-CSRFToken": $.cookie("csrftoken")},
+	contentType: 'application.json',
+	data: {
+		xxx: xxx,
+		xxx: xxx
+	}
+})
+```
+
+- 如果是下面这样写，csrftoken就不会被解析
+
+```
+$,ajax({
+	url: '/home/'
+	type: 'post',
+	contentType: 'application.json',
+	data: {
+		xxx: xxx,
+		xxx: xxx
+		"X-CSRFToken": $.cookie("csrftoken"),
+
+	}
+})
+```
+
+- Ajax传输数据的时候，如果指定了contentType的编码格式，那么data就应该在ajax中转换成对应的数据类型
+
+```
+$,ajax({
+	url: '/home/'
+	type: 'post',
+	contentType: 'application.json',
+	data: JSON.stringfy({
+		xxx: xxx,
+		xxx: xxx
+		"X-CSRFToken": $.cookie("csrftoken"),
+
+	})
+})
+```
 
 
 #### $.ajax(settings)
