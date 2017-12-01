@@ -116,6 +116,7 @@ Method  URL  http-version CRLF
 ##### 请求内容相关
 
 - Content-Type：请求提交内容的类型
+	- **客户都按给服务端发送数据的编码格式**，默认为"application/x-www-form-urlencoded"，对应格式为`?name=xxx&age=18`
 	- 例如：Content-Type: application/x-www-form-urlencoded。
 	- **应用**： Django会先从请求头中获取该值，然后再去request.body中获取数据
 
