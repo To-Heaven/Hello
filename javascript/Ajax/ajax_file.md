@@ -10,11 +10,11 @@
 - `enctype`**规定了form表单数据在发送到服务端之前要被编码的类型**
 - 属性值有三种
 	- 默认: `application/x-www-form-urlencoded`
-		- 在发送到服务器之前，所有字符都会进行编码（空格转换为 "+" 加号，特殊符号转换为 ASCII HEX 值）
+		- 在发送到服务器之前，所有字符都会进行编码（空格转换为 "&" 符，特殊符号转换为 ASCII HEX 值）
 	- `multipart/form-data`
-		- 如果我们想使用form的input标签上传文件，就必须将属性设置为`multipart/form-data`，这种方式支持将文件转换成二进制数据上传，但是对于form表单中的其他数据比如上传的用户名，到达服务端之后还是字符串(str)类型
+		- 如果我们想使用form的input标签上传文件，就必须将属性设置为`multipart/form-data`，这种方式支持上传二进制文件（比如图片），但是对于form表单中的其他数据比如上传的用户名，到达服务端之后还是字符串(str)类型
 	- `text/plain`
-		- 这种编码只会将空格转换成"+"号，但是不会对特殊符号进行转码
+		- 这种编码只会将空格转换成"&"符，但是不会对特殊符号进行转码
 
 
 
@@ -23,6 +23,10 @@
 - 服务端通过`request.FILES`获取到的是一个`MultiValueDict`对象，结构如下
 	- MultiValueDict{'filename': [文件对象1, 文件对象2, ...]}
 	- 使用`get("name")`获取文件对象fileObj，这里的`"name"`是前端form表单中input对应的标签的name属性值，**如果没有咋子input中声明name，后端仍然无法得到文件内容**
+
+###### get与getlist
+- get方法会得到一个文件对象
+- getlist方法类似于retuest.POST.getlist(field)，得到的是文件对象组成的列表
 	
 
 
