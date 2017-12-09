@@ -25,7 +25,7 @@
 ```
 
 ## 事件委派
-- 所谓事件委派其实就是通过对一个父节点进行事件监听，当存在满足对应的子节点时，该子节点就会执行响应的事件。
+- 所谓事件委派其实就是通过对一个父节点进行事件监听，当存在满足对应条件的子节点时，该子节点就会执行响应的事件。
 - 为什么要用事件委派？
 	- 假设现在有一个后台管理界面，界面上有一个列表，列表中存放的是一个个用户，并且每一个用户所在的行都有一个“编辑”的按钮，用来编辑用户的所有相关信息，如果我们不使用事件委派，那么我们就必须为每一个按钮添加一个点击事件，触发编辑功能，当有很多用户的时候，这样做显然是不行的，这个时候，事件委派就排上了用场。
 
@@ -56,7 +56,8 @@
 var resources = document.querySelector('#resources'),
 log = document.querySelector('#log');
 resources.addEventListener('mouseover', showtarget, false);
-function showtarget(ev) {  var target = ev.target;
+function showtarget(ev) {  
+  var target = ev.target;
   if (target.tagName === 'A') {
     log.innerHTML = 'A link, with the href:' + target.href;
   }
@@ -166,9 +167,9 @@ function showtarget(ev) {  var target = ev.target;
 
 ## 提交表单
 - JavaScript表单提交有两种方式
-	- 使用form节点对象的`f.submit()`方法提交
+	1. 使用form节点对象的`f.submit()`方法提交
 		- 浏览器默认是点击`<input type='submit'>`或`<button type='submit'>`时提交表单。当通过事件触发`f.submit()`方法的时候也可以提交表单，但是这样明显扰乱了表单信息正常提交
-	- 响应form表单对象自身的`onsubmit`事件
+	2. 响应form表单对象自身的`onsubmit`事件
 		- 使用这种方法提交表单数据时，form中应该有`type='submit'`属性的`<input>`或者`<button>`标签，这是浏览器对form表单提交的默认方式。通过`onsubmit`事件可以对默认提交进行控制，并再触发的目标函数中对form表单中的数据进行处理和逻辑判断（比如是否要提交）。
 
 
@@ -176,18 +177,19 @@ function showtarget(ev) {  var target = ev.target;
 <!--使用f.submit()方法提交-->
 <form id="test-form">
     <input type="text" name="test">
-    <button type="button" onclick="doSubmitForm()">点击提交</button>
 </form>
+<button type="button" onclick="doSubmitForm()">点击提交</button>
+
 <script>
     function doSubmitForm() {
         var form = document.getElementById('test-form');
-        form.submit();
+        form.submit();					// 使用form.submit()提交
     }
 </script>
 ```
 
 - 使用`f.onsubmit`事件触发默认提交有两种方式
-	- 当`f.onsubmit`事件对应的函数返回值为`true`的时候，会触发默认提交，否则不会提交
+	- 当`f.onsubmit`事件对应的回调函数返回值为`true`的时候，会触发默认提交，否则不会提交
 	- 在JavaScript中声明`f.onsubmit`事件
 	- 在HTML中声明`f.onsubmit`事件
 
@@ -290,7 +292,7 @@ function showtarget(ev) {  var target = ev.target;
 
 ## 焦点事件
 - `onfocus` 和 `onblur`
-	- 用于`<input type='text'>`文本框等能够捕获光标的元素，所谓
+	- 用于`<input type='text'>`文本框等能够捕获光标的元素
 	- onfocus就是光标在text内
 	- onblur就是光标（鼠标）移动到文本输入框之外
 
@@ -339,6 +341,7 @@ function showtarget(ev) {  var target = ev.target;
 	- onkeydown即按下键pattern之后会触发的事件
 	- onkeypress是按下键至松开的过程中触发的事件
 	- onkeyup是按键被松开后会触发的事件
+	- 使用event的code属性可以对键进行判断（比如enter键）
 
 ```html
 
@@ -465,7 +468,7 @@ function showtarget(ev) {  var target = ev.target;
         var arr_city = province_map[province.value];
 
         console.log(city.children)
-        city.options.length = 1;
+        city.options.length = 1;			// 初始化select中的option选项数量，每一次选择上级选项时，下级选项应该初始化
 //        city.children.length = 1;
 
         for (let city_name of arr_city) {
@@ -498,4 +501,5 @@ function showtarget(ev) {  var target = ev.target;
 
 ## 选中事件
 - `onselect`
-	- 内容被选中时触发的事件
+	- 文本框中的内容被选中时触发的事件
+
