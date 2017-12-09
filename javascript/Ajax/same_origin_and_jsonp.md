@@ -84,12 +84,39 @@ http://www.ziawang.com:88/ajax/
 - 利用`<script>`标签可以跨域资源嵌入的特性
 	- 动态添加和删除script标签
 
+- jsonp的本质
+	- 在前端js中创建一个回调函数，服务端使用json返回该函数的调用并且传入参数
+
 ###### 1.jQuery实现
-- 方式一
+- 方式一，使用`$.getJSON(url,[data],[callback])`
+
+```
+   function f(){
+          $.getJSON("http://127.0.0.1:7766/SendAjax/?callbacks=?",function(arg){
+            alert("hello"+arg)
+        });
+    }
+```
 
 http://www.ruanyifeng.com/blog/2016/04/same-origin-policy.html
 
-- 方式二
+- 方式二，使用`$.ajax`
+
+```
+    function f(){
+          $.ajax({
+                url:"http://127.0.0.1:7766/SendAjax/",
+                dataType:"jsonp",
+                jsonp: 'callbacks',
+                jsonpCallback:"SayHi"
+           });
+
+       }
+
+    function SayHi(arg){
+                alert(arg);
+            }
+```
 
 #### WebSocket	
 
