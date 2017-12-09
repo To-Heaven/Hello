@@ -125,6 +125,25 @@ b'username=ziawang&age=18&csrfmiddlewaretoken=UBcNe4PmfrhuyAs6UNdPPxPDFzqj5NdWm1
 
 ```
 
+- 注意这种方式下，我们还可以这样设计ajax请求
+
+```
+    $("#submit").click(function () {
+		var data_part = JSON.parse({
+                username: $("#username").val(),
+                age: $("#age").val(),
+                csrfmiddlewaretoken: $("[name='csrfmiddlewaretoken']").val()
+            });
+        $.ajax({
+            url: '/index/',
+            type: 'post',
+            data: {"data_part": datapart, "other": "other_things"},
+            success: function (data) {
+                console.log(data);
+            }
+        })
+    });
+```
 
 
 #### 注意
