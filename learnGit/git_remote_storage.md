@@ -20,6 +20,8 @@
 - 执行完此命令之后，在home目录下会生成一个隐藏的`.ssh`目录，该目录下会有两个文件，`id_rsa.pub`和`id_rsa`，显然前面一个密钥就是我们要交给Github服务器的公钥，ssh私钥应保证不让别的用户或黑客获得，因此我们创建ssh过程中会有一个提示，是否要为私钥`id_rsa`设置口令，即用密码保护，如果你要上传的文件非常重要，那你应该为私钥设置一个口令。
 
 
+#### https
+- 除了使用ssh之外，Git还提供了https
 
 #### 提交公钥
 - 进入到个人的GitHub页面，在`settings keys`中将`id_rsa.pub`中的内容复制粘贴到页面提供的文本框中就可以啦。
@@ -37,6 +39,8 @@
 #### 关联
 1. 本地gitbash下，执行命令
 	- `git remote add origin git@github.com:ZiaWang/xxx.git`
+	- 关于`origin`
+		- origin可以看作其后路径的别名，可以不必须为"origin"，在之后对仓库第一次使用`git push`的时候，要使用这个别名
 
 
 2. 推送本地内容至远程仓库
@@ -54,5 +58,32 @@
 - 克隆远程仓库的命令和关联远程仓库的命令很相似，只需要将`remote add origin`换成`clone`即可
 
 - `git clone git@github.com:ZiaWang/xxx.git`
+
+
+# 合并的三种方式
+
+## git pull
+- 当本地已经有了GitHub仓库中的东西之后，如果本地域远程仓库中的内容不同（比如你在另一个主机上向仓库推送了内容），这个时候你就需要使用`git pull [ origin branch_name]` 来将GitHub上新增加的修改同步到本地。
+	- 使用`git pull `命令可以让我们在多个终端上向与远程的GitHub仓库进行交互，在日常开发中，经常用到的就是这个命令 
+
+## git fetch 
+- 使用git pull 从远程GitHub上下载一个分支下来时，这个命令会做两件事
+	1. 从远程GitHub上将分支拷贝到本地的分支上
+	2. 再将工作区中刚下载的分支与当前分支合并，比如dev
+- git featch 命令相当于完成了git pull 的第一步，当我们本地仓库的dev分支没有东西需要从远程GitHub下载分支dev内容的时候，这个命令会将远程分支拷贝到本地，并保存在`featch-dev`分支上。在这种情况下我们在工作区中是看不见分支内容的，需要我们手动合并从GitHub上featch下来的分支
+	1.  `git checkout dev`确保我们在dev分之下
+	2.  `git merge origin/dev`即可
+
+## git rebase
+
+- rebase合并的过程中，如果出现了冲突，git会停止rebase，并且等到我们手动解决冲突之后，使用git add命令，然后执行`git rebase --continue`就可以完成合并
+	- 注意`git add`之后不要使用`git commit 	`
+
+#### git rebase --abort 
+- 这个参数可以用来终止rebase的命令，并恢复当前分支到rebase之前的状态
+
+#### git rebase --continue
+- 
+
 
 
