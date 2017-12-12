@@ -150,14 +150,19 @@ console.log(arr_num);				// [0, 1, 2, 3, 4, 5, undefined, undefined, 8]
 - a.slice(start, stop)
 	- 不传入参数的情况下，默认截取所有元素。用来复制数组
 	
+- a.splice(start, deleteCount, value, ...)  插入、删除或替换数组的元素
+	- deleteCount：要删除的个数
+	- start: 要开始删除的元素的位置
+	- value: 需要替换元素时指定
 
+```
+obj.splice(1,0,val) 指定位置1插入元素
+obj.splice(2,1,val) 指定位置2替换元素
+obj.splice(3,1)     指定位置3删除元素
+```
 
 
 #### 返回对象，原数组不变
-
-
-
-
 - a.concat(value1, value2...)
 	- value可以是任意类型
 		- 如果是容器类型比如组，就会将数组中的元素一个个添加要现有数组中
