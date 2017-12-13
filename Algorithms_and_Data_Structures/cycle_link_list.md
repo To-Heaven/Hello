@@ -55,3 +55,4 @@ LinkList Connect(LinkList A, LinkList B)
 - 循环链表中，终端节点使用尾指针rear指示，那么查找终端节点的时间复杂度就是O(1)，开始节点也是O(1)
 	- 头结点 = rear->next->next
 
+
