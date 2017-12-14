@@ -10,6 +10,15 @@
 	- 写 w
 	- 执行 x
 
+## 命令执行权限
+#### /bin/
+- `/bin`目录下的命令是所有用户都可以执行的
+
+
+#### /user/bin/
+- `/usr/bin/`目录下的命令只有管理员才能够执行
+
+
 ## 更改文件/目录权限 chmod
 > change the permissions mode of a file
 
