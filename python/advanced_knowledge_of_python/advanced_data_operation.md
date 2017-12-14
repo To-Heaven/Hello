@@ -171,8 +171,17 @@ with open("a.txt", 'r') as rf:
 	top5 = wordCounter.most_common(5)
 ```
 
-## 对字典排序
+## 字典操作
+#### 快速找到多个字段中的公共键
+
+
+
 #### 按照value进行排序
+
+
+
+
+
 
 
 
