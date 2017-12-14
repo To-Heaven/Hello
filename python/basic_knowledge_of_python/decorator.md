@@ -409,12 +409,12 @@ D:\Python36\python.exe D:/files/python_practice/20170814-0820/0814/practice.py
 ```python
 import time
 
-def wrapper(aclass):
+def wrapper(cls):
     def inner(*args, **kwargs):
-        print('%s 开始运行'%aclass.__name__)
+        print('%s 开始运行'%cls.__name__)
         start = time.time()
-        obj = aclass(*args, **kwargs)
-        print('%s 运行了%s S'%(aclass.__name__, time.time()-start))
+        obj = cls(*args, **kwargs)
+        print('%s 运行了%s S'%(cls.__name__, time.time()-start))
         return obj
     return inner
 
