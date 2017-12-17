@@ -78,12 +78,51 @@ create user 'ziawang' @ 'localhost' identified by 'password'
 	- `mysql -h host -u username -p `
 		- host: MySQL服务器正在运行的主机名称
 
+## 密码管理
+#### 初始密码
+- MySQL5.7中会给root用户随机生成一个密码，我们可以在`error log`中找到，如果你是使用rpm安装的，那么这个文件的位置就是`/var/log/mysqld.log`
 
-## 忘记密码（破解密码）
+- 整个步骤如下
+	1. 使用`grep "password" /var/log/mysqld.log`获取MySQL生成的随机密码
+	2. 使用该密码登陆root用户
+	3. 登陆完成之后必须立刻修改密码，不然你干什么操作都会报错
+		- `ALTER USER user() identified by 'newpassword'`
+	4. 新创建的密码也是有规范的，MySQL中有三种密码的规范，我们可以使用`set global validate_password_policy=0|1|2`来设置
+		- 0 or LOW：length，支队长度有限制
+		- 1 or MEDIUM： 默认为1， 必须符合长度，且必须含有数字，小写或大写字母，特殊字符 
+		- 2 or STRONG： 必须符合长度，且必须含有数字，小写或大写字母，特殊字符，还要有一个dictionary file
+
+- 配置密码参数
+	- `show variables like 'validate_password%'`
+		- 此命令会列出密码规则的相关配置，我们可以使用`set global 来修改`
+	- 如果你只想查看其中一个配置参数的值，使用`select`
+		- `select @@validate_password_mixed_case_count`
+ 
+
+```
+mysql> SHOW VARIABLES LIKE 'validate_password%';
++--------------------------------------+-------+
+| Variable_name                        | Value |
++--------------------------------------+-------+
+| validate_password_dictionary_file    |       |
+| validate_password_length             | 8     |
+| validate_password_mixed_case_count   | 2     |
+| validate_password_number_count       | 1     |
+| validate_password_policy             | LOW   |
+| validate_password_special_char_count | 1     |
++--------------------------------------+-------+
+6 rows in set (0.00 sec)
+
+mysql> set global validate_password_mixed_case_count=2;
+Query OK, 0 rows affected (0.00 sec)
+```
+
+#### 忘记密码（破解密码）
 -  在socket套接字通信中，客户端登陆验证的密码是保存在服务端主机的文件中的。同样的，在MySQL中，客户端的验证信息也是以文件的方式保存的
 -  方法一：
 	1. 如果MySQL服务端还在运行，要先关闭mysqld，记得以什么方式打开就以什么方式关闭
 	2. 输入命令   `mysqld --skip-grant-tables`，这样就不用密码直接输入mysql就可以登陆root账户
+		1. 此命令无效时，使用下面命令`mysqld_safe --user=mysql --skip-grant-tables --skip-networking & mysql -u root mysql`，执行此命令之前要关闭mysqld
 	3. 进入之后使用命令
 		- 在5.7版本的MySQL中    `update mysql.user set authentication_string=password('密码') where user='root' and host='localhost'`   注意使用引号
 		- 在5.7版本之前的MySQL中    `update mysql.user password=password('密码') where user='root' and host='localhost'`
@@ -94,6 +133,7 @@ create user 'ziawang' @ 'localhost' identified by 'password'
 			- /F 标志强制关闭
 			- /PID  即进程id   可以使用`tasklis | findstr`查看 
 	6. 使用新设置的root密码等登陆
+
 
 
 
@@ -118,7 +158,14 @@ character-set-server=utf8
 host=localhost
 ```
 
+#### 使用user()
+- 在MySQL中，`user()`返回的是当前登陆的对象。在修改密码和赋予权限定额过程中，你可以使用这个函数，当然也可以直接用字符串指定用户
 
+
+#### 注意
+- **mysql 在使用"mysql_safe"重置root密码并登录之后，必须马上修改密码，不然会报错**
+	- `ALTER USER 'root'@'localhost' IDENTIFIED BY '新密码';`
+	- 或者使用user()  `alter user user() identified by '新密码'`
 
 ## 将MySQL服务端添加到系统服务列表中（windows下）
 - 为了方便，在使用时可以将MySQL服务端启动任务添加到系统服务列表中
@@ -140,6 +187,16 @@ host=localhost
 
 
 ## 启动和关闭MySQL服务端
+
+#### linux
+- 启动:
+	1. `service mysqld start`
+
+- 关闭:
+	1. `service mysqld stop`
+
+#### windows
+
 - 启动：
 	1. 终端命令行下输入`mysqld` ，服务端就跑起来了，这个时候，该命令行会卡在该位置，关掉该窗口并不会导致MySQL服务端关闭
 	2. Windows下，将服务端添加到系统服务列表中启动
