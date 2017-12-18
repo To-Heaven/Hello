@@ -1,13 +1,16 @@
 ## 常量
-- 变量需要注意的地方
-	- 不可变性
-	- 常量名应该大写
+
+#### 常量的特点
+1. 不可变性
+2. 常量名应该大写
+
+
+#### 创建常量类
 - 但是我们在python中定义的常量（本质上是一个变量）总是可以更改的，在程序运行的过程中绝对不允许常量被改变，除非你定义的是一个变量，因此需要我们通过类去实现一个满足常量上述条件的对象
 - 代码如下
 
 ```python
 # constant.py
-import sys
 
 class const:
     ''' 用于创建常量对象，并保证常量对象的不可变性和命名规范 '''
@@ -24,20 +27,21 @@ class const:
         Return:
             None
         '''
+
         if self.__dict__.get(name):
             raise self.ConstError("Can't change const.{name}".format(name=name))
         if not name.isupper():
             raise self.ConstCaseError("const name {name} is not all uppercase".format(name=name))
         self.__dict__[name] = value
 
-sys.modules[__name__] = const()                 # 导入此模块，直接使用模块名创建常量
+const = Const()				# 单例模式
 # ---------------------------------------------------------------
-import constant
+from constant import const
 
-constant.TOTAL = 1000
-constant.CHUNK_SIZE = 100
+const.TOTAL = 1000
+const.CHUNK_SIZE = 100
 # ---------------------------------------------------------------
-import constant as file
+from constant import const as file
 
 file.TOTAL = 1000
 file.CHUNK_SIZE = 100
@@ -48,8 +52,8 @@ file.CHUNK_SIZE = 100
 
 # python2与python3中的type()
 - 在python3中，没有了古典类，创建的类都默认继承自object类。但是在python2中创建的类默认是古典类。	
-	- 所谓古典类即创建的类不继承自任何类
-	- 所谓新式类就是创建的类继承自object类
+	- 所谓古典类即不继承自任何类的类
+	- 所谓新式类就是继承自object类的类
 
 >  那么问题来了
 
@@ -83,12 +87,12 @@ True
 - type()缺点
 	- 对于用户基于内建类扩展的自定义类，type并不能准确返回结果
 	- python2中type()对所有古典类实例化对象返回的结果全都相同，即无效。（对python2中的新式类有效）
-- 解决这种情况的方法
-	-  `isinstance(obj, classinfo)`
+		- 解决这种情况的方法 `isinstance(obj, classinfo)`
 
 
 ## None 与0、空值对象False
 - None是空值对象，是NoneType类的实例（单例模式）
+	- **对于一段运行着的程序，其中的所有对None的引用都指向同一个None对象**
 
 
 ```python
@@ -112,6 +116,7 @@ True
 	- **用户定义的类中如果存在`__nonzero__()`和`__len__()方法`**
 		- 如果`__nozero__()`返回值的布尔值为False(python3 没有__nozero__())
 		- 如果`__len__()`返回值的布尔值为0
+	- **容易错的地方: 空格字符串不是False**
 
 
 ```python
@@ -119,8 +124,6 @@ True
 class NoneTest1:
     def __len__(self):
         return 1
-
-
 
 
 class NoneTest2:
@@ -140,7 +143,7 @@ print('NoneTest2', bool(NoneTest2()))
 
 ## 再说可变对象与不可变对象
 - 不可变对象
-	- 不可变对象其中一个优点就是：当两个引用同时指向内存中的同一个不可变对象的时候，每个根据引用对该不可变对象的操作都是相互隔离的，即不会产生相互的影响。
+	- 不可变对象其中一个优点就是：**当两个引用同时指向内存中的同一个不可变对象的时候，每个根据引用对该不可变对象的操作都是相互隔离的，即不会产生相互的影响**。当一个引用调用了该字符串类似`replace`这种方法的时候，会返回一个新的字符串，并不会对原先的字符串产生任何影响
 - 可变对象
 	- 可变对象在很多情况下不能作为函数参数的默认值。
 	- 可变对象作为默认参数时的应用场景
