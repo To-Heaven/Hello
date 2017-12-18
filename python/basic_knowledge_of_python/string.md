@@ -2,22 +2,26 @@
 
 ## 获取字符串
 
-- name = 'ziawang'   
-	- 引号可以是单引号，双引号，三引号
-	- type(name)可以获取对象类型
+#### 1. 直接使用引号创建
+> type(name)可以获取对象类型
 
 
-- 实例化字符串类获取字符串
-	-  class str(object='')
-	-  class str(object=b'', encoding='utf-8', errors = 'strict')   
-	-  return a string of object（**返回的是一个字符串，不是bytes类型的数据**）
+- `name = 'ziawang'`   
+- 引号可以是单引号，双引号，三引号
+
+
+
+#### 2. 实例化字符串类获取字符串
+-  `class str(object='')`
+-  `class str(object=b'', encoding='utf-8', errors = 'strict')   `
+	-  return a string of object（**python3返回的是一个字符串，不是bytes类型的数据**）
 		-  if the object is empty, return a empty string
 	- arguments:
 		- if neither encoding nor errors is given, str(object) return object.__str__()
 		- if this object does not has the __str__method, str() fall back to returning repr(object)
 	- Note: 
 		- if at least  encoding or errors is given, object must be a byte-like object(bytes or bytearray）
-		- if  object is a byte-like object , str(object, encoding, errors)   <==> bytes.decode(encoding, errors)
+		- if object is a byte-like object , str(object, encoding, errors)   <==> bytes.decode(encoding, errors)
 
 ```python
 >>> str()
@@ -33,9 +37,9 @@ b'ziawang'
 
 ## 字符串的特点
 
-- **字符串是序列，是可迭代的对象**，可以通过索引来获取字符串的子字符
-
-- **字符串不可以被更改，因为他们是不可变的**
+1. **字符串是序列，是可迭代的对象**
+2. **字符串中的每一个字符都对应一个索引，可以通过索引来获取字符串中的字符或者切片来获取一个子字符串**
+3. **字符串不可以被更改，因为他们是不可变的**
 
 
 ```python
@@ -52,10 +56,12 @@ TypeError: 'str' object does not support item assignment
 
 ## 字符串的常用操作 common operations
 
+
+#### 1. f 字符串
 - python3.6新操作`f'...{value}'` 拼接字符串
 	- 除了简单的拼接字符串的功能外，还可以在大括号中传入表达式比如可以传入`"zia" + "wang"`这样也能输出相同结果
 	- 表达式内可以直接是数字、列表，对数字可以在大括号内进行运算并输出
-	- 在平常使用时，为了保证可阅读性，可以用变量指向该表达式，传入变量即可
+	- 在平常使用时，**为了保证可阅读性，可以用变量指向该表达式，传入变量即可**
 
 ```python
 >>> name = 'ziawang'
@@ -68,20 +74,26 @@ TypeError: 'str' object does not support item assignment
 >>> str_list = f'result is {[1, 2] * 2}'
 >>> str_list
 'result is [1, 2, 1, 2]'
+>>> def f():
+...     return 'haha'
+...
+>>> f'aaaa:{f()}'
+'aaaa:haha'
 >>>
 ```
 
-- 字符串的连接
-	- 一个字符串是一个整体，它是不可变的类型，因此字符串连接总是返回一个新字符串
+#### 2. 字符串的连接
+- 一个字符串是一个整体，它是不可变的类型，因此**字符串连接总是返回一个新字符串**
+- 拼接的集中姿势
 	- 可以用 ` + ` 操作符连接（粘到一起，中间不会有空格）
 	- 可以用逗号隔开，连接后会在中间存在空格
 	- 如果没有加号，相邻的两个字符串会自动的连接在一起，但是这种情况不适用于一个字符串加上一个指向字符串的变量。这种情况下只能使用加号来连接代表字符串的变量和字符串
 
 
 ``` python
->>> str1 = 'ziawang'
->>> str2 = 'haha'
->>> str1+str2
+>>> s1 = 'ziawang'
+>>> s2 = 'haha'
+>>> s1+s2
 'ziawanghaha'
 >>> 'ziawang', 'haha'
 ('ziawang', 'haha')
@@ -92,6 +104,7 @@ ziawang haha
 >>> 
 ```
 
+#### 3. 字符串乘法
 - 可以用 *   来重复
 
 ``` python 
@@ -99,8 +112,10 @@ ziawang haha
 ziawangziawangziawang,haha
 ```
 
+#### 4. 原始字符串
 - 原始字符串 `r`  (raw-string)
 	- ` r'prefix that disables most escape sequence processing'`
+	- 原始字符串中的`/`只能看作普通的反斜杠而不是转义字符
 
 ```python
 >>> print('asdasdas\tdasd')
@@ -110,9 +125,9 @@ asdasdas\tdasd
 >>> 
 ```
 
-- 字符串的切片
-	- 过大的索引值（下标值大于实际长度）会被字符串实际长度代替
-	- 当从下边界指向上边界方向与步长方向相反的时候，就会返回空字符串
+#### 5. 字符串的切片
+- 过大的索引值（下标值大于实际长度）会被字符串实际长度代替
+- 当从下边界指向上边界方向与步长方向相反的时候，就会返回空字符串
 
 ```python
 >>> a = 'qwertyu'
@@ -138,9 +153,9 @@ True
 ```
 
 
-
+#### 6. 使用索引
 - 字符串也可以用索引来获取组成字符串中的元素
-- 以str = 'abcde'为例
+- 以s = 'abcde'为例
 
 ```python
 >>> s = 'abcde'
@@ -174,46 +189,80 @@ True
 
 ```
 
-## 字符串的属性variables
-- 待补充
+
+#### 7. 成员判断
+- 使用`in`可以判断一个字符串是否是另一个字符串的子集
+	- 参与运算的数据必须是字符串类型，否则会报错
+
+```python
+>>> s
+'0123456789'
+>>> 0 in s
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: 'in <string>' requires string as left operand, not int
+>>> '0' in s
+True
+>>> '123' in s
+True
+>>> '134' in s
+False
+>>>
+```	
 
 
 ## 字符串的方法methods
 
-### 查询字符串
+#### 查询
 
 
 - str.endswith(sub[start[end]])判断字符串的结束位置的字符是否是指定值，也可以用start和end限定判断范围
 
 ```python
->>> str = 'qwertqwerqwer'
->>> len(str)
+>>> s = 'qwertqwerqwer'
+>>> len(s)
 13
->>> str.endswith('e',0,12)
+>>> s.endswith('e',0,12)
 True
 ```
 
 
 - str.find(sub[start[end]]) 从字符串的左边开始找
 	- Return the lowest index in the string where substring sub is found within the slice  s[start:end].Optional arguments start and end are inter preted as in slice notation. **Return -1 if sub is not found.**
+	- 如果被查询的子字符串不存在，会返回`-1`
+
+```python
+>>> s
+'0123456789'
+>>> s.find('23')
+2
+>>> s.find('23', 2)
+2
+>>> s.find('23', 3)
+-1
+>>> s.find('24', 0)
+-1
+>>>
+```
 
 - str.rfind(sub[start[end]])  从字符串的右边开始找
 	- **注意**
 		- 两种方法得到的结果是相同的，即该字符sub所在的索引是固定不变的（但是当一个字符串中存在了重复的字符的时候得到的结果就是不一样的）
+		- 可以用`find`和`rfind`来判断字符串重是否存在重复字符串，但是建议用`count`方法
 
 ```python
->>> str = 'asdwqfcqfrwef'
->>> str.find('f')
+>>> s = 'asdwqfcqfrwef'
+>>> s.find('f')
 5
->>> len(str)
+>>> len(s)
 13
->>> str.find('f',6)
+>>> s.find('f',6)
 8
->>> str.find('p')                   #返回 -1
+>>> s.find('p')                   #返回 -1
 -1
->>> str.rfind('c')
+>>> s.rfind('c')
 6
->>> str.rfind('c', -4, -6)
+>>> s.rfind('c', -4, -6)
 -1
 >>> 
 ```
@@ -224,14 +273,14 @@ True
 - str.count(sub[start[end]])返回字符串中某字符串出现的次数，可以用start和end来限制统计范围
 
 ```python
->>> str = 'qwertqwerqwer'
->>> len(str)
+>>> s = 'qwertqwerqwer'
+>>> len(s)
 13
->>> str.count('q')
+>>> s.count('q')
 3
->>> str.count('q',1)
+>>> s.count('q',1)
 2
->>> str.count('q',1,8)
+>>> s.count('q',1,8)
 1
 >>> 
 ```
@@ -240,22 +289,23 @@ True
 - min(str)
 -  返回字符串中最大/小的字母
 
-### 字符串切割
+#### 字符串切割
 - str.partition(string)  返回一个三元元组。该方法将str的副本进行分割，第一个元素是分隔符左边的子字符串，第二个为分隔符本身，第三个为分隔符右边的子字符串
 
 ```python
->>> str = 'ziawangisfrom Bozhou'
->>> str.partition('is')
+>>> s = 'ziawangisfrom Bozhou'
+>>> s.partition('is')
 ('ziawang', 'is', 'from Bozhou')
 >>> 
 ```
 
 - str.splitlines(keepends=False)
-	- return a list of the lines in the string , breaking at the boundaries .
+	-  return a list of the lines in the string , breaking at the boundaries .
 	-  line breaks are not included in the resulting list unless keepends is given and True
+	-  按照字符串中的换行符来切割字符串，`keepends`参数可以用来保留换行符
+	-  `keepends=False`的时候，两个相邻的换行符会切出来一个空字符串`''`
 	
 ```python
->>> s = '012301230123'
 >>> s = '12\n3\n\n456\r\n789\f4567\v'
 >>> s
 '12\n3\n\n456\r\n789\x0c4567\x0b'
@@ -270,15 +320,26 @@ True
 - string.split(s = '',  num = string.count(s))  通过分隔符  s 对字符串进行切片，参数num为切割的次数
 	- str默认为所有的空字符，包括空格，换行\n，制表符\t
 	- num分割次数
+	- **注意**
+		- 要将字符串以空格切分时，如果没有指定split的参数为`' '`，那么会将连续的多个空格作为一个空格切分。如果指定了参数为一个`' '`空格，那么就会按照指定的字符串切分原字符串，并且在处理连续的空格时会产生空字符串`''`
 
 
 ```python
->>> str  = 'haha \t haha \thaha \thaha'
->>> str.split(' ', 2)
+>>> s  = 'haha \t haha \thaha \thaha'
+>>> s.split(' ', 2)
 ['haha', '\t', 'haha \thaha \thaha']
->>> str.split()
+>>> s.split()
 ['haha', 'haha', 'haha', 'haha']
->>> 
+>>> s = 'asd asd  asd asd sss ss'
+>>> s.aplit()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'str' object has no attribute 'aplit'
+>>> s.split()
+['asd', 'asd', 'asd', 'asd', 'sss', 'ss']			# 将多个连续的空格当作一个空格
+>>> s.split(' ')
+['asd', 'asd', '', 'asd', 'asd', 'sss', 'ss']		# 产生了空字符串
+>>>
 ```
 
 - 应用场景：获取字符串中指定的子字符串（可以对用户输入的字符串进行格式化，每隔一定长度插入一个特定字符，这样方便之后用split切分成列表）
@@ -307,8 +368,11 @@ while True :
 - str.isdigit()判断一个字符串里面是否全是由数字组成，在python3中，isdigit只能识别str，byte和unicode，无法进行字符串中中文数字和罗马数字的判断
 - str.isdecimal()在python3中只可以对str和unicode进行识别，不能识别byte，中文数字和罗马数字
 - str.isnumberic()可以判断str，unicode，中文，罗马数字
+
 > bytes 没有 isdecimal(), isnumber()方法
-**应该选择str.isdigit()来进行数值判断，因为它适用于大部分场景**
+
+
+- **应该选择str.isdigit()来进行数值判断，因为它适用于大部分场景**
 
 ```python
 AGE = 56
@@ -316,13 +380,14 @@ while True :
 	age = input('please input the age :').strip()
 	if len(age) == 0:   continue
 	if age.isdigit() :
-		...balabala...
+		# ...balabala...
 ```
 
 
 ### 返回新字符串
 
 - str.maketrans(intab, outtab)  创建子字符隐射的转换表，进行字符转换，源字符串不会改变
+	- 这个方法与replace的最大区别在于，他可以批量的设置要替换的映射关系
 	- 返回值是一个映射表，用来作为`translate()`的参数
 	- intab 字符串中要被替代的字符组成的字符串
 	- outtab对应intab中字符的字符串
@@ -332,14 +397,16 @@ while True :
 - 翻译表table通过maketrans()方法转换而来
 
 ```python
->>> s = 'ziawang'
->>> s = 'haha'
->>> l = s.maketrans('ha', 'xi')
->>> l
-{104: 120, 97: 105}
->>> s.translate(l)
-'xixi'
->>> 
+s = 'asdasdasdasdasdasd'
+
+d = {
+    'a': 'A',
+    's': 'S',
+    'd': 'D'
+}
+trans_table = s.maketrans(d)
+
+print(s.translate(trans_table))
 ```
 
 - str.join(iterable) 将序列sequence中的元素用str连接起来，返回一个生成新的字符串。但是要注意的是，该**序列的元素应该是字符串，如果是数字就会报错**
@@ -350,15 +417,15 @@ while True :
 > Return a string which is the concatenation of the strings in the  iterable.  The separator between elements is S.
 
 ```python
->>> str = '-'
+>>> s = '-'
 >>> phone_number = (156,9501,8792)
->>> str.join(phone_number)
+>>> s.join(phone_number)
 Traceback (most recent call last):
   File "<pyshell#4>", line 1, in <module>
     str.join(phone_number)
 TypeError: sequence item 0: expected str instance, int found
 >>> p = ('156','9501','8792')
->>> str.join(p)
+>>> s.join(p)
 '156-9501-8792'
 >>> 
 ```
