@@ -423,6 +423,7 @@ mysql>
 
 
 ## 配置文件
+- Linux下，配置文件路径为`/etc/my.cnf`
 - 常用的sections
 	- [mysqld]
 		- mysqld section下存放着服务端启动时的配置，常用的配置信息如下
