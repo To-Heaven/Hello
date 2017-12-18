@@ -90,6 +90,22 @@
 - 格式
 	- `whereis 命令名称`
 
+###### whereis passwd
+- 使用`whereis passwd`命令的时候，会得到四条结果，如下
+
+```
+[root@host ~]# whereis passwd
+passwd: /usr/bin/passwd /etc/passwd /usr/share/man/man1/passwd.1.gz /usr/share/man/man5/passwd.5.gz
+```
+- 这是因为Linux系统系有一个名称位`passwd`的命令，又有一个`passwd`的配置文件。
+	- ` /usr/share/man/man1/passwd.1.gz`  这样以`.1.gz`结尾的文件对应的是命令的帮助文件路径
+	- ` /usr/share/man/man5/passwd.5.gz` 以`.5.gz`结尾的文件对应的则是配置文件对应的帮助文件的路径
+
+- 因此当我们使用`man passwd`的时候，得到的将会是命令的帮助文档信息，如果你想要看`passwd`配置文件的帮助信息，可以这样
+	- `man 5 passwd`
+
+
+
 #### 文件内搜索命令 grep
 - 在文件中搜寻字符串匹配的行并输出
 - 所在路径：`/bin/grep`
