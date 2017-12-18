@@ -72,7 +72,9 @@ mysql>
 	- **结构化数据**，每一行的内容必须要符合定制好的表结构（字段的个数和类型都一样）
 	
 - mongodb
-	- 没有结构，以文档为单位，每一个文档都可以有自己独特的结构（JSON对象都可以拥有自己的属性和值）
+	- 没有固定结构，以文档为单位，每一个文档都可以有自己独特的结构（JSON对象都可以拥有自己的属性和值）
+
+> In MongoDB, a document is roughly equivalent to a row in an RDBMS. When working with relational databases, rows are stored in tables, which have a strict schema that the rows follow. MongoDB stores documents in collections rather than tables — the principal difference is that no schema is enforced at a database level.
 
 > 应用场景： 电影、影评、影评的回复、打分。在传统数据库中，至少至少要四张表，在mongodb中只需要一篇文档就可以完成
 
