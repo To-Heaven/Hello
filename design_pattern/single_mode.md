@@ -199,3 +199,23 @@ print(a is f)
 print(id(a), id(f))
 ```
 
+#### 使用静态字段
+- 这种方法，在多线程下会出问题，会出现多个实例，
+
+```
+class Foo:
+	_instance = None
+	
+	@classmethod
+	def instance(self):
+		if not Foo._instance:
+			obj = Foo(*args, **kwargs)		
+			Foo._instance = obj
+		return  Foo._instance
+```
+
+- 加锁才行
+
+```
+
+```
