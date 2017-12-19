@@ -35,50 +35,73 @@
 - 简单来说，关系型数据库是由一个个关联的表组成的
 - 非关系型数据库则没有表的概念 
 
+#### 关系型数据库的特点
+1. **表结构固定**
+2. **使用关系模型组织数据，使数据之间的耦合性较强**
+3. **降低的数据的冗余**
+4. **事务的一致性**
 
+#### 关系型数据库的缺点
+1. 表结构固定导致只有固定结构的数据才能存放在数据表中
+2. 读写性能差
+	- 跨表查询总会产生性能损耗
+3. 较难满足高并发读写需求
 
+## 数据库配置
 
-## 数据库初始化
+#### 数据库初始化
 > 确保将MySQL的bin目录下文件的路径添加到系统环境变量中
+
+- 初始化数据库用来干什么？
+	- 刚安装好的数据库服务器是没有`data`目录的，`data`目录起始就是用来存放数据库的目录，之后在初始化数据库之后我们才能创建一个数据库。
 
 - 什么时候使用数据库初始化
 	1. 刚安装好MySQL，需要创建第一个数据库的时候
 	2. 修改了配置文件中的datadir对应路径值之后
 
+- 配置文件在哪儿？
+	- Linux中，MySQL的配置文件路径一般为`/etc/my.cnf`
+	- 而在Windows中，我们可以讲配置文件放在MySQL的安装根目录下
+
 - 如何初始化？
 	- `mysqld --initialize`
-		- 此操作之后会在配置文件`my.ini`中datadir指定的路径下创建一个data目录，该目录下的每一个文件夹都对应着给一个数据库
-		- 这种初始化方式会默认给root用户分配一个随机密码。保存在MySQL的日志文件中。
+		- 此操作之后会在配置文件`my.cnf`中datadir指定的路径下创建一个data目录，该目录下的每一个文件夹都对应着给一个数据库
+		- 这种初始化方式会默认给root用户分配一个随机密码。保存在MySQL的日志文件`/var/log/mysql.log`中。
 	- `mysqld --initialize-insecure` 
 		- 这种方法可以不让MySQL默认为root用户创建随机密码，这样初始化数据库之后，使用`mysqladmin -u root password 密码`来创建密码
   
 
-## 创建用户名和密码
-- 使用下面命令创建root用户密码（刚安装的MySQL，root用户是没有密码的）
+## 用户名管理
+
+
+###### 创建新用户方式一
+- 需要登录到客户端的root用户在mysql中创建
+- 命令如下
+	- `localhost`表示创建的用户只能在本地主机中登陆
+	- `%`表示创建的用户可以在互联网的其他主机上登陆到本地的数据库
+
+```mysql
+create user 'ziawang' @ 'localhost' identified by 'password'
+create user 'wangzihao' @ '%' identified by 'password'
+```
+
+###### 方式二
+- 也可以在授予权限的同时创建用户
+
+```
+grant all on *.* to 'user'@'%' identified by 'password'
+```
+
+
+## 密码管理
+
+#### 创建root密码(mysqld --initialize-insecure)
+- 如果你使用的是`mysqld --initialize-insecure`方法初始化的数据库，那么你可以使用下面命令创建root用户密码
+
 ```mysql
 mysqladmin -u root password 密码
 ```
 
-- 创建新用户
-	- 需要登录到客户端的root用户在mysql中创建
-	- 命令如下
-
-```mysql
-create user 'ziawang' @ 'localhost' identified by 'password'
-```
-
-
-
-## 验证登陆
-- 刚创建的MySQL数据库，用户在进行使用的时候是没有设置密码的，因此只需要在客户端终端这样
-	- `mysql -u root`
-- 对于一个存在了用户名和密码的数据库，就要这样访问(注意密码不需要加引号)
-	- `mysql -u username -p password`
-- 完整的登陆因该是这样
-	- `mysql -h host -u username -p `
-		- host: MySQL服务器正在运行的主机名称
-
-## 密码管理
 #### 初始密码
 - MySQL5.7中会给root用户随机生成一个密码，我们可以在`error log`中找到，如果你是使用rpm安装的，那么这个文件的位置就是`/var/log/mysqld.log`
 
@@ -118,7 +141,9 @@ Query OK, 0 rows affected (0.00 sec)
 ```
 
 #### 忘记密码（破解密码）
--  在socket套接字通信中，客户端登陆验证的密码是保存在服务端主机的文件中的。同样的，在MySQL中，客户端的验证信息也是以文件的方式保存的
+> mysql底层仍然使用的是在socket套接字通信  
+
+-  客户端登陆验证的密码是保存在服务端主机的文件中的。同样的，在MySQL中，客户端的验证信息也是以文件的方式保存的
 -  方法一：
 	1. 如果MySQL服务端还在运行，要先关闭mysqld，记得以什么方式打开就以什么方式关闭
 	2. 输入命令   `mysqld --skip-grant-tables`，这样就不用密码直接输入mysql就可以登陆root账户
@@ -127,20 +152,27 @@ Query OK, 0 rows affected (0.00 sec)
 		- 在5.7版本的MySQL中    `update mysql.user set authentication_string=password('密码') where user='root' and host='localhost'`   注意使用引号
 		- 在5.7版本之前的MySQL中    `update mysql.user password=password('密码') where user='root' and host='localhost'`
 	4. 使用`flush privileges` 刷新权限
-	5. 使用`tskill mysqld` 关闭服务端
-		- 如果这个命令不能用，使用这个   `taskkill /T /F /PID 进程号`   
-			- /T 表示将PID对应的进程和子进程都kill
-			- /F 标志强制关闭
-			- /PID  即进程id   可以使用`tasklis | findstr`查看 
+	5. 关闭服务端
+		- Linux中
+			- `service mysqld stop`
+			- 或者使用`pkill -9 PID`杀死该进程
+		- Windows中使用`tskill mysqld` 
+			- 如果这个命令不能用，使用这个   `taskkill /T /F /PID 进程号`   
+				- /T 表示将PID对应的进程和子进程都kill
+				- /F 标志强制关闭
+				- /PID  即进程id   可以使用`tasklis | findstr`查看 
 	6. 使用新设置的root密码等登陆
 
 
 
 
 - 方法二
-	1. 在安装目录下创建配置文件   `my.ini`
+	1. 新创建一个配置文件
+		- Linux可以在`/etc/my.cnf`
+		- Windows可以选择在安装根目录下创建`my.ini`配置文件
 	2. 在配置文件中按照格式写入配置，如下
-		- ini配置文件的注释使用井号或分号	
+		- cnf配置文件的注释在使用井号"#"
+		- ini配置文件的注释使用井号"#"或分号	
 	3. 由于datadir即数据库路径变化了，因此需要对数据库进行初始化 `mysqld --initialize-insecure`
 		- 这样初始化之后，原先的密码就不存在了，这样就可以重新创建密码了
 
@@ -154,7 +186,7 @@ datadir=D:\data
 # 端口，默认为3306
 port=3306
 # 编码，注意utf8不是utf-8，如果是
-character-set-server=utf8
+character_set_server=utf8
 host=localhost
 ```
 
@@ -167,11 +199,22 @@ host=localhost
 	- `ALTER USER 'root'@'localhost' IDENTIFIED BY '新密码';`
 	- 或者使用user()  `alter user user() identified by '新密码'`
 
+
+## 验证登陆
+- 刚创建的MySQL数据库，用户在进行使用的时候是没有设置密码的，因此只需要在客户端终端这样
+	- `mysql -u root`
+- 对于一个存在了用户名和密码的数据库，就要这样访问
+	- `mysql -u username -p`
+- 完整的登陆因该是这样
+	- `mysql -h host -u username -p `
+		- host: MySQL服务器正在运行的主机名称
+
+
 ## 将MySQL服务端添加到系统服务列表中（windows下）
 - 为了方便，在使用时可以将MySQL服务端启动任务添加到系统服务列表中
 - Windows下步骤这样
 	- 命令行下  `mysqld  --install`		
-		- 管理员身份开死去命令行
+		- 管理员身份开启命令行
 	- 打开运行小窗口 `win + R`
 	- 输入 `services.msc`
 	- 找到MySQL，点击启动，服务端就启动了
@@ -211,8 +254,6 @@ host=localhost
 	3. `net stop mysql`
 
 
-
-memory  关掉服务端
 ## 存储引擎
 - 存储引擎是什么鬼?
 	- 存储引擎就是如何存储数据、如何为存储的数据建立索引和如何更新、查询数据等技术的实现方法。因为在关系数据库中数据的存储是以表的形式存储的，所以存储引擎也可以称为表类型（即存储和操作此表的类型）
@@ -250,7 +291,7 @@ memory  关掉服务端
 
 
 ## 创建新用户
-- root用户下才能创建其他用户
+- **root用户下才能创建其他用户**
 - 创建一个只能在本地主机登陆的账户
 
 ```sql
@@ -398,6 +439,21 @@ mysql> show grants for ziawang@'localhost';
 mysql>
 ```
 
+## 查看当前登陆的用户
+- `select user();`
+
+```
+mysql> select user();
++-------------------+
+| user()            |
++-------------------+
+| ziawang@localhost |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> 
+```
+
 ## 删除用户
 - `drop user username@'host'`
 
@@ -452,7 +508,7 @@ mysql>
 				- 用于提供上述user的密码
 			- default-character-set
 				-  客户端的编码搁置
-			-  port
+			- port
 	- [mysql]
 		- 登陆时调用的配置文件，是客户端的局部配置
 		- 配置信息同[client]section，相同的配置参数会覆盖[client]中对应的配置参数
