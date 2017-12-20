@@ -95,22 +95,34 @@ arg ...: arguments passed to program in sys.argv[1:]
 - sys.exit(msg)
 	- Exit from Python. This is implemented by raising the SystemExit exception
 	- cleanup actions specified by finally clauses of try statements are honored
+	- `sys.exit(msg)`会触发SystemExit来中断程序
 
 ```python
 import sys
+
+
 try:
-    sys.exit('use with the try statement is best')
-except  Exception:
-    pass
-finally:
-    print('cleanup action ')
+    sys.exit(0)
+except SystemExit as e:
+    print('exception message :', e)
 
--------------------------------------------------
-# 运行结果
-cleanup action 
-use eith the try statement is best
+print('in first')
 
-Process finished with exit code 1
+
+try:
+    sys.exit(1)
+except SystemExit as e:
+    print('exception message : ', e)
+
+print('in last')
+
+
+# 运行结果-------------------------------------------------
+exception message : 0
+in first
+exception message :  1
+in last
+
 
 
 ```
@@ -121,7 +133,8 @@ Process finished with exit code 1
 	- an intger giving the maxmum value a variable of type Py_ssize can take. it's usually 2\**31-1 on a 32-bit platform for 2\**63-1 on a 64-bit platform
 
 - sys.path
-	- return  a list of string that specifies the search path for the modules. initalized form the emvironment variable PYTHONPATH, plus an installation-dependent default
+	- **是一个全局列表**
+	- return  a list of string that specifies the search path for the modules. initalized form the emvironment variable PYTHONPATH, plus an installation-dependent default（返回模块搜索路径，**当我们使用import导入模块的时候，解释器就会遍历该列表中的每一个路径，直到导入成功**）
 	- the first item of this list , path[0] is the directory containing the script that used to invoke the python interpreter（path列表的第一个元素的值是执行python脚本的路径）
 
 
@@ -139,49 +152,14 @@ Process finished with exit code 1
 
 
 
-- sys.stdin
-	- used for all interactive input, including calls to input()
-
-> prompt     提示符  
-
-- sys.stdout
-	- used for the output of print() and expression statements and for the prompts of input()
-	- sys指向控制台，赋值为一个文件句柄的时候，就会指向该文件
-
-```python
-import sys
-
-wf = open('ziawang.txt', 'w', encoding='utf-8')
-msg1 = 'www.ziawang.com'
-__console__ = sys.stdout             # 先把最初sys.stdout赋值给__console__
-sys.stdout = wf			
-print('msg1:',msg1)
-
-msg2 = 'ziawang'
-sys.stdout = __console__		
-print(msg2)
-
-
--------------------------------------------------------------------------
-# 输出结果
-#ziawang.txt
-#msg1: www.ziawang.com
-ziawang
-
-Process finished with exit code 0
-```
-
-
-- sys.stderr
-	- The interpreter’s own prompts and its error messages go to stderr.
-
 
 - sys.modules
+	- **是一个全局字典，包含了从解释器运行开始后被导入的所有模块，重复导入同一个模块实际上只会导入一次，其后的导入仅仅是对该字典做了一个查询操作**，当解释器启动时会将该字典加载到内存
 	- a dictionary that maps module names to modules which have alreadly been laded.  
 	- \_\_name\_\_
 		- 在当前文件的时候，\_\_name\_\_变量的值为"\_\_main\_\_"
 		- __在当前的文件中导入别的模块的时候，__name__变量指向的是该模块的模块名__
-	- sys.modules[\_\_name\_\_]会返回当前所在模块对象
+	- sys.modules[\_\_name\_\_]会返回当前所在模块对象，你可以通过句点符`.`来访问该模块中的任何全局变量
 	
 ```python
 import sys
@@ -202,3 +180,35 @@ in modulefunc.......
 
 ```
 
+#### sys.stdout, sys.stdin, sys.stderr
+###### 1. sys.stdout和print的关系
+- 当我们使用`print('hello ziawang')`打印一个字符串到控制台的时候，实际上调用的`sys.stdout.write('hello ziawang'+'\n')`，它会将结果输出到控制台
+
+###### 2. sys.stdin与input的关系
+- 当我们使用`input('name:')`在控制台交互的时候，实际上有两个步骤
+	1. `sys.stdout.write('name:'+'\n')`
+	2. `sys.stdin.readline()[:-1]`
+		- 后面进行字符串切分是去掉`stdout`写入的换行符（换行符只占一个字符长度）
+
+###### 注意
+- `sys.stdout`本质上也是一个引用，它默认指向的是控制台，我们可以将其重定向到一个具备`write()`方法的对象上（比如文件对象），这实际上就是将`sys.stdout`的引用从控制台指向其他对象
+
+- 我们知道，在python中，**变量之间的相互赋值本质上就是引用的传递过程**，那么我们可以将一个文件的引用（句柄）赋值给`stdout`
+	- 当我们把`stdout`指向了一个文件对象的时候，`print`调用`stdout`的`write`方法起始就是在调用文件的`write`方法，所以就可以将内容写入文件了
+
+- **重定向stdout之前，一定要记得备份其引用，即先保存到另外一个变量身上**
+
+```python
+import sys
+
+
+temp = sys.stdout       # 备份
+
+sys.stdout = open('ziawang.txt', 'w')       # 重定向
+
+print('这段文字将在文件ziawang.txt中显示')
+
+sys.stdout = temp           # 恢复
+
+print('这段文字将在控制台打印')
+``` 
