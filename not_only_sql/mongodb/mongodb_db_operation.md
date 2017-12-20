@@ -44,7 +44,7 @@
 - 切换到当前使用的数据库下，再执行删除命令
 - `db.dropDatabase()`
 
-```sql
+```javascript
 > show dbs;
 admin  0.000GB
 first  0.000GB
@@ -68,7 +68,7 @@ test   0.000GB
 
 - 举个栗子
 
-```
+```javascript
 > show dbs;
 admin  0.000GB
 local  0.000GB
