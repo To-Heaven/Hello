@@ -8,7 +8,7 @@
 - mongodb的collections也支持隐式创建。直接向一个**尚未创建的collection中**插入文档会隐式的创建该collection，并向该collection中插入文档
 	- `db.unexist_collection.insert(document)`
 	
-```
+```javascript
 > use ziawang;
 switched to db ziawang
 > db.userinfo.insert({"name":"ziawang", "age": "23"});
@@ -25,7 +25,7 @@ ziawang  0.000GB
 - `show tables` or `show collections`
 	- 显示当前数据库下的所有集合
 
-```
+```javascript
 > show tables;
 userinfo
 > show collections;
@@ -37,7 +37,7 @@ userinfo
 - `db.collection_name.drop()`
 	- 删除名称为`collection_name`的集合，删除成功后会返回一个`True`
 	
-```
+```javascript
 > db.userinfo.drop();
 true
 > 
