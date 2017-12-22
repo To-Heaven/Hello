@@ -52,7 +52,36 @@ TypeError: 'str' object does not support item assignment
 >>> 
 ```
 
+## 字符串的应用
+1. 最最常用到的，就是存放数据，比如从文件中读取的字符串
+2. 配置文件中，特别是在Web项目比如Django中，通常以字符串来保存配置项，并通过`反射`来调用配置。
+	- 比如中间件配置、已注册应用配置等等
 
+```python
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'trial.apps.TrialConfig',
+    'curd.apps.CurdConfig',
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'seconds.urls'
+
+```
 
 ## 字符串的常用操作 common operations
 
@@ -104,6 +133,39 @@ ziawang haha
 >>> 
 ```
 
+###### 注意
+- `M += N` 与 `M = M + N`是不同的! 
+	- 对于不可变对象来说，这两种方法都会创建一个新的对象
+	- 对于可变对象来说，前者不会创建一个新对象，而后者会创建一个新的对象。
+	- 直接点说，不管对象是可变也好，不可变也罢，`M = M + N`这种方式总会占用更多的内存
+
+
+```python
+>>> a                             # 不可变对象 
+'hello ziawang'
+>>> id(a)
+57722104
+>>> a = a + ' ziawang'
+>>> a
+'hello ziawang ziawang'
+>>> id(a)
+57692672
+>>> a = []                        # 可变对象
+>>> id(a)
+57674808
+>>> a += [1]
+>>> a
+[1]
+>>> id(a)
+57674808
+>>> a = a+ [2]
+>>> a
+[1, 2]
+>>> id(a)
+57721480
+>>>
+```
+
 #### 3. 字符串乘法
 - 可以用 *   来重复
 
@@ -124,6 +186,10 @@ asdasdas	dasd
 asdasdas\tdasd
 >>> 
 ```
+
+###### 项目应用
+1. Django2.0版本中的`re_path`和2.0以下版本的`url`在实现路由映射的时候都大量用到了原始字符串
+2. 爬虫时，对正则表达式字符串使用原始字符串可以避免n个莫名其妙的坑
 
 #### 5. 字符串的切片
 - 过大的索引值（下标值大于实际长度）会被字符串实际长度代替
@@ -210,6 +276,85 @@ False
 >>>
 ```	
 
+#### 8. 占位符%s
+- 用来拼接字符串，还有两个经常用到的是字符串的`format`和`join`方法
+	- `"%s, %s" % ("hello", "ziawang")`
+- 这个操作经常会用到，几乎每一个项目中，都会用到
+
+- 字符串中的占位符较多时会影响阅读性，此时应该使用format
+
+###### 应用——拼接字符串
+1. Django的源码中的大量使用到了占位符来拼接
+2. 在我们自定义错误类型的时候，错误信息中的一些内容应该是变化的，我们可以使用占位符来代替
+
+```python
+# 比如视图函数不返回响应值的时候，会抛出的错误
+if response is None:
+    raise ValueError(
+        "%s.process_template_response didn't return an "
+        "HttpResponse object. It returned None instead."
+        % (middleware_method.__self__.__class__.__name__)
+    )
+```
+
+3. 在开发过程中，我们通常需要为一些动态变化着的数据进行拼接。比如在开发`seconds`组件的过程中，为每一个模型生成分别对应`增、删、改、查`路径，以及为这个路径创建一个反响解析时用到的name，也是用的占位符，这是在一个字符串中的占位符数量不是很多的情况下，如果占位符太多，我们应使用`format`来提高阅读性
+
+```python
+    def get_urls(self):
+        """ 生成路径与视图函数映射关系的列表，并扩展该列表
+        Return:
+            返回存放路由关系的列表
+        """
+
+        # 生成增、删、改、查基本映射关系
+        app_model = self.get_app_model()
+        urlpatterns = [
+            re_path(r'^$', self.add_request_decorator(self.show_view), name='%s_%s_show' % app_model),
+            re_path(r'^add/$', self.add_request_decorator(self.add_view), name='%s_%s_add' % app_model),
+            re_path(r'^(\d+)/delete/$', self.add_request_decorator(self.delete_view), name='%s_%s_delete' % app_model),
+            re_path(r'^(\d+)/change/$', self.add_request_decorator(self.change_view), name='%s_%s_change' % app_model),
+        ]
+
+    def get_delete_url(self, nid):
+        """ 获取删除记录对应的路径
+        Args:
+            nid: 该记录的id
+        Return:
+            字符串形式的路径
+        """
+
+        alias = 'curd:%s_%s_delete' % self.get_app_model()
+        return reverse(alias, args=(nid, ))
+
+    def get_change_url(self, nid):
+        """ 获取编辑记录对应的url
+        Args:
+            nid: 该记录的id
+        Return:
+            字符串形式的路径
+        """
+
+        alias = 'curd:%s_%s_change' % self.get_app_model()
+        return reverse(alias, args=(nid, ))
+
+    def get_show_url(self):
+        """ 获取列表页面的url
+        Return:
+            字符串形式的路径
+        """
+
+        alias = 'curd:%s_%s_show' % self.get_app_model()
+        return reverse(alias)
+
+    def get_add_url(self):
+        """ 获取增加记录对应的url
+        Return:
+            字符串形式的路径
+        """
+
+        alias = 'curd:%s_%s_add' % self.get_app_model()
+        return reverse(alias)
+```
 
 ## 字符串的方法methods
 
@@ -318,6 +463,7 @@ True
 ``` 
 
 - string.split(s = '',  num = string.count(s))  通过分隔符  s 对字符串进行切片，参数num为切割的次数
+	- 从左边开始切分字符串
 	- str默认为所有的空字符，包括空格，换行\n，制表符\t
 	- num分割次数
 	- **注意**
@@ -352,6 +498,54 @@ while True :
 	print('命令shi:%s, 命令的参数是%s'%(cmd_new[0], cmd_new[1]))	
 ```
 
+- rsplit(s = '',  num = string.count(s))
+	- 从右边开始切分字符串
+	- 其他用法和split相同
+
+###### split与rsplit在项目中的应用
+- 在`问卷调查`项目中，问卷中每一类问题的对应不同的答案类型，总共`单选、打分、建议`三种问题分别对应的答案在数据库表中的字段名为`option, val, content`，要针对不同类型的问题生成不同form组件的字段在问卷页面上显示，同时考虑到了保存数据到数据库的情况，所以将字段名与问题的id拼接在一起，当提交数据时直接使用切分字符串，既可以得到问题id，又可以得到问题类型。
+- 为什么在项目中用的时`rsplit`而不是`split`？
+	- option字段在答案表中是一个外键foreignkey，关联的是每一个问题的选项组成的表，因此在创建一条记录的时候，需要`create`函数中要使用的是`option_id=xxx`，对应的拼接的字符串就是类似于这种`option_id_1`，如果我们使用split切分字符串提取问题类型与问题id的时候，就会切成`option`和`id_1`，这样创建记录很定会报错，所以使用`rsplit("_", 1)`就可以完美解决这个问题
+
+```python
+    for que in question_list:
+        if que.tp == 1:
+            field_dict['val_%s' % que.id] = fields.ChoiceField(
+                label=que.caption,
+                error_messages={'required':'必填'},
+                widget=widgets.RadioSelect,
+                choices=[(i, i) for i in range(1, 11)]
+            )
+        elif que.tp == 2:
+            field_dict['option_id_%s' % que.id] = fields.ChoiceField(
+                label=que.caption,
+                widget=widgets.RadioSelect,
+                choices=models.Option.objects.filter(
+                    qs_id=que.id).values_list('id', 'name'))
+        else:
+            field_dict['content_%s' % que.id] = fields.CharField(
+                label=que.caption, widget=widgets.Textarea, validators=[func, ])
+
+    MyTestForm = type("MyTestForm", (Form,), field_dict)
+
+    if request.method == 'GET':
+        form = MyTestForm()
+        return render(request, 'score.html', {'question_list': question_list, 'form': form})
+    else:
+        # 15字验证
+        # 不允许为空
+        form = MyTestForm(request.POST)
+        if form.is_valid():
+            objs = []
+            for key,v in form.cleaned_data.items():		## {'option_id_2': '3', 'content_9': 'sfasdf', 'val_10': '13'}
+                k,qid = key.rsplit('_',1)
+                answer_dict = {'stu_id':student_id,'question_id':qid,k:v}
+                objs.append(models.Answer(**answer_dict))
+            models.Answer.objects.bulk_create(objs)
+            return HttpResponse('感谢您的参与!!!')
+
+        return render(request, 'score.html', {'question_list': question_list, 'form': form})
+```
 
 ### 字符串判断
 
@@ -827,10 +1021,7 @@ info = ['ziawang', 'is  23  years old  ', 'living  in  Beijing']
 ```
 
 > perform            执行
-> template           模板
 > substitution    替换
-> dumplicate      复制
-> placeholder     占位符 
 > precedence      优先权
 
 
