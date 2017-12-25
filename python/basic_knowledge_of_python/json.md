@@ -118,7 +118,7 @@ TypeError: keys must be a string
 
 
 
-- if ensure_ascii is True the output is guaranteed to have all incoming non-ascii characters escaped. if ensure_ascii is False , these characters will be output as-is （就是说，这个参数如果是False，就会原样输出ASCII字符而不会对ASCII字符对象进行序列化）
+- if ensure_ascii is True the output is guaranteed to have all incoming non-ascii characters escaped. if ensure_ascii is False , these characters will be output as-is （就是说，这个参数如果是False，就会原样输出ASCII字符而不会对ASCII字符对象进行序列化，如果序列话的对象中包含中文字符，设置该参数为False即可在序列化后的对象中显示中文字符而不是被ASCII序列化的一串二进制）
 - indent : non-negative integer or string,json array elements and object members will be pretty-printed with that indent level. 
 	- indent level of 0, '', or negative will only insert newlines.
 	- indent level of None, selects the most compact representation 
