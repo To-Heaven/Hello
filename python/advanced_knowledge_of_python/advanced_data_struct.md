@@ -89,6 +89,111 @@ True
 	- python2中type()对所有古典类实例化对象返回的结果全都相同，即无效。（对python2中的新式类有效）
 		- 解决这种情况的方法 `isinstance(obj, classinfo)`
 
+## type与isinstance
+#### isinstance
+- 判断一个对象是否是一个类或该类基类(包括"祖先类")的实例。
+	- 注意：python2中的新式类type判断对象类型是有效的，但是在古典类中无效
+
+```python
+Python 3.6.1 (v3.6.1:69c0db5, Mar 21 2017, 17:54:52) [MSC v.1900 32 bit (Intel)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> class Foo(object):
+...     pass
+...
+>>> class Sub(Foo):
+...     pass
+...
+>>> a = Sub()
+>>> isinstance(a, Sub)
+True
+>>> isinstance(a, Foo)
+True
+>>> type(a) == Foo
+False
+>>> type(a) == Sub
+True
+>>>
+
+# --------------------- python2 ----------------------
+Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> class Foo(object):
+...     pass
+...
+>>> class Sub(Foo):                        # python3新式类 
+...     pass
+...
+>>> b = Sub()
+>>> isinstance(b, Sub)
+True
+>>> isinstance(b, Foo)
+True
+>>> type(b) == Foo
+False
+>>> type(b) == Sub
+True
+>>> class Moo:                             # python2古典类
+...     pass
+...
+>>> class Noo(Moo):
+...     pass
+...
+>>> n = Noo()
+>>> isinstance(n, Noo)
+True
+>>> isinstance(n, Moo)
+True
+>>> type(n) == Noo
+False
+>>> type(n) == Moo
+False
+
+```
+
+#### "精确度"比较
+- 对于新式类来说，isinstance的精确度显然没有type高，这也导致新式类中两者的用途不同(**python3中不再存在古典类**)
+	- `isinstance`检测的是一个范围，而不是特定的某一个类型
+	- `type`检测的是一个特定的类型
+
+#### 应用
+- 我在开发自己的开源插件`seconds`的过程中碰巧需要判断一个ModelForm类中字段的类型是否是`ModelChoiceField`或者`ModelMultipleChoice`，如果判断为`True`，就针对该字段展开其他业务逻辑。而恰巧后者继承自前者，因此判断的条件变成了一个范围，利用该继承关系，就可以使用`isinstance`来判断
+	- 代码如下	
+
+```python
+from django.template import Library
+from django.urls import reverse
+from django.forms.models import ModelChoiceField
+
+register = Library()
+
+
+@register.inclusion_tag(filename='curd/form.html')
+def form_popup(form_obj):
+    """ 渲染表单，并为单选框/复选框后面添加popup链接按钮
+    Args:
+        form_obj: 视图函数响应上下文中的form对象
+    """
+    
+    new_form = []
+    for bound_field in form_obj:  
+        temp = {"is_popup": False, "bound_field": bound_field}
+        
+        if isinstance(bound_field.field, ModelChoiceField):
+            field_related_model_class = bound_field.field.queryset.model
+            app_model = (
+                field_related_model_class._meta.app_label, 
+                field_related_model_class._meta.model_name
+            )
+            base_url = reverse("curd:%s_%s_add" % app_model)
+            popup_url = "%s?_popbackid=%s" % (base_url, bound_field.auto_id)
+            temp["is_popup"] = True
+            temp["popup_url"] = popup_url
+        new_form.append(temp)
+        
+    return {"form": new_form}
+
+```
+
 
 ## None 与0、空值对象False
 - None是空值对象，是NoneType类的实例（单例模式）
