@@ -1,16 +1,6 @@
 ## 增加节点
 - 创建节点对象
 	- `document.createElement(str_tag)`
-	
-
-## 为节点对象绑定属性
-	- 使用`obj.xxx = xxx`方式绑定
-		- obj.innertext='xxx'
-		- obj.type='text/css'
-		- obj.innerhtml='p {color:red}'
-	- 使用`obj.setAttribute(str_attr, str_value)`
-		- str_attr是要绑定的属性名
-		- str_value是要绑定的属性值
 
 ## 添加子节点	
 - 使用节点对象的appendChild方法为其添加节点
@@ -27,7 +17,9 @@
 	- ref是sub节点对象的位置参考对象
 
 
-
+## 替换标签
+- `par.replaceChild(new_sub, old_sub)`
+	- 通过父标签来替换目标标签
 
 - 有以下HTML结构
 
