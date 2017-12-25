@@ -6,10 +6,6 @@
 
 ## 通过DOM树获取
 
-
-
- 
-### 方法
 #### 返回单个节点对象
 - ele.getElementById(str_id)
 	- 返回节点以下级别的子节点中id为str_id的对象
@@ -18,12 +14,12 @@
 - ele.getElementsByTagName(str_tag_name)
 	- 返回标签名为str_tag_name的节点对象组成的列表
 - ele.getElementsByName('name_value')
-	- 返回标签name属性为'name_value'的标签都想组成的列表
+	- 返回标签name属性为'name_value'的标签对象组成的列表
 
 - ele.getElementsByClass(str_class)
 	- 返回类为str_class的节点对象组成的列表 
 
-### DOM节点对象属性
+#### 通过属性获取
 - ele.parElement
 	- 返回节点的父节点对象
 - ele.children
@@ -36,8 +32,8 @@
 	- 返回节点列表中最后一个子节点 
 - nextElementSibling
 	- 下一个兄弟标签元素
-- previousElementSibiling
-	- 上一个兄弟标签原元素
+- previousElementSibling
+	- 上一个兄弟标签元素
 
 ## 通过css选择器获取
 > [CSS选择器](http://www.ziawang.com/page/css/selector.html)
