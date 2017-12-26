@@ -2,6 +2,94 @@
 [pyMySQL官方指南](http://pymysql.readthedocs.io/en/latest/index.html#)
 http://www.cnblogs.com/MySimond/p/4750199.html
 
+## pymysql应用的场景
+#### 先说说Django的ORM
+- Django有自己内置的ORM框架，因此**不需要我们自己考虑去链接数据库**
+- Django本身链接数据库，本质上也是得使用mysldb/pymysql
+	- 如果你用的时`python3`，你需要在应用的`__init__.py`文件中加上这一段代码
+
+```python
+import pymysql
+
+
+pymsql.install_as_MySQLdb()
+```
+
+- DJango的ORM有优点也有缺点
+	- 优点：
+		- 当我们要操作数据库时，不需要再使用元僧的SQL语句与数据库交互，只需要使用ORM为我们提供的类与对象来操作数据库。这样使得我们创建和修改数据库表的时候非常方便，如果没有ORM，我们直接操作数据库的话，就得使用mysql命令或者配合navicate mysql来操作数据
+		- 使用ORM的时候我们不需要考虑数据库的链接，只需要专注于数据库的操作，ORM会帮助我们将对象和类的操作转换成会响应的SQL语句
+	- 缺点：
+		- 速度上会比原生的SQL要慢，因为ORM将对象和类转换成SQL语句的时候需要消耗时间。
+		- 通过原生的SQL可以构造出复杂的语句，而使用ORM可能很难实现这些复杂查询
+		
+
+#### 应用场景
+###### 1. flask
+- flask中你可以使用`SQLalchemy`，也可以直接使用`pymysql`来链接数据库
+
+###### 2. tornado
+
+
+###### 3.非Web的脚本程序
+- 最常见的比如爬虫程序
+
+###### 4. 自己动手实现一个增删改查的组件类
+- 使用pymysql我们可以自己将pymysql对数据库的增删改查功能封装到一个类中，这样就没有必要每一次都写重复的代码了
+- 但是有几点一定要注意！！
+	1. 对Connection对象使用单例模式。为什么要用单例模式？很简单，如果你不适用单例模式，每一次对数据库的操作可能都会重复`建立连接`这个步骤，这样显然是有问题的，我们要避免不必要的重复链接，因为每一次的数据库连接都会产生性能损耗。我们可以利用python的模块导入的特性来实现`单例模式`
+	2. 链接数据库的`connect`参数应该存放在配置文件中进行获取
+
+```ini
+# config.ini
+[mysql]
+host = 172.96.203.6
+port = 3306
+database = test
+user = haha
+password = passhaha
+charset = utf8
+```
+
+```python
+# curd.py
+import pymysql
+import configparser
+
+
+def get_config():
+    parser = configparser.ConfigParser()
+    parser.read(filenames='config.ini', encoding='utf-8')
+    config = dict(parser['mysql'])
+    config['port'] = int(config['port'])
+    return config
+
+
+connection = pymysql.connect(**get_config())
+
+
+class MysqlCURD(object):
+    def __init__(self):
+        self.connection = connection
+```
+
+- 测试`connection`对象的是否是实现了单例
+
+```python
+from curd import MysqlCURD
+
+
+a = MysqlCURD()
+b = MysqlCURD()
+
+print(id(a))        # 49984464
+print(id(b))        # 49984592
+print(id(a.connection))  # 53963184
+print(id(b.connection))  # 53963184	，证明实现了单例模式	
+```
+
+
+
 ## 获取Connection对象(pymysql.connections.Connection)
 - 本质上是一个通过socket套接字建立的和MySQL服务端之间的链接
 - 有两种方式获取
@@ -29,11 +117,19 @@ http://www.cnblogs.com/MySimond/p/4750199.html
 			- SSDictCursor
 
 ## Connection  Object Methods
+#### 事务相关
 - conn.begin()
 	- 开始事务
 
 - conn.rollback()
 	- 回滚当前的事务
+
+#### 链接相关
+
+
+- conn.ping(reconnect=True)
+	- 检查服务端是否存在（正在运行）
+
 
 - conn.close()
 	- 关闭链接
@@ -42,15 +138,17 @@ http://www.cnblogs.com/MySimond/p/4750199.html
 	- 将对数据库的更改提交到数据库服务器
 	- Commit changes to stable storage
 
+#### 数据库相关
+- conn.select_db(db)
+	- 设置当前操作的数据库
+
+#### 游标相关
+
 - conn.cursor(cursor=None)
 	- 创建一个游标用来执行响应的数据库操作
 
 
-- conn.ping(reconnect=True)
-	- 检查服务端是否存在（正在运行）
-
-- conn.select_db(db)
-	- 设置当前操作的数据库
+#### 其他
 
 - conn.show_warnings()
 	- 显示警告
@@ -98,16 +196,20 @@ print(c2)
 ```
 
 ## Cursor Object Methods
-
+#### 存储过程
 - c.callproc(procname, args=())
+
+#### 游标操作
+
 - c.close()
 	- 关闭一个游标，清除存在的数据（与该游标有关的）
 
+#### 执行操作
 - c.execute(query, args=None)
 	- 执行一个sql语句
 	- *parameters*
 		- querys: 要执行的sql语句
-		- args: 可以是一个元组，列表，字典，存放sql语句中要匹配的值
+		- args: 可以是一个元组，列表，字典，存放sql语句中"占位符"要匹配的值
 			- 如果是列表或元组：sql语句中可使用%s占位符
 			- 如果是字典：sql语句中可使用%(name)s 
 	- 返回值为被影响了的记录条数  Number of affected rows
@@ -119,10 +221,13 @@ print(c2)
 	- *parameters*
 		-  querys: 要执行的sql语句
 		-  args: 由序列或映射关系构成的序列
-			-  [(),(),(),()]
-			-  ((),(),(),())
+			-  可以是：[(),(),(),()]
+			-  也可以是：((),(),(),())
 
-> 查询操作
+
+
+
+#### 查询操作
 
 - fetchone()
 	- 查询满足条件一条记录
@@ -184,7 +289,7 @@ Process finished with exit code 0
 - fetchall()
 - fetcmany()
 - fetchall_unbuffered()
-	-  返回所有满足条件的记录，类似生成器，但是对于非常大的结果集，这样做会非常占内存
+	-  返回所有满足条件的记录，类似迭代器，但是对于非常大的结果集，这样做会非常占内存
 
 - read_next()
 	- 读去下一行记录
