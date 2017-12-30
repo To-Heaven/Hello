@@ -21,14 +21,69 @@
 
 #### 使用request.FILES获取文件对象
 - 服务端通过`request.FILES`获取到的是一个`MultiValueDict`对象，结构如下
-	- MultiValueDict{'filename': [文件对象1, 文件对象2, ...]}
+	- MultiValueDict{'filename': [文件对象1, 文件对象2], 'filename':文件对象3], ...}
 	- 使用`get("name")`获取文件对象fileObj，这里的`"name"`是前端form表单中input对应的标签的name属性值，**如果没有咋子input中声明name，后端仍然无法得到文件内容**
+
+
+- 如果`form`表单中有多个`file`类型的`input`框，如果你只为其中某几个选择了文件，一部分没有选择文件，在`request.FILES`得到的`MultiValueDict`中只会有选中了文件的键值对
+
+```html
+<!-- 表单 -->
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="a">
+    <input type="file" name="b">
+    <input type="file" name="c">
+    <input type="submit">
+</form>
+```
+
+```python
+from django.shortcuts import render, HttpResponse
+
+
+def push_file(request):
+    if request.method == 'GET':
+        return render(request, 'push_file.html')
+    else:
+        print(request.FILES)
+        return HttpResponse('上传成功')
+
+# 获取的结果，没有c，因为c没有选中文件
+<MultiValueDict: {'a': [<InMemoryUploadedFile: review1218-1222.txt (text/plain)>], 'b': [<InMemoryUploadedFile: 22105395.jpeg (image/jpeg)>]}>
+
+```
 
 ###### get与getlist
 - get方法会得到一个文件对象
 - getlist方法类似于retuest.POST.getlist(field)，得到的是文件对象组成的列表
-	
+	- 当前端表单中的提交文件的`input`框设置了`multiple`属性时，就可以一次提交多个文件，在`request.FILES`的结果中，该`input`的`name`属性将对应一个列表
 
+
+```html
+<!-- form表单 -->
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="c" multiple>
+    <input type="submit">
+</form>
+```
+
+```python
+from django.shortcuts import render, HttpResponse
+
+
+def push_file(request):
+    if request.method == 'GET':
+        return render(request, 'push_file.html')
+    else:
+        file_list = request.FILES.getlist('c')
+        print(file_list)    
+        return HttpResponse('上传成功')
+
+# 结果
+[<InMemoryUploadedFile: 22105392.jpeg (image/jpeg)>, <InMemoryUploadedFile: 22105394.jpeg (image/jpeg)>]
+```
 
 
 ###### fileObj
@@ -55,6 +110,11 @@ ziawang <class 'str'>
 review.txt
 ```
 
+- fileObj.content_type: 返回文件的MIME类型
+	- `text/plain`
+	- `image/jpeg`
+
+- fileObj.size: 返回文件的大小
 
 ## Ajax FormData
 
@@ -71,18 +131,40 @@ review.txt
 	- value: 标签的value
 
 ```javascript
-var upload_file=$("#img")[0].files[0];
+<form method="post">
+    {% csrf_token %}
+    <input type="file" name="a">
+    <input type="file" name="b">
+    <input type="file" name="c" multiple>
+</form>
+<button>提交</button>
 
-$.ajax({
-            url:"/upload_file/",
-            type:"POST",
-            data:formData,
-            contentType:false,
-            processData:false,})
+<script>
+    $("button").click(function () {
+        var formData = new FormData();
+        formData.append(
+            'formData_c',
+            $("input[name='c']")[0].files[0]
+        );
+        formData.append(
+            'csrfmiddlewaretoken', $('input:hidden').val()
+        );
+
+        $.ajax({
+            url: '/push_file/',
+            data: formData,
+            type:'post',
+            processData:false,
+            contentType:false
+        })
+    })
+</script>
 
 ```
 
-
+- 注意
+	1. 这种方式可以不指定`form`表单的`enctype`参数
+	2. 不要在`formData`对象中对一个key`append`存放多个文件的列表，因为目前发现，多个文件会导致上传失败，后续找到解决方案后会更新本文章
 
 - 使用jQuery获取文件的步骤（易错）
 	1. `$("#img")`: 得到的是一个存放了input标签的集合
