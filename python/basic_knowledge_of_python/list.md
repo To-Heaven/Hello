@@ -1,56 +1,65 @@
 [点击查看我整理的列表思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/list.png?raw=true)
 
-## sequence comparison
+
+#### 获取列表
+- 获取列表的几种姿势:
+	1. 创建空列表 `[]`或者`list()`
+	2. 使用中括号 `['a',' b',' c']`
+	3. 列表生成式  `[f(x) for x in iterable ]`
+	4. `list(iterable)`
+	5. `list(iterator)`
+
+#### 列表的特点
+1. 有序
+	- 索引
+	- for 遍历的时候是按照索引有序遍历的
+
+2. 内部的元素可以时任意类型python对象
+
+3. 可迭代对象
+	- 内部实现了`__iter__`方法
+
+4. 可变对象
+	- 列表的长度和列表中的元素是可以变化的
+
+
+
+#### 列表的常用操作
+1. 索引取值
+2. 切片
+	- [start, end, step]
+		- 切片的方向与start指向end的方向相反的时候，返回一个None
+	- 切片范围大于列表的最大长度时以列表的最大长度为准
+3. 成员判断
+	- 调用的其实就是对象的`__contains__`方法
+4. 与其他列表相加
+	- 内部实现了`__add__`方法
+	- 会返回一个新的列表对象，不会改变原先的列表
+5. 与整数相乘
+	- 返回一个元列表元素重复整数倍的新列表，原列表不改变
+6. 遍历
+	- 内部实现的是`__iter__`方法
+	- 当遍历的时候，首先会将可迭代对象变成一个迭代器然后再从迭代器中取值
+	- **不要在遍历列表的过程中修改列表，通常我们会遍历列表的副本**
+7. 使用`len(l)`获取长度
+	-  内部调用的其实是列表对象的`__len__`方法
+
+8. 列表之间进行比较
 
 > additional		补充的
 > custom 		定制的
 > comparison		比较
 > guarantee		保证
 
-- sequence of the same type support comparision.
-- Compared by comparing corresponding elements.
-- To compare equal, every element must equal and the two sequences must be of the same type and have the same length.
-
-## 'in' and 'not in'
-- support types
-	- list
-	- tuple
-	- str
-	- bytes
-	- bytearray
+- sequence of the same type support comparision.只有相同类型的数据才能进行比较
+- Compared by comparing corresponding elements.比较的是以雪猎中一个个相互对应的元素
+- To compare equal, every element must equal and the two sequences must be of the same type and have the same length.如果两个序列比较的结果为`True`，那么必须满足以下条件
+	1. 序列中的每一个元素必须一一对应相等
+	2. 序列长度必须相等
+	3. 序列的类型必须相同
  
-## list
-- 存储多个元素，并且可以修改（应用）
 
-
-> 列表的长度和列表的元素是可以变化的
-
-
-- 列表的元素不必是同一类型
-
-- 可以用 +  加号来连接列表
-
-```python
->>> l = [1, 2, 3]
->>> nl = l + [4, 5, 6]
->>> nl
-[1, 2, 3, 4, 5, 6]
-```
-
-- 类似字符串，列表同样适用切片和索引操作。但是要注意的是，列表切片操作返回的值是一个新列表。
-> python中的有序序列都支持切片
-
-```python
->>> l[0:]
-[1, 2, 3]
->>> l[:-1]
-[1, 2]
->>> l[:0]
-[]
-
-```
-
-## 详解切片格式
+#### 详解切片格式
 - list[start : end : step]
 	- start 是切片起点索引
 	- end是切片终点索引
@@ -81,9 +90,9 @@
 >>> 
 ```
 
-- list是可以修改的
-	- 修改方式一：通过索引修改元素值
-	- 修改方式二：通过对切片赋值来批量修改列表中的元素
+###### 利用切片修改列表
+- 修改方式一：通过索引修改元素值
+- 修改方式二：通过**对切片赋值来批量修改列表中的元素**
 
 ```python
 >>> l = ['a', 'b', 'c', 'd', 'e', 'f']
@@ -97,21 +106,12 @@
 ['e', 'f']
 >>> 
 ```
+ 
+#### list method
+###### 增
 
-## get list
-- lists can be constructed in several ways:
-	- a pair of square brackets to denote a empty list    []
-	- ['a',' b',' c']
-	- list comprehension  [f(x) for x in iterable ]
-	- list(iterbale)
-	- list(iterator)
-   
-
-
-## list method
 - list.append(sub)  在列表的末尾添加新元素（新元素可以是任何数据类型）
-
->相当于  list[len(list):] = sub
+	- 相当于  list[len(list):] = sub，因为**可以通过对切片赋值来修改列表**
 
 
 ```python
@@ -170,7 +170,9 @@ None
 [1, {1: '1', 2: '2'}, ('可以插入', '元组'), 2, 3, 4, 5, 6]
 ```
 
-- list.remove(sub) 删除列表中值为sub的第一个元素，如果没有这个元素就会返回一个错误
+###### 删
+
+- list.remove(sub) 删除列表中值为sub的**第一个元素**，如果没有这个元素就会返回一个错误
 > 单纯的删除，没有返回值，即None
 
 
@@ -188,7 +190,7 @@ ValueError: list.remove(x): x not in list
 ```
 
 - list.pop([index]) 删除指定索引index位置的元素，并返回该元素，如果index没有被指定，那么会返回最后一个元素的值，返回该值后，元素立即从列表中删除
-> 有返回值，与remove和del 不同。**应用：一边删除，一边用变量接收返回的值（即从列表中取值）**
+	-  有返回值，与remove和del 不同。**应用：列表中的元素只需要使用一次**
 
 ```python
 >>> list
@@ -213,11 +215,14 @@ ValueError: list.remove(x): x not in list
 
 ```
 
+###### 查 
+
 - list.index(sub) 返回值为列表中值为sub的第一个元素的索引
 	
 
 - list.count(sub) 返回值为sub在list中出现的次数
 
+###### 改
 
 - list.sort(*, key=None, reverse=False) 无返回值，对列表中的元素进行排序
 	- the two arguments must be called by keyword
@@ -251,16 +256,19 @@ None
 
 ```
 
-- list.copy()  返回一个浅拷贝，浅拷贝指创建一个同样指向该list的变量，但是不会在内存中创建另一个相同内容的list   
-
->  效果同  list[:]
 
 
-## 把列表当作堆栈使用(先进后出，后进先出)
+- list.copy()  返回一个浅拷贝，**对于列表中的元素对象来说，浅拷贝拷贝的是引用**
+	- 效果同  `list[:]`
+	
+
+
+
+#### 把列表当作堆栈使用(先进后出，后进先出)
 - 方法
 	- list.append()
 	- list.extend()
-	- list.pop([])
+	- list.pop()
 
 ```python
 >>> list
@@ -275,7 +283,7 @@ None
 [1, 2, 3]
 ```
 
-## 把列表当作队列使用（先进先出，后进后出）
+#### 把列表当作队列使用（先进先出，后进后出）
 - 队列最先进入的元素最先释放，但是这样用的效率不高
 - 相对来说，从列表末尾田家河弹出很快，在头部插入和弹出很慢（因为为了一个元素压迫移动整个列表的所有元素）
 - 实现队列的条件
@@ -297,7 +305,7 @@ deque(['haha', 'hello !', '么么哒'])
 >>> 
 ```
 
-## 列表推导式——从序列中创建列表
+#### 列表推导式 
 - 在推导列表推导式之前，普通方法是将序列中的元素迭代，通过返回的元素创建列表。
 - 列表最大的优势就是简单明了的
 
@@ -334,7 +342,7 @@ print(l)
 print(i)				#  i在内存中仍然存在
 ```
 
-**但是这种方法是有弊端的**
+- **但是这种方法是有弊端的**
 	- 在for循环中，被创建的  i   变量在循环结束之后时依然存在的。
 
 - **列表推导式**
@@ -433,7 +441,7 @@ print(l)
 ```
 
 
-## 无穷嵌套列表(还有无穷嵌套字典)
+#### 无穷嵌套列表(还有无穷嵌套字典)
 - a.append(a)
 
 ```python
@@ -451,7 +459,7 @@ True
 
 ```
 
-## 列表重构
+#### 列表重构
 
 ```python
 >>> l = [1, 2, 3, [4, 5, 6], 7, [8, 9]]
