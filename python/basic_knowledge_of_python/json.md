@@ -2,7 +2,7 @@
 
 [点击查看我整理的json模块思维导图](https://github.com/ZiaWang/Hello/blob/master/picture/json-2.png?raw=true)
 
-## 单词 
+#### 单词 
 notation		记号，标记法  
 obsolete		废弃，抛弃  
 interchange	交换  
@@ -23,19 +23,19 @@ document	文档
 
 >    [json tools website ](http://www.bejson.com)
 
-# json module
+#### json module
 - json module always **produces str objects. not bytes objects**. 
 	- file-like-object.write() must support str input
 
 
-# Note
+#### Note
 
 > frame   框架  
 
-- while Try to serialize mutiple objects with repeated calls to dump() using the samp fp will result in an invalid JSON file beause json is not a framed protocol.
+- while Try to serialize mutiple objects with repeated calls to dump() using the same fp will result in an invalid JSON file beause json is not a framed protocol.
 - 注意： 
 	- **keys in key-value pairs of json are always of the type str**. 
-		- when a dictionary s converted into a JSON,all the keys of the dictionary are coerced to strings.
+		- when a dictionary s converted into a JSON,all the keys of the dictionary are coerced to strings.字典中的数据会被强制转换成`字符串的形式`
 		- if a dictionary is convert into a JSON and then back into a dictionary, the dictionary may not equal the original one.
 	- that is , loads(dumps(x))  ! = x   if x has non-string keys（就是当字典的keys不是字符串的时候，被序列化之后的dict再用load或loads转换回去，就会和原来的keys不同——强制变成字符串了）
 
@@ -68,7 +68,7 @@ with open('json_dump', 'r', encoding='utf-8') as jd:
 
 ``` 
  
-## json.dump  and json dumps
+#### json.dump  and json dumps
  - json.dump(obj, fp, \*, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=None, default=None, sort_keys=False, **kw)
 	- serialize a obj as a json formatted stream** to a fp**(file-like object), using this conversion table
 	- conversion table:
@@ -84,8 +84,8 @@ with open('json_dump', 'r', encoding='utf-8') as jd:
 
 
 - if skipkeys is True, dict keys that are not of basic type(int str float bool None) will be skipped instead of raiseing a TypeError
-	- 简单说就是，当json对象中的keys不是字符串的时候，序列化该都对象会报错
-	- 如果将参数skipkeys设置为True，json就会忽略这些不合json序列化规则的键值对
+	- 简单说就是，当json对象中的keys不是int, string, float, bool, None的时候，序列化该都对象会报错
+	- 如果将参数skipkeys设置为True，json就会忽略这些不合json序列化规则的键值对, 相应的, 序列化之后的数据就会缺少一些值
 
 ```python
 import json
@@ -247,7 +247,7 @@ b'"asas"'
 ```
 
 
-## json.tool
+#### json.tool
 > validated  使生效  
 
 - The JSON file to be validated or pretty-printed:
