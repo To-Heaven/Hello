@@ -6,7 +6,7 @@
 - 参数
 	- args: 以JavaScript对象的形式传递参数，常用的有
 		- headers
-			- 
+			- 存放请求头信息的map对象（字典）
 		- url: 	请求的路径（这个url可以从浏览器的network中查看）
 		- type: 请求方法
 		- data: 请求要发送的数据。data数据对应的结构是一个js对象（json对象也可以），Ajax根据请求头中Content-Type指定的类型封装data中的数据
@@ -25,7 +25,7 @@
 			- 当设置为false的时候，data中的数据就不会被Ajax按照contentType转换
 		- traditional
 		- dataType
-			- 与其服务端返回的数据类型，客户端会按照dataType指定的值解析响应内容，如果不指定该值，dataType默认就等于服务端返回的响应头中Content-Type指定的值进行转换
+			- 期望服务端返回的数据类型，客户端会按照dataType指定的值解析响应内容，如果不指定该值，dataType默认就等于服务端返回的响应头中Content-Type指定的值进行转换
 			- dataType的值可以是`"html", "xml", "json", "script", "text"`
 
 ###### 1. 设置contentType = 'application/json'
@@ -155,7 +155,7 @@ $,ajax({
 	url: '/home/'
 	type: 'post',
 	headers: {"X-CSRFToken": $.cookie("csrftoken")},
-	contentType: 'application.json',
+	contentType: 'application/json',
 	data: {
 		xxx: xxx,
 		xxx: xxx
@@ -169,7 +169,7 @@ $,ajax({
 $,ajax({
 	url: '/home/'
 	type: 'post',
-	contentType: 'application.json',
+	contentType: 'application/json',
 	data: {
 		xxx: xxx,
 		xxx: xxx
@@ -196,6 +196,17 @@ $,ajax({
 ```
 
 
+###### 总结上面的内容
+- 上面那么多例子其实都是围绕`type`、`Content-Type`、`X-CSRFToken`的多种情况的处理方式，下面进行梳理
+	1. 如果请求是`get`（即type=get），此时不需要csrftoken数据
+		1. 如果`Content-Type = application/x-www-form-urlencode`，那么`data`就不需要json序列化了
+		2. 如果`Content-Type = application/json`，那么`data`就需要使用`JSON.strify()`序列化
+	2. 如果请求是`post`，此时需要csrftoken数据
+		1. 如果`Content-Type = application/x-www-form-urlencode`，那么`X-CSRFToken`数据就可以放在`data`或者`header`中
+		2. 如果`Content-Type = application/json`，这意味着data传递的数据必须是`json序列化之后的数据`，这个时候就不能将`X-CSRFToken`键值对放在`data`中了，序列化的`X-CSRFToken`数据服务端也无法解析，这样会返回一个`403forbidden`。这种情况下只能将`X-CSRFToken`数据存放在`header`中 
+
+- 如果要传递给服务端的数据需要转换成`json字符串`，并且还要传递其他的数据，那么这个时候就可以将`json`数据和`其他数据`封装到一个`map`对象（字典）中，这种方式不需要修改`Content-Type`
+
 #### $.ajax(settings)
 
 
@@ -212,7 +223,7 @@ $,ajax({
 - 但是要**注意：模板渲染的只能是视图函数要渲染的模板**，因此下面第一种方式不适用于独立的js静态文件
 
 ###### 1. $ajax.setup()
-- 如果此种方式所在的js代码一静态文件方式存放在服务器中，
+- 如果此种方式所在的js代码以静态文件方式存放在服务器中，
 
 ```python
 $.ajaxSetup({
