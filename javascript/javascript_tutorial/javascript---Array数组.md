@@ -163,7 +163,7 @@ console.log(arr_num);				// [0, 1, 2, 3, 4, 5, undefined, undefined, 8]
 		- 如果指定了start、deleteCount、*value，会修改原数组，并返回一个空数组
 		- 如果指定了start、deleteCount会修改原数组，并返回从原数组中移除掉的子数组
 
-```
+```javascript
 obj.splice(1,0,val) 指定位置1插入元素
 obj.splice(2,1,val) 指定位置2替换元素
 obj.splice(3,1)     指定位置3删除元素
