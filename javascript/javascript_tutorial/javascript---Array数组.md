@@ -1,5 +1,5 @@
-# 数组
-## 创建方式
+## 数组
+#### 创建方式
 - 直接通过方括号创建
 
 ```javascript
@@ -32,7 +32,7 @@ arr_num[8] = 1;
 console.log(arr_num);			// [1, undefined × 7, 1]
 ```
 
-## 表示形式
+#### 表示形式
 - 使用方括号包含起来
 - **数组中的数据可以是JavaScript的任意数据类型**
 
@@ -45,16 +45,16 @@ arr_my[4];				// undefined
 
 ```
 
-## 特点
-- 可以通过索引来访问数组中存放的元素
-- 索引越界在JavaScript中不会报错
+#### 特点
+1. 可以通过索引来访问数组中存放的元素
+2. **索引越界在JavaScript中不会报错**
 	- 索引操作时会返回undefined
 	- 使用`slice()`切片的时候，索引越界会返回字符串切片的到的最大长度
 	
-- 索引赋值时，如果赋值的宽度大于数组长度，数组长度会边长 
+3. **索引赋值时，如果赋值的宽度大于数组长度，数组长度会边长 **
 
 
-## 常用操作
+#### 常用操作
 - 成员判断`in`
 - 遍历
 	- 使用`for in `遍历的得到的是数组的索引，因为`for in `遍历得到的是对象的属性，而索引就是数组的属性
@@ -66,11 +66,11 @@ arr_my[4];				// undefined
 
 
 
-## 数组的属性
+#### 数组的属性
 - a.length
 	- 数组的长度，包含的元素个数
 	- 注意
-		- 给数组的length属性赋值会改变数组的长度
+		- **给数组的length属性赋值会改变数组的长度**
 
 ```javascript
 var arr_my = [1, 'ziawang', '', true, undefined, ['2', 0, null]];
@@ -88,8 +88,8 @@ arr_num[8] = 8;
 console.log(arr_num);				// [0, 1, 2, 3, 4, 5, undefined, undefined, 8]
 ```
 
-## 常用方法
-#### 增
+#### 常用方法
+###### 增
 - a.push(value1, value2...)
 	- value可以是任意类型
 		- 如果是容器类型比如组，就会将数组中的元素一个个添加要现有数组中
@@ -102,22 +102,26 @@ console.log(arr_num);				// [0, 1, 2, 3, 4, 5, undefined, undefined, 8]
 	- value可以是任意类型
 		- 如果是容器类型比如组，就会将数组中的元素一个个添加要现有数组中
 	- Inserts new elements at **the start of an array.**
+		- 如果不执行start和count，就会在数组开始位置插入值
 	- 从start指定的位置开始移除count指定数量的元素，在移除元素的位置插入指定的元素item
-	- 返回值为被移除的元素
+	- 返回值为数组的最新长度
 
 
 
 
-#### 删
+###### 删
+
+
+- a.pop() 
+	- Removes the last element from an array and returns it 将数组最后一个元素移除并返回
+	- 对于空数组，继续pop会返回`undefined`
+
 
 - a.shift()
 	- Removes the first element from an array and returns it.
 	- 移除并返回数组的第一个元素
 
 
-- a.pop() 
-	- Removes the last element from an array and returns it 将数组最后一个元素移除并返回
-	- 对于空数组，继续pop会返回`undefined`
 
 
 
@@ -129,7 +133,7 @@ console.log(arr_num);				// [0, 1, 2, 3, 4, 5, undefined, undefined, 8]
 #### 修改自身并返回
 
 - a.reverse()
-	- 反转数组中的元素
+	- 反转数组中的元素，数组本身会被修改并返回
 
 
 - a.sort(comparefunc)
@@ -154,6 +158,10 @@ console.log(arr_num);				// [0, 1, 2, 3, 4, 5, undefined, undefined, 8]
 	- deleteCount：要删除的个数
 	- start: 要开始删除的元素的位置
 	- value: 需要替换元素时指定
+	- 返回值
+		- 如果只指定了start参数：**不会修改原数组，返回值为从原数组中截取出的一段子数组**
+		- 如果指定了start、deleteCount、*value，会修改原数组，并返回一个空数组
+		- 如果指定了start、deleteCount会修改原数组，并返回从原数组中移除掉的子数组
 
 ```
 obj.splice(1,0,val) 指定位置1插入元素
@@ -175,7 +183,7 @@ console.log(arr_concat);	// [0, 1, 2, 3, 4, "haha", "xixi"]
 ```
 
 - a.join(seperator)
-	- 将数组中的元素用指定字符连接起来拼接成字符串，并返回该字符串
+	- **将数组中的元素用指定字符连接起来拼接成字符串，并返回该字符串**
 	- seperator: 字符串，用来连接数组中过的元素
 
 - a.map(func)
