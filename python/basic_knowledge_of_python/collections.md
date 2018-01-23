@@ -219,7 +219,7 @@ Pixel(x=11, y=22, red=128, blue=255, green=0)
 	- return a new deque object initialized left-to-right(using append()) with data from iterable. if iterable is not specified,the new deque is empty
 	- if  maxlen is not specified or is None, the deque is bounded to the specified maximum length .
 	- when new items are added , a corresponding number of items are discarded from the oppisite end.they are also useful for tracking transactions and other pools of data where only the most recent activity is of intersted
-	- Note: if length of iterble bigger than maxlen. then create a deque from the left
+	- Note: **if length of iterble bigger than maxlen. then create a deque from the left**
 
 ```python
 import time
@@ -246,7 +246,8 @@ deque([4, 5, 6, 7, 8], maxlen=5)
 deque([5, 6, 7, 8, 9], maxlen=5)
 ``` 
 
-### deque.Method
+#### deque.Method
+###### 增
 - deque.append(value)
 	- 将value从右边插入deque对象中，左进右出
 - deque.appendleft(value)
@@ -267,16 +268,10 @@ deque(['appendleft', 6, 7, 8, 9], maxlen=5)
 >>> 
 ```
 
-- deque.clear()
-- deque.copy()
-	- return a shallow copy of the deque
-
-- deque.count(element)
-	- return the number of deque equal to elelment
 - deque.extend(iterable)
-	- 把iterable的值按照顺序插入到deque中
+	- 把iterable的值按照顺序使用`append()`添加到队列中
 - deque.extendleft(iterable)
-	- Note: the series of left appends results in reversing the order of elements in the iterable argument（当使用deque.extendleft()方法的时候，传入的iterbale会被**倒序插入到deque的左边**）
+	- Note: the series of left appends results in reversing the order of elements in the iterable argument（当使用deque.extendleft()方法的时候，传入的iterbale会按照顺序使用`appendleft()`添加到队列左侧）
 
 ```python
 >>> from collections import deque
@@ -286,9 +281,6 @@ deque(['appendleft', 6, 7, 8, 9], maxlen=5)
 deque([4, 3, 2, 1], maxlen=5)
 
 ```
-
-- deque.index(element[start, [end]])
-	- return the first match or raise ValueError if not found
 
 - insert(index, value)
 	- insert x into the deque at position index
@@ -315,6 +307,10 @@ IndexError: deque already at its maximum size
 
 ```
 
+
+###### 删
+- deque.clear()
+
 - deque.pop()
 	- remove and return an element from the right side of the deque.
 	- Note: if no elements are present , raise an IndexError 
@@ -340,6 +336,11 @@ deque([2, 1, 5], maxlen=5)
 - deque.remove(value)
 	- remove the first occurence of value from the deque ,if not found , raises a ValueError
 
+###### 其他
+- deque.copy()
+	- return a shallow copy of the deque(浅拷贝)
+
+###### 改
 - deque.reverse()
 -  deque.rotate(n)
 	-  rotate the deque n steps to the right.
@@ -373,11 +374,24 @@ deque([5, 6, 7, 8, 9], maxlen=5)
 
 ```
 
+###### 查
+- deque.count(element)
+	- return the number of deque equal to elelment
+
+- deque.index(element[start, [end]])
+	- return the first match or raise ValueError if not found
+
+
+
+
+
+
 ## deque object variables
 
 - deque.maxlen
 	- Maximum size of a deque 
 	- Note: None if unbounded
+	- 这是一个只读的属性,如果你尝试修改它,就会抛出`AttributeError`错误
 
 
 
