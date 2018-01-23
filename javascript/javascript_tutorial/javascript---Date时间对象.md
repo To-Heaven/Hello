@@ -1,6 +1,6 @@
 # Date对象
 
-## 创建一个时间对象
+#### 创建一个时间对象
 - 创建当前系统时间的时间对象
 
 ```javascript
@@ -37,8 +37,8 @@ console.log(time_specified);
 - 通过时间戳创建
 	- 获取本地时间的时间戳`Date.parse(time-string)`
 	- 获取UTC时间的时间戳`Date.UTC()`
-	- time-string为ISO 0861 规范的时间字符串
-	- 将时间戳作为参数传入Data()实例化也可以得到对应的时间对象
+	- time-string为ISO 0861 规范的时间字符串，也可以是`Y-m-d H:M:S`的格式
+	- 将时间戳作为参数传入Date()实例化也可以得到对应的时间对象
 
 ```javascript
 var time_stamp = Date.parse('2016-01-01T19:59:59.888+08:00');
@@ -47,7 +47,7 @@ console.log(Date(time_stamp));
 ```
 
 
-## 获取字符串形式时间
+#### 获取字符串形式时间
 - `date_obj.toLocalString();`
 	- 本地操作系统时间的字符串形式
 
@@ -57,7 +57,7 @@ console.log(Date(time_stamp));
 
 
 
-## date object 方法
+#### date object 方法
 - date.getFullYear()
 	- 返回完整的数字年份
 - date.getMonth()
@@ -88,12 +88,11 @@ console.log(Date(time_stamp));
 - date.toUTCString()
 	- 将时间转换成字符串形式的格林威治时间
 
-## module functions
+#### module functions
 - Date.parser(datastring-or-data_obj)
 	- 将一个实践转换成时间戳
 	- 这个时间戳可以在Date()实例化时作为参数传入
-
-- 
+ 
 
 
 
