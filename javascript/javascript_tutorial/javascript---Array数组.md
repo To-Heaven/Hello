@@ -51,16 +51,28 @@ arr_my[4];				// undefined
 	- 索引操作时会返回undefined
 	- 使用`slice()`切片的时候，索引越界会返回字符串切片的到的最大长度
 	
-3. **索引赋值时，如果赋值的宽度大于数组长度，数组长度会边长 **
+3. **索引赋值时，如果赋值的宽度大于数组长度，数组长度会变长，数组的最大长度会变成索引越界的长度，中间未填充的值用`undefined代替`**
 
 
 #### 常用操作
-- 成员判断`in`
+- 使用索引赋值
+	- `arr[0] = 1`
 - 遍历
 	- 使用`for in `遍历的得到的是数组的索引，因为`for in `遍历得到的是对象的属性，而索引就是数组的属性
 	- 使用`for of` 遍历的到的就是数组的值
 
+###### 注意
+1. JavaScript中的数组**不支持**向python那样`l[1: 8: 2]`的切片方式，但是JavaScript提供了`arr.slice()`方法让我们可以实现这个功能
+2. JavaScript中**不能**使用`in`判断某元素是否在数组中，我们可以这样实现
+	- 注意下面这种情况不要直接使用`a.indexOf(b)`，因为b指向的对象和a内部那个与b存放相同键值对的对象不是同一个对象，即内存中地址不同的两个对象
 
+```javascript
+# 比如判断一个对象b是否在数组a中
+var a =[{id:1},{id:2},{name:'cc'}];
+var b = {id:1};
+
+console.log(JSON.stringify(a).indexOf(JSON.stringify(b))!=-1);
+```
 
 
 
@@ -92,7 +104,7 @@ console.log(arr_num);				// [0, 1, 2, 3, 4, 5, undefined, undefined, 8]
 ###### 增
 - a.push(value1, value2...)
 	- value可以是任意类型
-		- 如果是容器类型比如组，就会将数组中的元素一个个添加要现有数组中
+		- 如果是容器类型比如数组，就会将数组中的元素一个个添加要现有数组中
 	- Appends new items to an array, and returns the new length of the array 将多个element添加到从后面按顺序添加到数组中，并返回数组的长度
 
 
@@ -139,7 +151,19 @@ console.log(arr_num);				// [0, 1, 2, 3, 4, 5, undefined, undefined, 8]
 - a.sort(comparefunc)
 	- Sorts an array.
 	- 默认的使用ASCII排序
-	- comparefunc: The name of the function used to determine the order of the elements. If omitted, the elements are sorted in ascending, ASCII character order.
+	- comparefunc：指向我们排序逻辑的函数，比如传递了一个`func`，其参数`(a, b)`，如果返回值的布尔值为`True`，就认为**a>b，就把a放在b的右侧**，如果返回的布尔值为`False`，就认为**a<b，就把a放在b的左侧**
+	
+```javascript
+// 举一个例子
+
+function mySort(a,b)
+{
+ return a - b;
+} 
+
+var arr = new Array(5, 4, 3, 2, 1); 
+arr.sort(mySort)
+```
 
 
 
