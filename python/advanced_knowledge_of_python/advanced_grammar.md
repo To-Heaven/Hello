@@ -142,6 +142,151 @@ insert_into_tb(conn, ('ziawang', 22))
 	- 创建一个新对象，如果被拷贝的目标对象中存在对其他对象的引用，那么深拷贝会将引用指向的对象也拷贝一份保存在新对象中。
 	- 这样通过深拷贝创建的对象内就不包含其他对象的引用，对其他对象的操作就不会影响到深拷贝得到的对象
 
+上面解释你可能看起来觉得云里雾里，其实对于深浅拷贝，用一句话总结起来就是：
+- 浅拷贝拷贝的是对象的引用，而深拷贝是拷贝的是对象
+
+以一个列表a = ['ziawang', [1, 2]]为例来解释浅拷贝中的几种情况
+1. 首先浅拷贝得到b，`b = a[:]`，此时我们使用内置函数`id()`对a和b的子元素的内存地址进行比较，你就会发现a和b的元素的内存地址是相同的，这是
+因为在浅拷贝的时候，b中每一个元素位置上存放的其实是a中元素对象的内存地址，当我们使用`b[0]`获取b中存储的第一个元素的时候，实际上会去获取a中
+第一个位置山的元素。
+2. 当我们使用`a[1].append(3)`的时候，此时你打印b就会发现b中第二个元素对应的列表中也增加了一个值`3`，这是因为b中第二个元素和a中第二个元素
+指向的是同一个列表，并且列表是可变元素，当我们修改a[1]对应列表的时候，不会新创建一个新的列表[1, 2, 3]，而是在原先a[1]列表对象的基础上往里
+面又放了一个值`3`，a[1]和b[1]指向的还是原来的元素
+3. 当我们使用`a[0] = 'wangzihao'`的时候，此时你就会发现b[0]的值并没有改变，而a[0]的值变成了`wangzihao`，这是因为a[0]作为一个字符串是
+一个不可变的对象，当`a[0] = 'wangzihao'`的时候，首先会在内存中新开辟一块内存空间存放字符串`wangzihao`，然后再让a[0]对应的内存地址修改为
+存放`wangzihao`这个字符串的地址，b[0]中对应的内存地址仍然是存放`ziawang`的内存地址，并没有改变
+
+```python
+>>> a = ['ziawang', [1, 2, 3]]
+>>> b = a[:]
+>>> id(a), id(b)
+(8649544, 8649464)
+>>> id(a[0]), id(a[1])
+(8713632, 8649584)
+>>> id(b[0]), id(b[1])
+(8713632, 8649584)
+>>> a[1][:]=[]
+>>> a
+['ziawang', []]
+>>> b
+['ziawang', []]
+>>> a[0] = 'wangzihao'
+>>> a
+['wangzihao', []]
+>>> b
+['ziawang', []]
+>>>
+```
+
+
+仍然以列表 a = ['ziawang', [1, 2]]为例来解释深拷贝
+- 我们使用b = copy.deepcopy(a)获的一个a的深拷贝对象b，这个时候a和b中元素的内存地址就完全不同了，这是因为当时用深拷贝的时候，解释器会在
+内存空开辟出新的内存空间来存放与a中具有相同值的新对象，并将这个对象的地址交给b[0], b[1]，从而实现深拷贝
+    - 你可能会发现这种情况，id(a[0])和id(b[0])对应的地址是相同的，而id(a[1])和id(b[1])对应的地址则是不同的。这里要说一下python解释器
+    的小数池优化，对于一些简短常用的数据对象，python将具有相同value的多个变量指向同一个内存地址，我们可以设置一个复杂的值来避免这个优化。
+
+
+#### 深浅拷贝在项目中的应用
+###### 1. `seconds`开源组件
+- `seconds`开源组件是我参考了Django的 admin源码之后完成的一个用来快速进行后台数据`增、删、改、查`管理的组件。在该项目中，
+	1. 为了在点击列表页面的添加按钮进入到添加页面时保存列表页面的原先搜索条件，我将列表页面的搜索条件进行深拷贝
+	2. 在实现组合搜索功能时，生成页面的每一个组合搜索选项对应URL，也是将当前请求的URL后的查询字符串对应的`QueryDict`进行了深拷贝，这样做的目的：每一次生成一个搜索选项时，都需要组装一次URL，如果使用浅拷贝，会破环原先列表页面发送来的请求中的搜索条件
+
+```python
+```python
+# 1. 生成搜索选项 ----------------------------------------------------------------------------
+
+class SearchRow(object):
+    """ 用于生成每一行的选项
+
+    """
+
+    def __init__(self, option_obj, request, data):
+        self.option_obj = option_obj
+        self.request = request
+        self.data = data
+
+    def __iter__(self):
+        params = deepcopy(self.request.GET)
+        params._mutable = True
+        current_id = params.get(self.option_obj.field_name)
+        current_id_list = params.getlist(self.option_obj.field_name)
+
+        if self.option_obj.field_name in params:
+            origin_list = params.pop(self.option_obj.field_name)
+            url = "{0}?{1}".format(self.request.path_info, params.urlencode())
+            yield mark_safe('<a href="{0}">全部</a>'.format(url))
+            params.setlist(self.option_obj.field_name, origin_list)
+        else:
+            url = "{0}?{1}".format(self.request.path_info, params.urlencode())
+            yield mark_safe('<a class="active" href={0}>全部</a>'.format(url))
+
+        # 遍历choices列表或者quersyet，取出渲染模板需要的数据
+        for obj in self.data:
+            if self.option_obj.is_choices:          # 选项为二元元组组成的列表形式
+                pk, text = str(obj[0]), obj[1]
+            else:                                   # 选项为QuerySet
+                pk = self.option_obj.val_func_name(obj) if self.option_obj.val_func_name else str(obj.pk)
+                text = self.option_obj.text_func_name(obj) if self.option_obj.text_func_name else str(obj)
+            if not self.option_obj.is_multi:        # 单选
+                params[self.option_obj.field_name] = pk
+                url = "{0}?{1}".format(self.request.path_info, params.urlencode())
+                if current_id == pk:
+                    yield mark_safe('<a class="active" href="{0}">{1}</a>'.format(url, text))
+                else:
+                    yield mark_safe('<a href="{0}">{1}</a>'.format(url, text))
+            else:                                   # 选项为多选
+                _params = deepcopy(params)      # ！！
+                id_list = _params.getlist(self.option_obj.field_name)
+
+                if pk in current_id_list:       # 取消勾选条件
+                    id_list.remove(pk)
+                    _params.setlist(self.option_obj.field_name, id_list)
+                    url = "{0}?{1}".format(self.request.path_info, _params.urlencode())
+                    yield mark_safe('<a class="active" href="{0}">{1}</a>'.format(url, text))
+                else:
+                    id_list.append(pk)
+                    _params.setlist(self.option_obj.field_name, id_list)
+                    url = "{0}?{1}".format(self.request.path_info, _params.urlencode())
+                    yield mark_safe('<a href="{0}">{1}</a>'.format(url, text))
+
+
+# 2. 添加页面重定向 --------------------------------------------------------------------------
+
+
+```
+```
+
+
+###### 2. `rbac`开源组件
+- `rbac`组件是我独自开发的`一个基于角色的权限管理系统`，其中用到深浅拷贝的地方就是`生成左侧菜单的inclusion_tag`中，每一次超链接的每一个`menu_dict`如果不使用深拷贝，菜单中每一个点击过的`<a>标签`都会被添加`active类`，这是因为每一次点击时，处理的都是同一个`menu_dict`对象，要想避免这种情况，只需要创建一个存放完全相同的数据的其他对象即可。
+
+```python
+
+@register.inclusion_tag(filename='rbac/menu.html')
+def menu_html(request):
+    """ 生成渲染菜单的数据结构并返回该数据
+    Args:
+        request: 请求对象
+    """
+    current_url = request.path_info
+    menu_list = request.session.get(settings.MENU_LIST)
+    menu_dict = {}
+    for item in menu_list:
+        if not item['group_menu']:
+            menu_dict[item['id']] = item
+
+    menu_dict = deepcopy(menu_dict)                              # 看这里！！
+    for item in menu_list:
+        regex_url = f'^{item["url"]}$'
+        if match(pattern=regex_url, string=current_url):
+            group_menu = item['group_menu']
+            if group_menu:              # 当前url关联了一个组内菜单
+                menu_dict[group_menu]['active'] = True
+            else:                       # 当前url是组内菜单中被关联的对象(null=True)
+                menu_dict[item['id']]['active'] = True  
+    # 后面部分省略，有兴趣的可以去我的GitHub上看源码，那里有文档详细解释
+```
 
 
 ## 迭代器协议
