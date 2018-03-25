@@ -53,7 +53,93 @@
 	- Author
 	- Date
 - 使用`git log --pretty=online`，将日志显示为一行
+- `git log` 与 `git reflog`的区别
+	- 加入西安在一个文件`a.txt`按照时间顺序他有三个版本号，分别对应`a, b, c`，当我们在`c`分支上使用`git reset --hard b`的时候，如果我们使用`git log`，我们只能得到`a，b`的版本信息，无法获取`b`之后的版本信息，但是如果我们使用`git reflog`命令，我们不但可以获取`a，b，c`所有曾经提交过的版本信息，还包括我们`HEAD指针`切换的信息
 
+```
+ziawa@DESKTOP-39L1EAK MINGW64 /e/gittest (master)
+$ git reflog
+6c25a1b (HEAD -> master) HEAD@{0}: reset: moving to 6c25a1
+b325146 HEAD@{1}: reset: moving to b32514
+6c25a1b (HEAD -> master) HEAD@{2}: reset: moving to 6c25a1b
+b325146 HEAD@{3}: reset: moving to b325
+6c25a1b (HEAD -> master) HEAD@{4}: commit: ADD c
+b325146 HEAD@{5}: commit: add b
+43b4fa5 HEAD@{6}: commit (initial): create a
+
+ziawa@DESKTOP-39L1EAK MINGW64 /e/gittest (master)
+$ git log --pretty=oneline
+6c25a1b2f87ef19ddf4d00508601430fb8497e5a (HEAD -> master) ADD c
+b3251463935bc7fa855fd0879bbe2f243a627e8e add b
+43b4fa5afd3bf4f2f3f43a451bf61e6ee51dc56e create a
+
+```
+
+
+
+#### 版本库软回退版本 git reset --soft 
+- `soft`参数可以实现软回退，也就是说将我们提交到分支的修改回退到暂存区中的状态
+
+```
+ziawa@DESKTOP-39L1EAK MINGW64 /e/gittest (master)
+$ git log --pretty=oneline
+6c25a1b2f87ef19ddf4d00508601430fb8497e5a (HEAD -> master) ADD c
+b3251463935bc7fa855fd0879bbe2f243a627e8e add b
+43b4fa5afd3bf4f2f3f43a451bf61e6ee51dc56e create a
+
+ziawa@DESKTOP-39L1EAK MINGW64 /e/gittest (master)
+$ git reset --soft HEAD^
+
+ziawa@DESKTOP-39L1EAK MINGW64 /e/gittest (master)
+$ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+        modified:   a
+
+
+ziawa@DESKTOP-39L1EAK MINGW64 /e/gittest (master)
+$ git log --pretty=oneline
+b3251463935bc7fa855fd0879bbe2f243a627e8e (HEAD -> master) add b
+43b4fa5afd3bf4f2f3f43a451bf61e6ee51dc56e create a
+
+```
+
+#### 默认的`--mixed`参数
+- `git reset [--mixed] HEAD^` 表示将当前分支上的内容回退到工作区的状态。（注意是当前分支）
+
+``` 
+ziawa@DESKTOP-39L1EAK MINGW64 /e/gittest (master)
+$ vim b				# 这里创建了一个名称为b的空文件
+
+ziawa@DESKTOP-39L1EAK MINGW64 /e/gittest (master)
+$ git reset HEAD^
+Unstaged changes after reset:
+M       a
+
+ziawa@DESKTOP-39L1EAK MINGW64 /e/gittest (master)
+$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+        modified:   a
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        b
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+ziawa@DESKTOP-39L1EAK MINGW64 /e/gittest (master)
+$ ls
+a  b
+
+```
+ 
 #### 还原文件内容到指定版本
 - `git reset --hard HEAD^`
 
