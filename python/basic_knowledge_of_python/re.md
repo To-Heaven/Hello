@@ -36,7 +36,7 @@
 		- \n	单个换行符
 		- a|b	字符a或字符b
 		- ^ 	字符串的开始，只从字符串开头匹配指定字符
-		-$ 	字符串的结尾， 只从字符串结尾匹配指定字符，或者是上一个换行符结尾的字符串，在多行模式下，匹配换行符之前的字符串
+		- $ 	字符串的结尾， 只从字符串结尾匹配指定字符，或者是上一个换行符结尾的字符串，在多行模式下，匹配换行符之前的字符串
 		- \ 	消除上述特殊字符含义，常用的比如  \(   \)  
 		- ()	匹配括号中的表达式，主要用于量词
 		- []	字符组
@@ -119,12 +119,14 @@ print(ret.group())
 ### re.Method
 - 关于参数中的flags标志位参数。控制表达式的匹配方式，如是否区分大小写，多行匹配
 - 常见的flags：
-	- flag = `re.DOTALL`  
+	- `flag = re.DOTALL or re.S`   
 		- 使`.`可以匹配任意字符，包括换行符 
-	-flag = `re.MULTILINE`
-		- 开启此模式，`$` 将能够匹配换行符之前的内容
-		- `foo.$` 匹配  `foo1\nfoo2\n` 时，将匹配到`foo1` 和 `foo2`
-    
+	- `flag = re.MULTILINE or re.M`  
+		- 开启此模式，`$` 将能够匹配换行符之前的内容  
+		- `foo.$` 匹配  `foo1\nfoo2\n` 时，将匹配到`foo1` 和 `foo2`  
+    - `flag = re.IGNORECASE or re.I`
+	    - 是匹配对大小写不敏感
+
 ```python
 print(re.findall('foo.$', 'foo1\nfoo2\n', re.M))	
 # ['foo1', 'foo2']
@@ -133,7 +135,7 @@ print(re.findall('foo.$', 'foo1\nfoo2\n', re.M))
 print(re.findall('foo.$', r'foo1\nfoo2\n', re.M))
 # 结果为 []
 ```
-	 
+
 
 
 - re.compile(pattern, flags=0)	将正则表达式编译成一个正则表达式对象。
