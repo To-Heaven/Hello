@@ -92,46 +92,6 @@ with a :
 
 
 
-## 循环中的else和try分支中的else
-- 之所以在这里又强调了一次循环中的else，是因为一直以来忽略了循环中else的另一个执行条件
-- **除了当循环语句正常执行结束运行else之外，当循环条件不成立的时候，也会触发else语句**
-
-```python
-
-while False:
-    print('不会被执行')
-else:
-    print('循环条件不成立的时候也会执行')
-``` 
-
-- 当只有try语句中的代码块正常执行完才能执行其他代码的时候，就用到了else分支，将紧跟者要运行的代码放在else中
-	- 简单的说就是，else中的代码块执行的前提条件就是try中的代码块完整执行，否则不能满足执行else中代码块的条件
-
-```python
-
-import pymysql
-
-conn = pymysql.connect(host = 'localhost',
-                       user = 'root',
-                       password = 'pass',
-                       database = 'db',
-                       charset = 'utf8',
-                       cursorclass = pymysql.cursors.DictCursor)
-
-def insert_into_tb(conn, attr):
-    cursor = conn.cursor()
-    try:
-        cursor.execute('insert into tb VALUES(%s %s)'%attr)
-    except Exception:
-        print('rollback . . .')
-        conn.rollback()
-    else:
-        conn.commit()			# 只有当实行execute成功才能提交数据，将变化写入内存
-    finally:
-	cursor.close()
-	conn.close()
-insert_into_tb(conn, ('ziawang', 22))
-```
 
 
 ## 对象的浅拷贝与深拷贝
@@ -193,7 +153,6 @@ insert_into_tb(conn, ('ziawang', 22))
 	2. 在实现组合搜索功能时，生成页面的每一个组合搜索选项对应URL，也是将当前请求的URL后的查询字符串对应的`QueryDict`进行了深拷贝，这样做的目的：每一次生成一个搜索选项时，都需要组装一次URL，如果使用浅拷贝，会破环原先列表页面发送来的请求中的搜索条件
 
 ```python
-```python
 # 1. 生成搜索选项 ----------------------------------------------------------------------------
 
 class SearchRow(object):
@@ -253,8 +212,7 @@ class SearchRow(object):
 
 # 2. 添加页面重定向 --------------------------------------------------------------------------
 
-
-```
+ 
 ```
 
 
